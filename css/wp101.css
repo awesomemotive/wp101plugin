@@ -1,0 +1,56 @@
+div#wp101-topic-listing {
+	width: 250px;
+	float: left;
+	margin: 10px 10px 10px 0;
+	padding: 10px;
+	border: 1px solid #cfcfcf;
+	-moz-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background: #f2f2f2;
+	min-height: 400px;
+	}
+
+div#wp101-topic-listing h3 {
+	margin: 0;
+	padding: 0;
+	color: #444;
+	}
+
+div#wp101-topic-listing h3 span a {
+	float: right;
+	font-weight: normal;
+	}
+
+div#wp101-topic-listing h3 span a:hover {
+	background: #fafafa;
+	border: 1px solid #c5c5c5;
+	}
+
+div#wp101-topic-listing ul {
+	margin: 20px 10px 10px 10px;
+	}
+
+div#wp101-topic-listing > ul {
+	margin: 0;
+	}
+
+div#wp101-topic-listing ul li {
+	list-style-type: none;
+	font-size: 110%;
+	}
+
+div#wp101-topic-listing ul li a {
+	text-decoration: none;
+	}
+
+div#wp101-topic {
+	max-width: 640px;
+	padding-left: 300px;
+	}
+
+div#wp101-topic h2 {
+	margin: 6px 0 10px 0;
+	border-bottom: 1px solid #ddd;
+	}
