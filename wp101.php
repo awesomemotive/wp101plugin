@@ -29,6 +29,7 @@ class WP101_Plugin {
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
 
 		// Upgrades
 		$db_version = get_option( 'wp101_db_version' );
@@ -65,6 +66,7 @@ class WP101_Plugin {
 	}
 
 	public function load() {
+		add_option( 'wp101_hidden_topics', array() );
 		$this->enqueue();
 		if ( $_POST ) {
 			check_admin_referer( 'wp101-update_key' );
@@ -112,6 +114,7 @@ class WP101_Plugin {
 	}
 
 	private function enqueue() {
+		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120416' );
 		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20110904' );
 	}
 
@@ -158,13 +161,62 @@ class WP101_Plugin {
 		}
 	}
 
+	public function ajax_handler() {
+		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) )
+			die( -1 );
+		if ( 'hide' == $_REQUEST['direction'] ) {
+			$this->hide_topic( $_REQUEST['topic_id'] );
+			die( '1' );
+		} elseif ( 'show' == $_REQUEST['direction'] ) {
+			$this->show_topic( $_REQUEST['topic_id'] );
+			die( '1' );
+		}
+		die( -1 );
+	}
+
+	private function get_hidden_topics() {
+		return (array) get_option( 'wp101_hidden_topics' );
+	}
+
+	private function is_hidden( $topic_id ) {
+		$hidden_topics = $this->get_hidden_topics();
+		return in_array( $topic_id, $hidden_topics );
+	}
+
+	private function hide_topic( $topic_id ) {
+		$hidden_topics = $this->get_hidden_topics();
+		$hidden_topics[] = $topic_id;
+		return update_option( 'wp101_hidden_topics', $hidden_topics );
+	}
+
+	private function show_topic( $topic_id ) {
+		$hidden_topics = $this->get_hidden_topics();
+		if ( $this->is_hidden( $topic_id ) ) {
+			unset( $hidden_topics[array_search( $topic_id, $hidden_topics )] );
+			return update_option( 'wp101_hidden_topics', $hidden_topics );
+		} else {
+			return false;
+		}
+	}
+
 	private function get_help_topics_html() {
 		$topics = $this->get_help_topics();
 		if ( !$topics )
 			return false;
 		$return = '<ul>';
 		foreach ( $topics as $topic ) {
-			$return .= '<li class="page-item-' . $topic['id'] . '"><a href="' . admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) . '">' . esc_html( $topic['title'] ) . '</a></li>';
+			if ( current_user_can( 'manage_options' ) ) {
+				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
+				if ( $this->is_hidden( $topic['id'] ) )
+					$addl_class = 'wp101-hidden';
+				else
+					$addl_class = 'wp101-shown';
+			} else {
+				if ( $this->is_hidden( $topic['id'] ) )
+					continue;
+				$edit_links = $addl_class = '';
+			}
+			$return .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 		$return .= '</ul>';
 		return $return;
@@ -199,9 +251,7 @@ class WP101_Plugin {
 <?php if ( trim( $pages ) ) : ?>
 <div id="wp101-topic-listing">
 <h3><?php _e( 'Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'publish_pages' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
-<ul>
 <?php echo $pages; ?>
-</ul>
 </div>
 
 <div id="wp101-topic">
