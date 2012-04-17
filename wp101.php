@@ -136,7 +136,7 @@ class WP101_Plugin {
 	}
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120417' );
+		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120417b' );
 		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120417' );
 	}
 
@@ -149,7 +149,7 @@ class WP101_Plugin {
 				// Check the API key against the server
 				$response = $this->validate_api_key_with_server();
 				if ( 'valid' == $response ) {
-					set_transient( 'wp101_api_key_valid', true, 24*3600 ); // Good for a day.
+					set_transient( 'wp101_api_key_valid', 1, 24*3600 ); // Good for a day.
 					return $response;
 				} else {
 					return $response;
@@ -206,7 +206,7 @@ class WP101_Plugin {
 	}
 
 	private function get_help_topics() {
-		if ( $this->validate_api_key() ) {
+		if ( 'valid' == $this->validate_api_key() ) {
 			if ( $topics = get_transient( 'wp101_topics' ) ) {
 				return $topics;
 			} else {
@@ -314,56 +314,65 @@ class WP101_Plugin {
 			</style>
 		<?php endif; ?>
 <div class="wrap" id="wp101-settings">
-	<h2 style="font-weight: bold;"><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
+	<?php screen_icon('options-general'); ?><h2><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
 <?php if ( isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
-	<p><?php _e( 'WP101 requires an API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?></p>
-	<h3 class="title"><?php _e( 'Need an API Key?', 'wp101' ); ?></h3>
-	<p><a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'View Subscription Details' ); ?></a></p>
+	<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
+	
+	<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
+	<div class="updated">
+	<p><?php _e( 'WP101 requires an API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?> <a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'Subscription Info' ); ?></a></p>
+	</div>
+	<?php endif; ?>
 
-	<h3 class="title"><?php _e( 'Have an API Key?' ); ?></h3>
 	<form action="" method="post">
 	<input type="hidden" name="wp101-action" value="api-key" />
 	<?php wp_nonce_field( 'wp101-update_key' ); ?>
 	<table class="form-table">
 	<tr valign="top">
-		<th scope="row"><label for="wp101-api-key">WP101Plugin.com API KEY: </label></th>
-		<td><input type="password" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
+		<th scope="row"><label for="wp101-api-key">WP101Plugin.com API Key: </label></th>
+		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
+			<td><a href="#" id="show-wp101-api-key">Show API Key</a><input class="regular-text" style="visibility: hidden" type="text" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
+		<?php else : ?>
+			<td><input class="regular-text" type="text" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
+		<?php endif; ?>
 	</tr>
 	</table>
 	<?php submit_button( __( 'Save API Key', 'wp101' ) ); ?>
 	</form>
-	<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
-	<?php if ( $this->get_custom_help_topics() ) : ?>
-		<?php echo $this->get_custom_help_topics_html( true ); ?>
+	<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
+		<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
+		<?php if ( $this->get_custom_help_topics() ) : ?>
+			<?php echo $this->get_custom_help_topics_html( true ); ?>
+		<?php endif; ?>
+		<form action="" method="post">
+		<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
+		<?php if ( $editable_video ) : ?>
+			<input type="hidden" name="document" value="<?php echo esc_attr( $_GET['document'] ); ?>" />
+			<input type="hidden" name="wp101-action" value="update-video" />
+			<?php wp_nonce_field( 'wp101-update-video-' . $_GET['document'] ); ?>
+		<?php else : ?>
+			<input type="hidden" name="wp101-action" value="add-video" />
+			<?php wp_nonce_field( 'wp101-add-video' ); ?>
+		<?php endif; ?>
+		<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label for="wp101-video-title">Video Title:</label></th>
+			<td><input type="text" id="wp101-video-title" name="wp101_video_title" class="regular-text" value="<?php echo $editable_video ? esc_attr( $editable_video['title'] ) : ''; ?>"/></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label for="wp101-video-code">Embed Code:</label></th>
+			<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
+		</tr>
+		</table>
+		<?php
+		if ( $editable_video )
+			submit_button( __( 'Update Video', 'wp101' ) );
+		else
+			submit_button( __( 'Add Video', 'wp101' ) );
+		?>
+		</form>
 	<?php endif; ?>
-	<form action="" method="post">
-	<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
-	<?php if ( $editable_video ) : ?>
-		<input type="hidden" name="document" value="<?php echo esc_attr( $_GET['document'] ); ?>" />
-		<input type="hidden" name="wp101-action" value="update-video" />
-		<?php wp_nonce_field( 'wp101-update-video-' . $_GET['document'] ); ?>
-	<?php else : ?>
-		<input type="hidden" name="wp101-action" value="add-video" />
-		<?php wp_nonce_field( 'wp101-add-video' ); ?>
-	<?php endif; ?>
-	<table class="form-table">
-	<tr valign="top">
-		<th scope="row"><label for="wp101-video-title">Video Title:</label></th>
-		<td><input type="text" id="wp101-video-title" name="wp101_video_title" class="regular-text" value="<?php echo $editable_video ? esc_attr( $editable_video['title'] ) : ''; ?>"/></td>
-	</tr>
-	<tr valign="top">
-		<th scope="row"><label for="wp101-video-code">Embed Code:</label></th>
-		<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
-	</tr>
-	</table>
-	<?php
-	if ( $editable_video )
-		submit_button( __( 'Update Video', 'wp101' ) );
-	else
-		submit_button( __( 'Add Video', 'wp101' ) );
-	?>
-	</form>
 <?php else : ?>
 
 <?php $pages = $this->get_help_topics_html(); ?>
