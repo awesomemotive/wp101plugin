@@ -19,4 +19,14 @@
 			});
 		});
 	});
+	$(document).ready(function(){
+		$('ul.wp101-topic-ul li small.wp101-delete a').click(function(){
+			$.post( ajaxurl, {
+				_wpnonce: $(this).data('nonce'),
+				action: 'wp101-delete-topic',
+				topic_id: $(this).data('topic-id')
+			});
+			$(this).parents('li').remove();
+		});
+	});
 })(jQuery);
