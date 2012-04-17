@@ -30,6 +30,7 @@ class WP101_Plugin {
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
+		add_action( 'wp_ajax_wp101-delete-topic', array( $this, 'ajax_delete_topic' ) );
 
 		// Upgrades
 		$db_version = get_option( 'wp101_db_version' );
@@ -67,8 +68,9 @@ class WP101_Plugin {
 
 	public function load() {
 		add_option( 'wp101_hidden_topics', array() );
+		add_option( 'wp101_custom_topics', array() );
 		$this->enqueue();
-		if ( $_POST ) {
+		if ( isset( $_POST['wp101-action'] ) && 'api-key' == $_POST['wp101-action'] ) {
 			check_admin_referer( 'wp101-update_key' );
 			$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
 			$result = $this->validate_api_key_with_server( $new_key );
@@ -84,6 +86,18 @@ class WP101_Plugin {
 			}
 			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
 			exit();
+		} elseif ( isset( $_POST['wp101-action'] ) && 'add-video' == $_POST['wp101-action'] ) {
+			check_admin_referer( 'wp101-add-video' );
+			$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+			set_transient( 'wp101_message', 'added_video', 300 );
+			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+			exit();
+		} elseif ( isset( $_POST['wp101-action'] ) && 'update-video' == $_POST['wp101-action'] ) {
+			check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
+			$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+			set_transient( 'wp101_message', 'updated_video', 300 );
+			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+			exit();
 		} elseif ( $message = get_transient( 'wp101_message' ) ) {
 			delete_transient( 'wp101_message' );
 			add_action( 'admin_notices', array( $this, 'api_key_' . $message . '_message' ) );
@@ -95,6 +109,14 @@ class WP101_Plugin {
 				exit();
 			}
 		}
+	}
+
+	public function api_key_updated_video_message() {
+		echo '<div class="updated"><p>' . __( 'Your custom video was updated!', 'wp101' ) . '</p></div>';		
+	}
+
+	public function api_key_added_video_message() {
+		echo '<div class="updated"><p>' . __( 'Your custom video was added!', 'wp101' ) . '</p></div>';		
 	}
 
 	public function api_key_valid_message() {
@@ -114,8 +136,8 @@ class WP101_Plugin {
 	}
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120416' );
-		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20110904' );
+		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120417' );
+		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120417' );
 	}
 
 	private function validate_api_key() {
@@ -140,10 +162,47 @@ class WP101_Plugin {
 
 	private function get_document( $id ) {
 		$topics = $this->get_help_topics();
+		$custom_topics = $this->get_custom_help_topics();
+		if ( isset( $topics[$id] ) )
+			return $topics[$id];
+		elseif ( isset( $custom_topics[$id] ) )
+			return $custom_topics[$id];
+		else
+			return false;
+	}
+
+	private function get_custom_help_topics() {
+		return (array) get_option( 'wp101_custom_topics' );
+	}
+
+	private function get_custom_help_topic( $id ) {
+		$topics = $this->get_custom_help_topics();
 		if ( isset( $topics[$id] ) )
 			return $topics[$id];
 		else
 			return false;
+	}
+
+	private function update_custom_help_topics( $topics ) {
+		update_option( 'wp101_custom_topics', $topics );
+	}
+
+	private function update_custom_help_topic( $id, $title, $content ) {
+		$topics = $this->get_custom_help_topics();
+		$topics[$id] = array( 'title' => $title, 'content' => $content );
+		$this->update_custom_help_topics( $topics );
+	}
+
+	private function remove_custom_help_topic( $id ) {
+		$topics = $this->get_custom_help_topics();
+		unset( $topics[$id] );
+		$this->update_custom_help_topics( $topics );
+	}
+
+	private function add_custom_help_topic( $title, $content ) {
+		$topics = $this->get_custom_help_topics();
+		$topics[sanitize_title( $title )] = array( 'title' => $title, 'content' => $content );
+		$this->update_custom_help_topics( $topics );
 	}
 
 	private function get_help_topics() {
@@ -163,7 +222,7 @@ class WP101_Plugin {
 
 	public function ajax_handler() {
 		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) )
-			die( -1 );
+			die( '-1' );
 		if ( 'hide' == $_REQUEST['direction'] ) {
 			$this->hide_topic( $_REQUEST['topic_id'] );
 			die( '1' );
@@ -171,7 +230,14 @@ class WP101_Plugin {
 			$this->show_topic( $_REQUEST['topic_id'] );
 			die( '1' );
 		}
-		die( -1 );
+		die( '-1' );
+	}
+
+	public function ajax_delete_topic() {
+		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'wp101-delete-topic-' . $_REQUEST['topic_id'] ) )
+			die( '-1' );
+		$this->remove_custom_help_topic( $_REQUEST['topic_id'] );
+		die( '1' );
 	}
 
 	private function get_hidden_topics() {
@@ -203,7 +269,7 @@ class WP101_Plugin {
 		$topics = $this->get_help_topics();
 		if ( !$topics )
 			return false;
-		$return = '<ul>';
+		$return = '<ul class="wp101-topic-ul">';
 		foreach ( $topics as $topic ) {
 			if ( current_user_can( 'manage_options' ) ) {
 				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
@@ -222,8 +288,24 @@ class WP101_Plugin {
 		return $return;
 	}
 
+	private function get_custom_help_topics_html( $edit_mode = false ) {
+		$return = '';
+		if ( $custom_topics = $this->get_custom_help_topics() ) {
+			$return .= '<ul class="wp101-topic-ul">';
+			foreach ( $custom_topics as $id => $topic ) {
+				if ( $edit_mode )
+					$return .= '<li class="page-item-' . $id . '"><span><a href="' . admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[ <a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a> ]</small></li>';
+				else
+					$return .= '<li class="page-item-' . $id . '"><span><a href="' . admin_url( 'admin.php?page=wp101&document=' . $id ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+			}
+			$return .= '</ul>';
+		}
+		// $return .= '<pre>' . htmlspecialchars( var_export( $this->get_custom_help_topics(), true ) ) . '</pre>';
+		return $return;
+	}
+
 	public function render_listing_page() {
-		$document_id = absint( isset( $_GET['document'] ) ? $_GET['document'] : 1 );
+		$document_id = isset( $_GET['document'] ) ? sanitize_title( $_GET['document'] ) : 1;
 		if ( $document_id ) : ?>
 			<style>
 			div#wp101-topic-listing .page-item-<?php echo $document_id; ?> > a {
@@ -231,27 +313,69 @@ class WP101_Plugin {
 			}
 			</style>
 		<?php endif; ?>
-<div class="wrap">
+<div class="wrap" id="wp101-settings">
 	<h2 style="font-weight: bold;"><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
 <?php if ( isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
 	<p><?php _e( 'WP101 requires an API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?></p>
-	<h3><?php _e( 'Need an API Key?', 'wp101' ); ?></h3>
+	<h3 class="title"><?php _e( 'Need an API Key?', 'wp101' ); ?></h3>
 	<p><a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'View Subscription Details' ); ?></a></p>
 
-	<h3 style="margin-top: 30px;"><?php _e( 'Have an API Key?' ); ?></h3>
+	<h3 class="title"><?php _e( 'Have an API Key?' ); ?></h3>
 	<form action="" method="post">
+	<input type="hidden" name="wp101-action" value="api-key" />
 	<?php wp_nonce_field( 'wp101-update_key' ); ?>
-	<p><label for="wp101-api-key">WP101Plugin.com API KEY: </label><input type="password" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></p>
-	<?php submit_button( 'Save API Key' ); ?>
+	<table class="form-table">
+	<tr valign="top">
+		<th scope="row"><label for="wp101-api-key">WP101Plugin.com API KEY: </label></th>
+		<td><input type="password" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
+	</tr>
+	</table>
+	<?php submit_button( __( 'Save API Key', 'wp101' ) ); ?>
+	</form>
+	<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
+	<?php if ( $this->get_custom_help_topics() ) : ?>
+		<?php echo $this->get_custom_help_topics_html( true ); ?>
+	<?php endif; ?>
+	<form action="" method="post">
+	<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
+	<?php if ( $editable_video ) : ?>
+		<input type="hidden" name="document" value="<?php echo esc_attr( $_GET['document'] ); ?>" />
+		<input type="hidden" name="wp101-action" value="update-video" />
+		<?php wp_nonce_field( 'wp101-update-video-' . $_GET['document'] ); ?>
+	<?php else : ?>
+		<input type="hidden" name="wp101-action" value="add-video" />
+		<?php wp_nonce_field( 'wp101-add-video' ); ?>
+	<?php endif; ?>
+	<table class="form-table">
+	<tr valign="top">
+		<th scope="row"><label for="wp101-video-title">Video Title:</label></th>
+		<td><input type="text" id="wp101-video-title" name="wp101_video_title" class="regular-text" value="<?php echo $editable_video ? esc_attr( $editable_video['title'] ) : ''; ?>"/></td>
+	</tr>
+	<tr valign="top">
+		<th scope="row"><label for="wp101-video-code">Embed Code:</label></th>
+		<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
+	</tr>
+	</table>
+	<?php
+	if ( $editable_video )
+		submit_button( __( 'Update Video', 'wp101' ) );
+	else
+		submit_button( __( 'Add Video', 'wp101' ) );
+	?>
 	</form>
 <?php else : ?>
 
 <?php $pages = $this->get_help_topics_html(); ?>
+<?php $custom_pages = $this->get_custom_help_topics_html(); ?>
 <?php if ( trim( $pages ) ) : ?>
 <div id="wp101-topic-listing">
 <h3><?php _e( 'Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'publish_pages' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 <?php echo $pages; ?>
+<?php if ( trim( $custom_pages ) ) : ?>
+<h3><?php _e( 'Custom Tutorials', 'wp101' ); ?></h3>
+<?php echo $custom_pages; ?>
+<?php endif; ?>
 </div>
 
 <div id="wp101-topic">

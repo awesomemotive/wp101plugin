@@ -51,11 +51,11 @@ div#wp101-topic h2 {
 	border-bottom: 1px solid #ddd;
 	}
 
-div#wp101-topic-listing li small a {
+.wp101-topic-ul li small a {
 	color: #555;
 }
 
-div#wp101-topic-listing li small a:hover {
+.wp101-topic-ul li small a:hover {
 	color: #000;
 }
 
