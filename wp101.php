@@ -316,7 +316,7 @@ class WP101_Plugin {
 <div class="wrap" id="wp101-settings">
 	<?php screen_icon('wp101'); ?><h2><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
-<?php if ( isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
+<?php if ( current_user_can( 'manage_options' ) && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
 	<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
 	
 	<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
@@ -379,7 +379,7 @@ class WP101_Plugin {
 <?php $custom_pages = $this->get_custom_help_topics_html(); ?>
 <?php if ( trim( $pages ) ) : ?>
 <div id="wp101-topic-listing">
-<h3><?php _e( 'Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'publish_pages' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+<h3><?php _e( 'Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 <?php echo $pages; ?>
 <?php if ( trim( $custom_pages ) ) : ?>
 <h3><?php _e( 'Custom Tutorials', 'wp101' ); ?></h3>
