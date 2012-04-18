@@ -137,7 +137,7 @@ class WP101_Plugin {
 
 	private function enqueue() {
 		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120417b' );
-		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120417' );
+		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120417b' );
 	}
 
 	private function validate_api_key() {
@@ -314,7 +314,7 @@ class WP101_Plugin {
 			</style>
 		<?php endif; ?>
 <div class="wrap" id="wp101-settings">
-	<?php screen_icon('options-general'); ?><h2><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
+	<?php screen_icon('wp101'); ?><h2><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
 <?php if ( isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
 	<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
