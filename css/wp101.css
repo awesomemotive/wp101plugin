@@ -74,3 +74,7 @@ div#wp101-topic-listing li small {
 div#wp101-topic-listing li:hover small {
 	visibility: visible;
 }
+
+#icon-wp101 {
+	background: transparent url( '../images/icon-32.png' ) no-repeat;
+}
