@@ -120,24 +120,24 @@ class WP101_Plugin {
 	}
 
 	public function api_key_valid_message() {
-		echo '<div class="updated"><p>' . __( 'Your WP101.com API key has been updated and verified!', 'wp101' ) . '</p></div>';
+		echo '<div class="updated"><p>' . __( 'Your WP101Plugin.com API key has been updated and verified!', 'wp101' ) . '</p></div>';
 	}
 
 	public function api_key_error_message() {
-		echo '<div class="updated"><p>' . __( 'The API key you provided is not valid.', 'wp101' ) . '</p></div>';
+		echo '<div class="updated"><p>' . __( 'The WP101Plugin.com API key you provided is not valid.', 'wp101' ) . '</p></div>';
 	}
 
 	public function api_key_notset_message() {
-		echo '<div class="updated"><p>' . __( 'You need to provide an API key!', 'wp101' ) . '</p></div>';
+		echo '<div class="updated"><p>' . __( 'You need to provide a WP101Plugin.com API key!', 'wp101' ) . '</p></div>';
 	}
 
 	public function api_key_expired_message() {
-		echo '<div class="updated"><p>' . sprintf( __( 'The API key you provided has expired. Please <a href="%s">renew your subscription</a>!', 'wp101' ), esc_url( self::$renew_url ) ) . '</p></div>';
+		echo '<div class="updated"><p>' . sprintf( __( 'The WP101Plugin.com API key you provided has expired. Please <a href="%s">renew your subscription</a>!', 'wp101' ), esc_url( self::$renew_url ) ) . '</p></div>';
 	}
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120417b' );
-		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120417b' );
+		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120418' );
+		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120418' );
 	}
 
 	private function validate_api_key() {
@@ -300,7 +300,6 @@ class WP101_Plugin {
 			}
 			$return .= '</ul>';
 		}
-		// $return .= '<pre>' . htmlspecialchars( var_export( $this->get_custom_help_topics(), true ) ) . '</pre>';
 		return $return;
 	}
 
@@ -320,25 +319,28 @@ class WP101_Plugin {
 	<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
 	
 	<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
-	<div class="updated">
-	<p><?php _e( 'WP101 requires an API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?> <a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'Subscription Info' ); ?></a></p>
-	</div>
+		<div class="updated">
+		<p><?php _e( 'WP101 requires a WP101Plugin.com API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?> <a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'Subscription Info' ); ?></a></p>
+		</div>
+	<?php else : ?>
+		<p><?php _e( '<strong class="wp101-valid-key">Your WP101Plugin.com API key is valid!</strong>', 'wp101' ); ?>
 	<?php endif; ?>
+
 
 	<form action="" method="post">
 	<input type="hidden" name="wp101-action" value="api-key" />
 	<?php wp_nonce_field( 'wp101-update_key' ); ?>
 	<table class="form-table">
 	<tr valign="top">
-		<th scope="row"><label for="wp101-api-key">WP101Plugin.com API Key: </label></th>
-		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
-			<td><a href="#" id="show-wp101-api-key">Show API Key</a><input class="regular-text" style="visibility: hidden" type="text" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
-		<?php else : ?>
-			<td><input class="regular-text" type="text" id="wp101-api-key" name="wp101_api_key" value="<?php echo esc_attr( $this->get_key() ); ?>" /></td>
-		<?php endif; ?>
+		<th scope="row"><label for="wp101-api-key"><?php _e( 'WP101Plugin.com API Key:', 'wp101' ); ?></label></th>
+		<td><input class="regular-text" type="text" id="wp101-api-key" name="wp101_api_key" value="" /></td>
 	</tr>
 	</table>
-	<?php submit_button( __( 'Save API Key', 'wp101' ) ); ?>
+	<?php if ( 'valid' === $this->validate_api_key() ) : ?>
+		<?php submit_button( __( 'Change API Key', 'wp101' ) ); ?>
+	<?php else : ?>
+		<?php submit_button( __( 'Set API Key', 'wp101' ) ); ?>
+	<?php endif; ?>
 	</form>
 	<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
 		<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
@@ -400,9 +402,9 @@ class WP101_Plugin {
 </div>
 <?php else : ?>
 	<?php if ( current_user_can( 'manage_options' ) ) : ?>
-		<p><?php printf( __( 'No help topics found. <a href="%s">Configure your API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
+		<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
 	<?php else : ?>
-		<p><?php _e( 'No help topics found. Contact the site administrator to configure your API key.', 'wp101' ); ?></p>
+		<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
 	<?php endif; ?>
 <?php endif; ?>
 
