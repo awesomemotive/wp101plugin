@@ -13,9 +13,13 @@ div#wp101-topic-listing {
 	}
 
 div#wp101-topic-listing h3 {
-	margin: 0;
+	margin: 20px 0 0 0;
 	padding: 0;
 	color: #444;
+	}
+
+div#wp101-topic-listing h3:first-of-type {
+	margin: 0;
 	}
 
 div#wp101-topic-listing h3 span a {
@@ -28,16 +32,16 @@ div#wp101-topic-listing h3 span a:hover {
 	border: 1px solid #c5c5c5;
 	}
 
-div#wp101-topic-listing ul {
+ul.wp101-topic-ul {
 	margin: 20px 10px 10px 10px;
 	}
 
-div#wp101-topic-listing ul li {
+ul.wp101-topic-ul li {
 	list-style-type: none;
 	font-size: 110%;
 	}
 
-div#wp101-topic-listing ul li a {
+ul.wp101-topic-ul ul li a {
 	text-decoration: none;
 	}
 
@@ -59,20 +63,12 @@ div#wp101-topic h2 {
 	color: #000;
 	}
 
-div#wp101-topic-listing li.wp101-shown small.wp101-show, div#wp101-topic-listing li.wp101-hidden small.wp101-hide {
+ul.wp101-topic-ul li.wp101-shown small.wp101-show, ul.wp101-topic-ul li.wp101-hidden small.wp101-hide {
 	display: none;
 	}
 
-div#wp101-topic-listing li.wp101-hidden span {
+ul.wp101-topic-ul li.wp101-hidden span {
 	text-decoration: line-through;
-	}
-
-div#wp101-topic-listing li small {
-	visibility: hidden;
-	}
-
-div#wp101-topic-listing li:hover small {
-	visibility: visible;
 	}
 
 #icon-wp101 {
