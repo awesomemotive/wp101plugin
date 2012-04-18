@@ -28,5 +28,9 @@
 			});
 			$(this).parents('li').remove();
 		});
+		$('a#show-wp101-api-key').click(function(){
+			$(this).remove();
+			$('#wp101-api-key').css('visibility', 'visible');
+		});
 	});
 })(jQuery);
