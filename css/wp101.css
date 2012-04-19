@@ -56,11 +56,11 @@ div#wp101-topic h2 {
 	}
 
 .wp101-topic-ul li small a {
-	color: #555;
+	color: #777;
 	}
 
 .wp101-topic-ul li small a:hover {
-	color: #000;
+	color: #111;
 	}
 
 ul.wp101-topic-ul li.wp101-shown small.wp101-show, ul.wp101-topic-ul li.wp101-hidden small.wp101-hide {
