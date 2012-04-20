@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: WordPress tutorial videos, delivered directly to your WordPress admin
-Version: 1.1.1
+Version: 2.0
 Author: WP101plugin.com
 Author URI: http://wp101plugin.com/
 */
