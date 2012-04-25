@@ -2,7 +2,7 @@
 Contributors: shawndh, markjaquith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 3.3.1
+Tested up to: 3.4
 Stable tag: 2.0
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
@@ -72,7 +72,9 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 == Upgrade Notice ==
 
 = 2.0 =
-* Includes the ability to hide individual videos, or add your own custom videos.
+* Includes the ability to hide individual videos.
+* Includes he ability to add your own custom videos.
+* Compatibility with WordPress 3.4.
 
 = 1.1.1 =
 * Minor fix related to hardcoded API keys. Added a custom menu icon.
