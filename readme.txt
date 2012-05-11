@@ -3,7 +3,7 @@ Contributors: shawndh, markjaquith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 3.4
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -50,6 +50,9 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 
 == Changelog ==
 
+= 2.0.1 =
+* Minor fix to ensure the actively-playing video title is bold.
+
 = 2.0 =
 * Added the ability to selectively choose which videos appear in the list.
 * Added the ability to add your own custom videos to the list.
@@ -70,6 +73,9 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 * First version!
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+* Minor fix to ensure the actively-playing video title is bold.
 
 = 2.0 =
 * Includes the ability to hide individual videos.
