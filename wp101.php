@@ -307,7 +307,7 @@ class WP101_Plugin {
 		$document_id = isset( $_GET['document'] ) ? sanitize_title( $_GET['document'] ) : 1;
 		if ( $document_id ) : ?>
 			<style>
-			div#wp101-topic-listing .page-item-<?php echo $document_id; ?> > a {
+			div#wp101-topic-listing .page-item-<?php echo $document_id; ?> > span a {
 				font-weight: bold;
 			}
 			</style>
