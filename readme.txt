@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 3.4
-Stable tag: 2.0.1
+Tested up to: 3.5
+Stable tag: 2.0.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -49,6 +49,10 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 2. The configuration interface, where you can enter your API key, hide videos from the list, or add your own custom videos!
 
 == Changelog ==
+
+= 2.0.2 =
+* Bug fix to address "API key not valid" error on multisite installations.
+* Removed redundant notification when API key is not set.
 
 = 2.0.1 =
 * Minor fix to ensure the actively-playing video title is bold.
