@@ -2,8 +2,8 @@
 /*
 Plugin Name: WP101
 Description: WordPress tutorial videos, delivered directly to your WordPress admin
-Version: 2.0.1
-Author: WP101plugin.com
+Version: 2.0.2
+Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
 
@@ -48,11 +48,16 @@ class WP101_Plugin {
 	}
 
 	private function validate_api_key_with_server( $key=NULL ) {
-		if ( NULL === $key )
+    		if ( NULL === $key )
 			$key = $this->get_key();
-		$result = wp_remote_get( self::$api_base . 'action=check_key&api_key=' . $key );
-		$result = json_decode( $result['body'] );
-		return $result->data->status;
+			$query = wp_remote_get( self::$api_base . 'action=check_key&api_key=' . $key, array( 'timeout' => 45, 'sslverify' => false ) );
+
+    		if ( is_wp_error( $query ) )
+        		return false; // Failed to query the server
+
+    		$result = json_decode( wp_remote_retrieve_body( $query ) );
+
+    		return $result->data->status;
 	}
 
 	private function get_key() {
@@ -125,10 +130,6 @@ class WP101_Plugin {
 
 	public function api_key_error_message() {
 		echo '<div class="updated"><p>' . __( 'The WP101Plugin.com API key you provided is not valid.', 'wp101' ) . '</p></div>';
-	}
-
-	public function api_key_notset_message() {
-		echo '<div class="updated"><p>' . __( 'You need to provide a WP101Plugin.com API key!', 'wp101' ) . '</p></div>';
 	}
 
 	public function api_key_expired_message() {
