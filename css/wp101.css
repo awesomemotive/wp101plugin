@@ -10,6 +10,7 @@ div#wp101-topic-listing {
 	border-radius: 4px;
 	background: #f2f2f2;
 	min-height: 400px;
+	clear: left;
 	}
 
 div#wp101-topic-listing h3 {
