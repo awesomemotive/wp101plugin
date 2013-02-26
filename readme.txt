@@ -2,7 +2,7 @@
 Contributors: shawndh, markjaquith, mordauk
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 3.5
+Tested up to: 3.5.1
 Stable tag: 2.0.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
