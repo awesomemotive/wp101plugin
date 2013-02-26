@@ -50,7 +50,7 @@ class WP101_Plugin {
 	private function validate_api_key_with_server( $key=NULL ) {
 		if ( NULL === $key )
 			$key = $this->get_key();
-			$query = wp_remote_get( self::$api_base . 'action=check_key&api_key=' . $key, array( 'timeout' => 45, 'sslverify' => false ) );
+		$query = wp_remote_get( self::$api_base . 'action=check_key&api_key=' . $key, array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 
 		if ( is_wp_error( $query ) )
 			return false; // Failed to query the server
@@ -211,7 +211,7 @@ class WP101_Plugin {
 			if ( $topics = get_transient( 'wp101_topics' ) ) {
 				return $topics;
 			} else {
-				$result = wp_remote_get( self::$api_base . 'action=get_topics&api_key=' . $this->get_key() );
+				$result = wp_remote_get( self::$api_base . 'action=get_topics&api_key=' . $this->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( !$result['error'] && count( $result['data'] ) ) {
 					set_transient( 'wp101_topics', $result['data'], 24*3600 ); // Good for a day.
