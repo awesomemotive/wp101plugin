@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: WordPress tutorial videos, delivered directly to your WordPress admin
-Version: 2.0.2
+Version: 2.0.3
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
@@ -66,6 +66,8 @@ class WP101_Plugin {
 			if ( empty( $db ) && isset( $_wp101_api_key ) && !empty( $_wp101_api_key ) ) {
 				update_option( 'wp101_api_key', $_wp101_api_key );
 				return $_wp101_api_key;
+			} elseif ( empty( $db ) && defined( 'WP101_API_KEY' ) ) {
+				update_option( 'wp101_api_key', WP101_API_KEY );
 			} else {
 				return $db;
 			}
