@@ -43,6 +43,12 @@ Yes! You can add your own custom videos, and they'll appear at the bottom of the
 
 You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](http://wp101plugin.com/) to start your own subscription and get access to updated content.
 
+= Can I hardcode my API key into the plugin for use across multiple installations?  =
+
+Yes! Simply enter your API key into line 12 in the wp101.php file and then install your customized version of the plugin across your clients' sites. Best of all, your API key will be preserved when you upgrade to future versions of the plugin. (Thanks, @wp_smith!)
+
+
+
 == Screenshots ==
 
 1. The video tutorial selection and viewing interface.
@@ -51,7 +57,7 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 == Changelog ==
 
 = 2.0.3 =
-* Setup constant WP101_API_KEY for use in wp-config.php
+* Fix to ensure hardcoded API keys are not lost on upgrade. Thanks, @wp_smith
 
 = 2.0.2 =
 * Bug fix to address "API key not valid" error on multisite installations.
@@ -80,6 +86,13 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 * First version!
 
 == Upgrade Notice ==
+
+= 2.0.3 =
+* Fix to ensure hardcoded API keys are not lost on upgrade. Thanks, @wp_smith
+
+= 2.0.2 =
+* Bug fix to address "API key not valid" error on multisite installations.
+* Removed redundant notification when API key is not set.
 
 = 2.0.1 =
 * Minor fix to ensure the actively-playing video title is bold.
