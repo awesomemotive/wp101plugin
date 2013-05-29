@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: WP101
-Description: WordPress tutorial videos, delivered directly to your WordPress admin
-Version: 2.0.3
+Description: WordPress tutorial videos, delivered directly in the WordPress dashboard.
+Version: 2.0.4
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
@@ -39,11 +39,13 @@ class WP101_Plugin {
 			delete_transient( 'wp101_topics' );
 			update_option( 'wp101_db_version', 2 );
 		}
+		
+		delete_transient( 'wp101_topics' );
 	}
 
 	public function admin_menu() {
-		$wp101_icon_url = plugin_dir_url( __FILE__ ) . '/images/icon.png';
-		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'WP101', 'menu title', 'wp101' ), 'read', 'wp101', array( $this, 'render_listing_page' ), $wp101_icon_url );
+		$wp101_icon_url = plugin_dir_url( __FILE__ ) . '/images/wp101-icon.png';
+		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'Video Tutorials', 'menu title', 'wp101' ), 'read', 'wp101', array( $this, 'render_listing_page' ), $wp101_icon_url );
 		add_action( "load-{$hook}", array( $this, 'load' ) );
 	}
 
@@ -216,7 +218,7 @@ class WP101_Plugin {
 				$result = wp_remote_get( self::$api_base . 'action=get_topics&api_key=' . $this->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( !$result['error'] && count( $result['data'] ) ) {
-					set_transient( 'wp101_topics', $result['data'], 24*3600 ); // Good for a day.
+					set_transient( 'wp101_topics', $result['data'], 30 ); // Good for a day.
 					return $result['data'];
 				}
 			}
@@ -316,7 +318,7 @@ class WP101_Plugin {
 			</style>
 		<?php endif; ?>
 <div class="wrap" id="wp101-settings">
-	<?php screen_icon('wp101'); ?><h2><?php _ex( 'WordPress 101 Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
+	<?php screen_icon('wp101'); ?><h2><?php _ex( 'WordPress Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
 	<?php if ( current_user_can( 'manage_options' ) && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
 	<?php if ( !isset( $_GET['document'] ) ) : ?>
@@ -324,7 +326,7 @@ class WP101_Plugin {
 
 		<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
 			<div class="updated">
-			<p><?php _e( 'WP101 requires a WP101Plugin.com API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?> <a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'Subscription Info' ); ?></a></p>
+			<p><?php _e( 'The WP101 Plugin requires a valid API key to provide access to the latest WordPress tutorial videos.', 'wp101' ); ?> <a class="button" href="<?php echo esc_url( self::$subscribe_url ); ?>" title="<?php esc_attr_e( 'WP101 Tutorial Plugin', 'wp101' ); ?>" target="_blank"><?php esc_html_e( 'Subscription Info' ); ?></a></p>
 			</div>
 		<?php else : ?>
 			<p><?php _e( '<strong class="wp101-valid-key">Your WP101Plugin.com API key is valid!</strong>', 'wp101' ); ?>
@@ -348,8 +350,8 @@ class WP101_Plugin {
 		</form>
 
 		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
-		<h3 class="title"><?php _e( 'WP101 Videos' ); ?></h3>
-		<p><?php _e( 'If there are WP101 videos for topics that don&#8217;t apply to this site, you can hide them.' ); ?></p>
+		<h3 class="title"><?php _e( 'WordPress Tutorial Videos' ); ?></h3>
+		<p><?php _e( 'If there are specific videos or topics that don&#8217;t apply to this site, you can hide them.' ); ?></p>
 		<?php echo $this->get_help_topics_html( true ); ?>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -362,7 +364,7 @@ class WP101_Plugin {
 			<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
 		<?php endif; ?>
 		<?php if ( !isset( $_GET['document'] ) ) : ?>
-			<p><?php _e( 'If you have your own videos, you can add them here. They will display in a separate section, below the WP101 videos.', 'wp101' ); ?></p>
+			<p><?php _e( 'If you have your own videos, you can add them here. They will display in a separate section, below the WordPress tutorial videos.', 'wp101' ); ?></p>
 			<?php if ( $this->get_custom_help_topics() ) : ?>
 				<?php echo $this->get_custom_help_topics_html( true ); ?>
 			<?php endif; ?>
@@ -400,10 +402,10 @@ class WP101_Plugin {
 <?php $custom_pages = $this->get_custom_help_topics_html(); ?>
 <?php if ( trim( $pages ) ) : ?>
 <div id="wp101-topic-listing">
-<h3><?php _e( 'Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 <?php echo $pages; ?>
 <?php if ( trim( $custom_pages ) ) : ?>
-<h3><?php _e( 'Custom Tutorials', 'wp101' ); ?></h3>
+<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
 <?php echo $custom_pages; ?>
 <?php endif; ?>
 </div>
