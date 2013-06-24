@@ -56,7 +56,7 @@ Yes! Simply enter your API key into line 12 in the wp101.php file and then insta
  
 == Changelog ==
  
-= 2.054 =
+= 2.0.5 =
 * Fixed issue with hiding the first video. Thanks, @Pippinsplugins!
 
 = 2.0.4 =
