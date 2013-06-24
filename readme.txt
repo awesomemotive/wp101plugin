@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, wpsmith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 3.5.1
-Stable tag: 2.0.4
+Tested up to: 3.5.2
+Stable tag: 2.0.5
  
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
  
@@ -56,6 +56,9 @@ Yes! Simply enter your API key into line 12 in the wp101.php file and then insta
  
 == Changelog ==
  
+= 2.054 =
+* Fixed issue with hiding the first video. Thanks, @Pippinsplugins!
+
 = 2.0.4 =
 * Replaced mentions of "WP101" with "Video Tutorials"
 * Replaced icons with a more generic icon.
@@ -93,6 +96,9 @@ Yes! Simply enter your API key into line 12 in the wp101.php file and then insta
  
 == Upgrade Notice ==
  
+= 2.054 =
+* Bux fix to address issue when hiding the first video in the list.
+
 = 2.0.4 =
 * Minor changes to improve the white-labeled experience.
 
