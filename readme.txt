@@ -96,8 +96,8 @@ Yes! Simply enter your API key into line 12 in the wp101.php file and then insta
  
 == Upgrade Notice ==
  
-= 2.054 =
-* Bux fix to address issue when hiding the first video in the list.
+= 2.0.5 =
+* Bug fix to address issue when hiding the first video in the list.
 
 = 2.0.4 =
 * Minor changes to improve the white-labeled experience.
