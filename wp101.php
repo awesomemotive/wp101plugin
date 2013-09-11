@@ -39,7 +39,7 @@ class WP101_Plugin {
 			delete_transient( 'wp101_topics' );
 			update_option( 'wp101_db_version', 2 );
 		}
-		
+
 		delete_transient( 'wp101_topics' );
 	}
 
@@ -139,6 +139,8 @@ class WP101_Plugin {
 	public function api_key_expired_message() {
 		echo '<div class="updated"><p>' . sprintf( __( 'The WP101Plugin.com API key you provided has expired. Please <a href="%s">renew your subscription</a>!', 'wp101' ), esc_url( self::$renew_url ) ) . '</p></div>';
 	}
+
+	public function api_key_notset_message(){ /* no message needed */ }
 
 	private function enqueue() {
 		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20120418b' );
