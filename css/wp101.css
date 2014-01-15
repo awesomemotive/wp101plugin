@@ -72,16 +72,34 @@ ul.wp101-topic-ul li.wp101-hidden span {
 	text-decoration: line-through;
 	}
 
-#icon-wp101 {
-	background: transparent url( '../images/wp101-icon-32.png' ) no-repeat;
-	}
+#wp101-settings h2.wp101title:before {
+	font-family: "dashicons";
+	content: "\f236";
+	font-size: 2rem;
+	line-height: 1;
+    float: left;
+    margin-right: 7px;
+    opacity: 0.7;
+}
 
+#wp101-settings .submit {
+    margin: 0;
+    padding: 0;
+}
+
+div#wp101-settings h3.title {
+	margin: 30px 0 0 0;
+	padding: 0;
+	color: #444;
+	}
+	
 .wp101-valid-key {
-	color: green;
-	padding: 7px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	background: #eee;
-	box-shadow: 1px 1px 2px rgba(0, 0, 0, .25), inset 0 0 15px rgba(0, 0, 0, .10);
-	margin-left: 5px;
+    display: inline-block;
+    padding: 11px 15px;
+    font-size: 13px;
+    text-align: left;
+	background-color: #fff;
+	border-left: 4px solid #7ad03a;
+	-webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+	box-shadow:         0px 1px 1px 0px rgba(0,0,0,0.1);
 	}
