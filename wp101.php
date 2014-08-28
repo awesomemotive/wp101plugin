@@ -392,8 +392,8 @@ class WP101_Plugin {
 		</form>
 
 		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
-		<h3 class="title"><?php _e( 'WordPress Tutorial Videos' ); ?></h3>
-		<p><?php _e( 'If there are specific videos or topics that don&#8217;t apply to this site, you can hide them.' ); ?></p>
+		<h3 class="title"><?php _e( 'WordPress Tutorial Videos', 'wp101' ); ?></h3>
+		<p><?php _e( 'If there are specific videos or topics that don&#8217;t apply to this site, you can hide them.', 'wp101' ); ?></p>
 		<?php echo $this->get_help_topics_html( true ); ?>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -401,9 +401,9 @@ class WP101_Plugin {
 	<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
 		<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
 		<?php if ( $editable_video ) : ?>
-			<h3 class="title"><?php _e( 'Edit Custom Video' ); ?></h3>
+			<h3 class="title"><?php _e( 'Edit Custom Video', 'wp101' ); ?></h3>
 		<?php else : ?>
-			<h3 class="title"><?php _e( 'Custom Videos' ); ?></h3>
+			<h3 class="title"><?php _e( 'Custom Videos', 'wp101' ); ?></h3>
 		<?php endif; ?>
 		<?php if ( !isset( $_GET['document'] ) ) : ?>
 			<p><?php _e( 'If you have your own videos, you can add them here. They will display in a separate section, below the WordPress tutorial videos.', 'wp101' ); ?></p>
@@ -422,11 +422,11 @@ class WP101_Plugin {
 		<?php endif; ?>
 		<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><label for="wp101-video-title">Video Title:</label></th>
+			<th scope="row"><label for="wp101-video-title"></label></th>
 			<td><input type="text" id="wp101-video-title" name="wp101_video_title" class="regular-text" value="<?php echo $editable_video ? esc_attr( $editable_video['title'] ) : ''; ?>"/></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label for="wp101-video-code">Embed Code:</label></th>
+			<th scope="row"><label for="wp101-video-code"><?php esc_html__( 'Embed Code:', 'wp101' ); ?></label></th>
 			<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text" placeholder="Example: <iframe src='http://player.vimeo.com/video/33767000' width='640' height='360' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
 		</tr>
 		</table>
