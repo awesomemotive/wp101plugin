@@ -47,7 +47,13 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 
 Yes! Simply enter your API key into line 12 in the wp101.php file and then install your customized version of the plugin across your clients' sites. Best of all, your API key will be preserved when you upgrade to future versions of the plugin. (Thanks, @wp_smith!)
 
+= Can I filter the list of videos, or add my own programmatically? =
 
+Absolutely! We've added the following filters for developers to add (or even remove) videos from the plugin.
+
+ * wp101_get_help_topics
+ * wp101_get_custom_help_topics
+ * wp101_get_hidden_topics
 
 == Screenshots ==
 
