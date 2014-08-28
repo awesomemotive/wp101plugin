@@ -14,9 +14,9 @@ $_wp101_api_key = '';
 class WP101_Plugin {
 	public static $db_version = 2;
 	public static $instance;
-	public static $api_base = 'http://wp101plugin.com/?wp101-api-server&';
+	public static $api_base      = 'http://wp101plugin.com/?wp101-api-server&';
 	public static $subscribe_url = 'http://wp101plugin.com/';
-	public static $renew_url = 'http://wp101plugin.com/';
+	public static $renew_url     = 'http://wp101plugin.com/';
 
 	public function __construct() {
 		self::$instance = $this;
@@ -40,7 +40,7 @@ class WP101_Plugin {
 			delete_transient( 'wp101_topics' );
 			update_option( 'wp101_db_version', 2 );
 		}
-		
+
 		delete_transient( 'wp101_topics' );
 	}
 
@@ -52,14 +52,17 @@ class WP101_Plugin {
     public function wp101_admin_icon() {
 	    echo '<style>#adminmenu #toplevel_page_wp101 div.wp-menu-image:before { content: "\f236" !important; }</style>';
     }
-	
-	private function validate_api_key_with_server( $key=NULL ) {
-		if ( NULL === $key )
-			$key = $this->get_key();
-		$query = wp_remote_get( self::$api_base . 'action=check_key&api_key=' . $key, array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 
-		if ( is_wp_error( $query ) )
+	private function validate_api_key_with_server( $key = null ) {
+		if ( null === $key ) {
+			$key = $this->get_key();
+		}
+
+		$query = wp_remote_get( esc_url_raw( self::$api_base . 'action=check_key&api_key=' . $key ), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
+
+		if ( is_wp_error( $query ) ) {
 			return false; // Failed to query the server
+		}
 
 		$result = json_decode( wp_remote_retrieve_body( $query ) );
 
@@ -68,8 +71,10 @@ class WP101_Plugin {
 
 	private function get_key() {
 			global $_wp101_api_key;
+
 			$db = get_option( 'wp101_api_key' );
-			if ( empty( $db ) && isset( $_wp101_api_key ) && !empty( $_wp101_api_key ) ) {
+
+			if ( empty( $db ) && isset( $_wp101_api_key ) && ! empty( $_wp101_api_key ) ) {
 				update_option( 'wp101_api_key', $_wp101_api_key );
 				return $_wp101_api_key;
 			} elseif ( empty( $db ) && defined( 'WP101_API_KEY' ) ) {
@@ -80,9 +85,12 @@ class WP101_Plugin {
 	}
 
 	public function load() {
+
 		add_option( 'wp101_hidden_topics', array() );
 		add_option( 'wp101_custom_topics', array() );
+
 		$this->enqueue();
+
 		if ( isset( $_POST['wp101-action'] ) && 'api-key' == $_POST['wp101-action'] ) {
 			check_admin_referer( 'wp101-update_key' );
 			$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
@@ -152,7 +160,7 @@ class WP101_Plugin {
 	}
 
 	private function validate_api_key() {
-		if ( !get_transient( 'wp101_api_key_valid' ) ) {
+		if ( ! get_transient( 'wp101_api_key_valid' ) ) {
 			if ( !$this->get_key() ) {
 				// Hasn't set API key yet
 				return 'notset';
@@ -172,26 +180,32 @@ class WP101_Plugin {
 	}
 
 	private function get_document( $id ) {
-		$topics = $this->get_help_topics();
+
+		$topics        = $this->get_help_topics();
 		$custom_topics = $this->get_custom_help_topics();
-		if ( isset( $topics[$id] ) )
-			return $topics[$id];
-		elseif ( isset( $custom_topics[$id] ) )
-			return $custom_topics[$id];
-		else
+
+		if ( isset( $topics[ $id ] ) ) {
+			return $topics[ $id ];
+		} elseif ( isset( $custom_topics[ $id ] ) ) {
+			return $custom_topics[ $id ];
+		} else {
 			return false;
+		}
 	}
 
 	private function get_custom_help_topics() {
-		return (array) get_option( 'wp101_custom_topics' );
+		return (array) apply_filters( 'wp101_get_custom_help_topics', get_option( 'wp101_custom_topics' ), self::$instance );
 	}
 
 	private function get_custom_help_topic( $id ) {
+
 		$topics = $this->get_custom_help_topics();
-		if ( isset( $topics[$id] ) )
-			return $topics[$id];
-		else
+
+		if ( isset( $topics[ $id ] ) ) {
+			return $topics[ $id ];
+		} else {
 			return false;
+		}
 	}
 
 	private function update_custom_help_topics( $topics ) {
@@ -199,41 +213,49 @@ class WP101_Plugin {
 	}
 
 	private function update_custom_help_topic( $id, $title, $content ) {
-		$topics = $this->get_custom_help_topics();
-		$topics[$id] = array( 'title' => $title, 'content' => $content );
+		$topics        = $this->get_custom_help_topics();
+		$topics[ $id ] = array( 'title' => $title, 'content' => $content );
 		$this->update_custom_help_topics( $topics );
 	}
 
 	private function remove_custom_help_topic( $id ) {
 		$topics = $this->get_custom_help_topics();
-		unset( $topics[$id] );
+		unset( $topics[ $id ] );
 		$this->update_custom_help_topics( $topics );
 	}
 
 	private function add_custom_help_topic( $title, $content ) {
 		$topics = $this->get_custom_help_topics();
-		$topics[sanitize_title( $title )] = array( 'title' => $title, 'content' => $content );
+		$topics[ sanitize_title( $title ) ] = array( 'title' => $title, 'content' => $content );
 		$this->update_custom_help_topics( $topics );
 	}
 
 	private function get_help_topics() {
+
+		$help_topics = false;
+
 		if ( 'valid' == $this->validate_api_key() ) {
+
 			if ( $topics = get_transient( 'wp101_topics' ) ) {
-				return $topics;
+				$help_topics = $topics;
 			} else {
 				$result = wp_remote_get( self::$api_base . 'action=get_topics&api_key=' . $this->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
-				if ( !$result['error'] && count( $result['data'] ) ) {
+				if ( ! $result['error'] && count( $result['data'] ) ) {
 					set_transient( 'wp101_topics', $result['data'], 30 ); // Good for a day.
-					return $result['data'];
+					$help_topics =  $result['data'];
 				}
 			}
 		}
+
+		return apply_filters( 'wp101_get_help_topics', $help_topics, self::$instance );
 	}
 
 	public function ajax_handler() {
-		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) )
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) ) {
 			die( '-1' );
+		}
 		if ( 'hide' == $_REQUEST['direction'] ) {
 			$this->hide_topic( $_REQUEST['topic_id'] );
 			die( '1' );
@@ -245,14 +267,18 @@ class WP101_Plugin {
 	}
 
 	public function ajax_delete_topic() {
-		if ( !wp_verify_nonce( $_POST['_wpnonce'], 'wp101-delete-topic-' . $_REQUEST['topic_id'] ) )
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-delete-topic-' . $_REQUEST['topic_id'] ) ) {
 			die( '-1' );
+		}
+
 		$this->remove_custom_help_topic( $_REQUEST['topic_id'] );
+
 		die( '1' );
 	}
 
 	private function get_hidden_topics() {
-		return (array) get_option( 'wp101_hidden_topics' );
+		return (array) apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ), self::$instance );
 	}
 
 	private function is_hidden( $topic_id ) {
@@ -277,10 +303,15 @@ class WP101_Plugin {
 	}
 
 	private function get_help_topics_html( $edit_mode = false ) {
+
 		$topics = $this->get_help_topics();
-		if ( !$topics )
+
+		if ( ! $topics ) {
 			return false;
+		}
+
 		$return = '<ul class="wp101-topic-ul">';
+
 		foreach ( $topics as $topic ) {
 			if ( $edit_mode ) {
 				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
@@ -289,12 +320,14 @@ class WP101_Plugin {
 				else
 					$addl_class = 'wp101-shown';
 			} else {
-				if ( $this->is_hidden( $topic['id'] ) )
+				if ( $this->is_hidden( $topic['id'] ) ) {
 					continue;
+				}
 				$edit_links = $addl_class = '';
 			}
-			$return .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
+			$return .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) )a . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
+
 		$return .= '</ul>';
 		return $return;
 	}
@@ -305,9 +338,9 @@ class WP101_Plugin {
 			$return .= '<ul class="wp101-topic-ul">';
 			foreach ( $custom_topics as $id => $topic ) {
 				if ( $edit_mode )
-					$return .= '<li class="page-item-' . $id . '"><span><a href="' . admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
+					$return .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
 				else
-					$return .= '<li class="page-item-' . $id . '"><span><a href="' . admin_url( 'admin.php?page=wp101&document=' . $id ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+					$return .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
 			}
 			$return .= '</ul>';
 		}
