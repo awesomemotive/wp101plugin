@@ -3,7 +3,7 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.0
-Stable tag: 2.1.1
+Stable tag: 2.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -56,7 +56,7 @@ Yes! Simply enter your API key into line 12 in the wp101.php file and then insta
 
 == Changelog ==
 
-= 2.1.2 =
+= 2.2 =
 * Tested for WordPress 4.0.
 * Added plugin icons for WordPress 4.0.
 * Added filters for developers.  You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
