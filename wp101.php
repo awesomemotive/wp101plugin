@@ -199,7 +199,7 @@ class WP101_Plugin {
 
 		if ( isset( $topics[ $id ] ) ) {
 			$document = $topics[ $id ];
-		} else ( isset( $custom_topics[ $id ] ) ) {
+		} else if ( isset( $custom_topics[ $id ] ) ) {
 			$document = $custom_topics[ $id ];
 		}
 
