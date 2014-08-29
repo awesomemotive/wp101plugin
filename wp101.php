@@ -312,41 +312,50 @@ class WP101_Plugin {
 			return false;
 		}
 
-		$return = '<ul class="wp101-topic-ul">';
+		$output = '<ul class="wp101-topic-ul">';
 
 		foreach ( $topics as $topic ) {
 			if ( $edit_mode ) {
 				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
-				if ( $this->is_hidden( $topic['id'] ) )
+				if ( $this->is_hidden( $topic['id'] ) ) {
 					$addl_class = 'wp101-hidden';
-				else
+				} else {
 					$addl_class = 'wp101-shown';
+				}
 			} else {
 				if ( $this->is_hidden( $topic['id'] ) ) {
 					continue;
 				}
 				$edit_links = $addl_class = '';
 			}
-			$return .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) )a . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
+			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
-		$return .= '</ul>';
-		return $return;
+		$output .= '</ul>';
+
+		return $output;
 	}
 
 	private function get_custom_help_topics_html( $edit_mode = false ) {
-		$return = '';
+
+		$output = '';
+
 		if ( $custom_topics = $this->get_custom_help_topics() ) {
-			$return .= '<ul class="wp101-topic-ul">';
+
+			$output .= '<ul class="wp101-topic-ul">';
+
 			foreach ( $custom_topics as $id => $topic ) {
-				if ( $edit_mode )
-					$return .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
-				else
-					$return .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+
+				if ( $edit_mode ) {
+					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
+				} else {
+					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+				}
 			}
-			$return .= '</ul>';
+			$output .= '</ul>';
 		}
-		return $return;
+
+		return $output;
 	}
 
 	public function render_listing_page() {
@@ -442,42 +451,49 @@ class WP101_Plugin {
 	<?php endif; ?>
 <?php
 	else :
-		$pages = $this->get_help_topics_html();
+		$pages        = $this->get_help_topics_html();
 		$custom_pages = $this->get_custom_help_topics_html();
 
 		if ( trim( $pages ) ) :
 ?>
-<div id="wp101-topic-listing">
-<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
-<?php echo $pages; ?>
-<?php if ( trim( $custom_pages ) ) : ?>
-<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
-<?php echo $custom_pages; ?>
-<?php endif; ?>
-</div>
+		<div id="wp101-topic-listing">
 
-<div id="wp101-topic">
-<?php if ( $document_id ) : ?>
-	<?php $document = $this->get_document( $document_id ); ?>
-	<?php if ( $document ) : ?>
-		<h2><?php echo esc_html( $document['title'] ); ?></h2>
-		<?php echo $document['content']; ?>
-	<?php else : ?>
-	<p><?php _e( 'The requested tutorial could not be found', 'wp101' ); ?>
-	<?php endif; ?>
-<?php endif; ?>
-</div>
-<?php else : ?>
-	<?php if ( current_user_can( 'manage_options' ) ) : ?>
-		<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
-	<?php else : ?>
-		<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
-	<?php endif; ?>
-<?php endif; ?>
+			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<?php
+				echo $pages;
+				do_action( 'wp101_after_help_topics', self::$instance );
+			?>
+			<?php if ( trim( $custom_pages ) ) : ?>
+			<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
+			<?php
+				echo $custom_pages;
+				do_action( 'wp101_after_custom_help_topics', self::$instance );
+			?>
+			<?php endif; ?>
+		</div>
 
-<?php endif; ?>
+		<div id="wp101-topic">
+			<?php if ( $document_id ) : ?>
+				<?php $document = $this->get_document( $document_id ); ?>
+				<?php if ( $document ) : ?>
+					<h2><?php echo esc_html( $document['title'] ); ?></h2>
+					<?php echo $document['content']; ?>
+				<?php else : ?>
+				<p><?php _e( 'The requested tutorial could not be found', 'wp101' ); ?>
+				<?php endif; ?>
+			<?php endif; ?>
+		</div>
+		<?php else : ?>
+			<?php if ( current_user_can( 'manage_options' ) ) : ?>
+				<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
+			<?php else : ?>
+				<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
+			<?php endif; ?>
+		<?php endif; ?>
 
-</div>
+		<?php endif; ?>
+
+		</div>
 <?php
 	}
 }
