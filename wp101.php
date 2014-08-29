@@ -181,16 +181,18 @@ class WP101_Plugin {
 
 	private function get_document( $id ) {
 
+		$document      = false;
+
 		$topics        = $this->get_help_topics();
 		$custom_topics = $this->get_custom_help_topics();
 
 		if ( isset( $topics[ $id ] ) ) {
-			return $topics[ $id ];
-		} elseif ( isset( $custom_topics[ $id ] ) ) {
-			return $custom_topics[ $id ];
-		} else {
-			return false;
+			$document = $topics[ $id ];
+		} else ( isset( $custom_topics[ $id ] ) ) {
+			$document = $custom_topics[ $id ];
 		}
+
+		return apply_filters( 'wp101_get_document', $document, self::$instance );
 	}
 
 	private function get_custom_help_topics() {
