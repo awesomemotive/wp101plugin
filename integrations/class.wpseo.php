@@ -9,7 +9,7 @@ class WP101_WPSEO_Videos {
 	}
 
 	public function init() {
-		add_filter( 'wp101_get_document'     , array( self::$instance, 'get_document' ) );
+		add_filter( 'wp101_get_document'     , array( self::$instance, 'get_document' ), 10, 3 );
 		add_action( 'wp101_after_help_topics', array( self::$instance, 'wpseo_help_topics_html' ) );
 	}
 
@@ -60,6 +60,20 @@ class WP101_WPSEO_Videos {
 		$output .= '</ul>';
 
 		return $output;
+	}
+
+	public function get_document( $document, $id, $wp_101 ) {
+
+		if ( ! $document ) {
+
+			$topics = $this->get_wpseo_help_topics( $wp_101 );
+
+			if ( isset( $topics[ $id ] ) ) {
+				$document = $topics[ $id ];
+			}
+		}
+
+		return apply_filters( 'wp101_wpseo_get_document', $document, $id, self::$instance );
 	}
 
 }

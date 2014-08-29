@@ -203,7 +203,7 @@ class WP101_Plugin {
 			$document = $custom_topics[ $id ];
 		}
 
-		return apply_filters( 'wp101_get_document', $document, self::$instance );
+		return apply_filters( 'wp101_get_document', $document, $id, self::$instance );
 	}
 
 	private function get_custom_help_topics() {
