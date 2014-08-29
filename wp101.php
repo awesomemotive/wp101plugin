@@ -27,6 +27,8 @@ class WP101_Plugin {
 		// Translations
 		load_plugin_textdomain( 'wp101', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
+		self::$instance->includes();
+
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_head', array( $this, 'wp101_admin_icon') );
@@ -42,6 +44,12 @@ class WP101_Plugin {
 		}
 
 		delete_transient( 'wp101_topics' );
+	}
+
+	public function includes() {
+		do_action( 'wp101_pre_includes', self::$instance );
+
+		include_once 'integrations/class.wpseo.php';
 	}
 
 	public function admin_menu() {
