@@ -64,4 +64,10 @@ class WP101_WPSEO_Videos {
 
 }
 
-new WP101_WPSEO_Videos;
+add_action( 'plugins_loaded', 'wp101_maybe_activate_wpseo_videos' );
+
+function wp101_maybe_activate_wpseo_videos() {
+	if ( function_exists( 'wpseo_auto_load' ) ) {
+		return new WP101_WPSEO_Videos;
+	}
+}

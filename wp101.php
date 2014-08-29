@@ -19,7 +19,11 @@ class WP101_Plugin {
 	public static $renew_url     = 'http://wp101plugin.com/';
 
 	public function __construct() {
+
 		self::$instance = $this;
+
+		self::$instance->includes();
+
 		add_action( 'init', array( $this, 'init' ) );
 	}
 
@@ -27,7 +31,6 @@ class WP101_Plugin {
 		// Translations
 		load_plugin_textdomain( 'wp101', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
-		self::$instance->includes();
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
