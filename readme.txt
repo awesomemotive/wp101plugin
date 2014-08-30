@@ -3,17 +3,19 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.0
-Stable tag: 2.2
+Stable tag: 3.0
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-The WP101 Plugin delivers a complete set of professionally-produced "WordPress 101" tutorial videos directly within the dashboard.
+The WP101 Plugin is simply the easiest way to teach out clients how to use WordPress. It delivers a complete set of professionally-produced “WordPress 101” and WordPress SEO Plugin tutorial videos directly within your clients' dashboard.
 
-Simply enter your [WP101Plugin.com](http://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WP administration panel. Perfect for teaching your clients the basics of how to use WordPress!
+Simply enter your [WP101Plugin.com](http://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
 
 Selectively choose which tutorial videos are shown, and even embed your own custom videos!
+
+NEW! Now includes a complete set of tutorial videos for the WordPress SEO Plugin by Yoast, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
 
 == Installation ==
 
@@ -33,11 +35,11 @@ Simply go to: [WP101Plugin.com](http://wp101plugin.com/) and follow the instruct
 
 = Can I choose which video topics are displayed? =
 
-Yes! You can selectively hide/show individual tutorial videos. Simply go to the Settings panel to choose which videos you'd like to include.
+Yes! You can selectively hide or show individual tutorial videos. Simply go to the Settings panel to choose which videos you'd like to include.
 
 = Can I add my own custom videos? =
 
-Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code furnished to you by your video hosting provider.
+Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
@@ -45,7 +47,7 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
-Yes! Simply enter your API key into line 12 in the wp101.php file and then install your customized version of the plugin across your clients' sites. Best of all, your API key will be preserved when you upgrade to future versions of the plugin. (Thanks, @wp_smith!)
+Yes! Simply enter your API key into the wp101.php file and then install your customized version of the plugin across your clients' sites. Or, if you prefer, define $_wp101_api_key within your wp-config file. Either way, your API key will be preserved when you upgrade to future versions of the plugin.
 
 = Can I filter the list of videos, or add my own programmatically? =
 
@@ -62,11 +64,11 @@ Absolutely! We've added the following filters for developers to add (or even rem
 
 == Changelog ==
 
-= 2.2 =
+= 3.0 =
 * Tested for WordPress 4.0.
 * Added plugin icons for WordPress 4.0.
-* Added filters for developers.  You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
-* Added support for WordPress SEO videos.
+* Added filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
+* Added videos for the WordPress SEO Plugin by Yoast, provided that plugin is installed.
 * Minor coding standards cleanup.
 
 = 2.1.1 =
@@ -76,10 +78,10 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Updated for WordPress 3.8, including new menu icon.
 
 = 2.0.6 =
-* Bug fix for missing api_key_notset_message. Thanks, @onebigidea!
+* Bug fix for missing api_key_notset_message.
 
 = 2.0.5 =
-* Fixed issue with hiding the first video. Thanks, @Pippinsplugins!
+* Fixed issue with hiding the first video.
 
 = 2.0.4 =
 * Replaced mentions of "WP101" with "Video Tutorials"
@@ -88,7 +90,7 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Updated screenshots.
 
 = 2.0.3 =
-* Fix to ensure hardcoded API keys are not lost on upgrade. Thanks, @wp_smith
+* Fix to ensure hardcoded API keys are not lost on upgrade.
 
 = 2.0.2 =
 * Bug fix to address "API key not valid" error on multisite installations.
@@ -118,6 +120,13 @@ Absolutely! We've added the following filters for developers to add (or even rem
 
 == Upgrade Notice ==
 
+= 3.0 =
+* We're all set for WordPress 4.0!
+* Added plugin icons for WordPress 4.0.
+* Added new filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
+* Added a new set of tutorial videos for the WordPress SEO Plugin, provided that plugin is already installed.
+* Minor coding standards cleanup.
+
 = 2.1.1 =
 * Bug fix for missing wp101_icon_url error.
 
@@ -125,7 +134,7 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Updated for WordPress 3.8, including new menu icon.
 
 = 2.0.6 =
-* Bug fix for missing api_key_notset_message. Thanks, @onebigidea!
+* Bug fix for missing api_key_notset_message.
 
 = 2.0.5 =
 * Bug fix to address issue when hiding the first video in the list.
@@ -134,7 +143,7 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Minor changes to improve the white-labeled experience.
 
 = 2.0.3 =
-* Fix to ensure hardcoded API keys are not lost on upgrade. Thanks, @wp_smith
+* Fix to ensure hardcoded API keys are not lost on upgrade.
 
 = 2.0.2 =
 * Bug fix to address "API key not valid" error on multisite installations.
