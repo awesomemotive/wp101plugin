@@ -51,7 +51,9 @@ class WP101_WPSEO_Videos {
 			return false;
 		}
 
-		$output = '<ul class="wp101-topic-ul">';
+		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' ) . '</h3>';
+
+		$output .= '<ul class="wp101-topic-ul">';
 
 		foreach ( $topics as $topic ) {
 			$output .= '<li page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
