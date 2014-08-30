@@ -449,7 +449,7 @@ class WP101_Plugin {
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label for="wp101-video-code"><?php _e( 'Embed Code:', 'wp101' ); ?></label></th>
-			<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text" placeholder="Example: <iframe src='http://player.vimeo.com/video/33767000' width='640' height='360' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
+			<td><textarea rows="5" cols="50" id="wp101-video-code" name="wp101_video_code" class="large-text" placeholder="Example: <iframe src='//player.vimeo.com/video/123456789' width='1280' height='720' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>"><?php echo $editable_video ? esc_textarea( $editable_video['content'] ) : ''; ?></textarea></td>
 		</tr>
 		</table>
 		<?php
