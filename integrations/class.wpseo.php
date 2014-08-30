@@ -13,7 +13,7 @@ class WP101_WPSEO_Videos {
 		add_action( 'wp101_after_help_topics', array( self::$instance, 'wpseo_help_topics_html' ) );
 	}
 
-	private function get_wpseo_help_topics( $wp_101 ) {
+	public function get_wpseo_help_topics( $wp_101 ) {
 
 		$help_topics = false;
 
