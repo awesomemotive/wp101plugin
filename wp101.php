@@ -467,19 +467,15 @@ class WP101_Plugin {
 
 		if ( trim( $pages ) ) :
 ?>
-		<div id="wp101-topic-listing">
-
-			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
-			<?php
-				echo $pages;
-				do_action( 'wp101_after_help_topics', self::$instance );
-			?>
-			<?php if ( trim( $custom_pages ) ) : ?>
-			<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
-			<?php
-				echo $custom_pages;
-				do_action( 'wp101_after_custom_help_topics', self::$instance );
-			?>
+		<div id="wp101-topic">
+			<?php if ( $document_id ) : ?>
+				<?php $document = $this->get_document( $document_id ); ?>
+				<?php if ( $document ) : ?>
+					<h2><?php echo esc_html( $document['title'] ); ?></h2>
+					<?php echo $document['content']; ?>
+				<?php else : ?>
+				<p><?php _e( 'The requested tutorial could not be found', 'wp101' ); ?>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 		<script>
@@ -494,15 +490,18 @@ class WP101_Plugin {
 			$win.resize( wp101Resize );
 		});
 		</script>
-		<div id="wp101-topic">
-			<?php if ( $document_id ) : ?>
-				<?php $document = $this->get_document( $document_id ); ?>
-				<?php if ( $document ) : ?>
-					<h2><?php echo esc_html( $document['title'] ); ?></h2>
-					<?php echo $document['content']; ?>
-				<?php else : ?>
-				<p><?php _e( 'The requested tutorial could not be found', 'wp101' ); ?>
-				<?php endif; ?>
+		<div id="wp101-topic-listing">
+			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<?php
+				echo $pages;
+				do_action( 'wp101_after_help_topics', self::$instance );
+			?>
+			<?php if ( trim( $custom_pages ) ) : ?>
+			<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
+			<?php
+				echo $custom_pages;
+				do_action( 'wp101_after_custom_help_topics', self::$instance );
+			?>
 			<?php endif; ?>
 		</div>
 		<?php else : ?>
