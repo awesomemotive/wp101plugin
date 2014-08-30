@@ -482,7 +482,18 @@ class WP101_Plugin {
 			?>
 			<?php endif; ?>
 		</div>
-
+		<script>
+		jQuery(function($){
+			var video = $('#wp101-topic iframe');
+			var ratio = video.attr('height') / video.attr('width');
+			var wp101Resize = function() {
+				video.css('height', (video.width() * ratio) + 'px' );
+			};
+			var $win = $(window);
+			$win.ready( wp101Resize );
+			$win.resize( wp101Resize );
+		});
+		</script>
 		<div id="wp101-topic">
 			<?php if ( $document_id ) : ?>
 				<?php $document = $this->get_document( $document_id ); ?>
