@@ -467,20 +467,6 @@ class WP101_Plugin {
 
 		if ( trim( $pages ) ) :
 ?>
-		<script>
-		jQuery(function($){
-			var video = $( '#wp101-topic iframe' ), ratio = video.attr( 'height' ) / video.attr( 'width' );
-
-			var wp101Resize = function() {
-				video.css( 'height', ( video.width() * ratio ) + 'px' );
-				video.css( 'max-width', '100%' );
-			};
-
-			var $win = $(window);
-			$win.ready( wp101Resize );
-			$win.resize( wp101Resize );
-		});
-		</script>
 		<div id="wp101-topic">
 			<?php if ( $document_id ) : ?>
 				<?php $document = $this->get_document( $document_id ); ?>
@@ -492,9 +478,20 @@ class WP101_Plugin {
 				<?php endif; ?>
 			<?php endif; ?>
 		</div>
+		<script>
+		jQuery(function($){
+			var video = $( '#wp101-topic iframe' ), ratio = video.attr( 'height' ) / video.attr( 'width' );
 
+			var wp101Resize = function() {
+				video.css( 'height', ( video.width() * ratio ) + 'px' );
+			};
+
+			var $win = $(window);
+			$win.ready( wp101Resize );
+			$win.resize( wp101Resize );
+		});
+		</script>
 		<div id="wp101-topic-listing">
-
 			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 			<?php
 				echo $pages;
