@@ -11,7 +11,8 @@ div#wp101-topic-listing {
 	background: #f2f2f2;
 	min-height: 400px;
 	clear: left;
-	}
+	z-index: 20;
+}
 
 div#wp101-topic-listing h3 {
 	margin: 20px 0 0 0;
@@ -49,28 +50,28 @@ ul.wp101-topic-ul ul li a {
 div#wp101-topic {
 	max-width: 640px;
 	padding-left: 320px;
-	}
+}
 
 div#wp101-topic h2 {
 	margin: 6px 0 10px 0;
 	border-bottom: 1px solid #ddd;
-	}
+}
 
 .wp101-topic-ul li small a {
 	color: #777;
-	}
+}
 
 .wp101-topic-ul li small a:hover {
 	color: #111;
-	}
+}
 
 ul.wp101-topic-ul li.wp101-shown small.wp101-show, ul.wp101-topic-ul li.wp101-hidden small.wp101-hide {
 	display: none;
-	}
+}
 
 ul.wp101-topic-ul li.wp101-hidden span {
 	text-decoration: line-through;
-	}
+}
 
 #wp101-settings h2.wp101title:before {
 	font-family: "dashicons";
@@ -91,7 +92,7 @@ div#wp101-settings h3.title {
 	margin: 30px 0 0 0;
 	padding: 0;
 	color: #444;
-	}
+}
 
 .wp101-valid-key {
     display: inline-block;
@@ -102,36 +103,37 @@ div#wp101-settings h3.title {
 	border-left: 4px solid #7ad03a;
 	-webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
 	box-shadow:         0px 1px 1px 0px rgba(0,0,0,0.1);
-	}
+}
 
 div#wp101-topic-listing {
 	float: left;
 	clear: both;
-	}
+}
 
 div#wp101-topic {
 	padding-left: 0;
 	float: left;
-	}
+	z-index: 10;
+}
 
 @media screen and (min-width: 1043px) {
 	body.folded div#wp101-topic-listing {
 		position: absolute;
-		}
+	}
 
 	body.folded div#wp101-topic {
 		padding-left: 320px;
 		position: absolute;
-		}
+	}
 }
 
 @media screen and (min-width: 1155px) {
 	div#wp101-topic-listing {
 		position: absolute;
-		}
+	}
 
 	div#wp101-topic {
 		padding-left: 320px;
 		position: absolute;
-		}
+	}
 }
