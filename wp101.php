@@ -370,7 +370,7 @@ class WP101_Plugin {
 	}
 
 	public function render_listing_page() {
-		$document_id = isset( $_GET['document'] ) ? sanitize_title( $_GET['document'] ) : 1;
+		$document_id = isset( $_GET['document'] ) ? sanitize_text_field( $_GET['document'] ) : 1;
 		while ( $this->is_hidden( $document_id ) ) {
 			$document_id++;
 		}
