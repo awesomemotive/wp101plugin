@@ -69,6 +69,7 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Added plugin icons for WordPress 4.0.
 * Added filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
 * Added videos for the WordPress SEO Plugin by Yoast, provided that plugin is installed.
+* Increased the default size of the video player, plus added responsive support for all your devices!
 * Minor coding standards cleanup.
 
 = 2.1.1 =
@@ -125,6 +126,7 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * Added plugin icons for WordPress 4.0.
 * Added new filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
 * Added a new set of tutorial videos for the WordPress SEO Plugin, provided that plugin is already installed.
+* Increased the default size of the videos player, plus added responsive support for all your devices!
 * Minor coding standards cleanup.
 
 = 2.1.1 =
