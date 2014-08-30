@@ -116,6 +116,10 @@ div#wp101-topic {
 	z-index: 10;
 }
 
+#wp101-topic iframe {
+	max-width: 100%;
+}
+
 @media screen and (min-width: 1043px) {
 	body.folded div#wp101-topic-listing {
 		position: absolute;

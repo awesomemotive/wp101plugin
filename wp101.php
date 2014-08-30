@@ -467,28 +467,15 @@ class WP101_Plugin {
 
 		if ( trim( $pages ) ) :
 ?>
-		<div id="wp101-topic-listing">
-
-			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
-			<?php
-				echo $pages;
-				do_action( 'wp101_after_help_topics', self::$instance );
-			?>
-			<?php if ( trim( $custom_pages ) ) : ?>
-			<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
-			<?php
-				echo $custom_pages;
-				do_action( 'wp101_after_custom_help_topics', self::$instance );
-			?>
-			<?php endif; ?>
-		</div>
 		<script>
 		jQuery(function($){
-			var video = $('#wp101-topic iframe');
-			var ratio = video.attr('height') / video.attr('width');
+			var video = $( '#wp101-topic iframe' ), ratio = video.attr( 'height' ) / video.attr( 'width' );
+
 			var wp101Resize = function() {
-				video.css('height', (video.width() * ratio) + 'px' );
+				video.css( 'height', ( video.width() * ratio ) + 'px' );
+				video.css( 'max-width', '100%' );
 			};
+
 			var $win = $(window);
 			$win.ready( wp101Resize );
 			$win.resize( wp101Resize );
@@ -503,6 +490,22 @@ class WP101_Plugin {
 				<?php else : ?>
 				<p><?php _e( 'The requested tutorial could not be found', 'wp101' ); ?>
 				<?php endif; ?>
+			<?php endif; ?>
+		</div>
+
+		<div id="wp101-topic-listing">
+
+			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<?php
+				echo $pages;
+				do_action( 'wp101_after_help_topics', self::$instance );
+			?>
+			<?php if ( trim( $custom_pages ) ) : ?>
+			<h3><?php _e( 'Custom Video Tutorials', 'wp101' ); ?></h3>
+			<?php
+				echo $custom_pages;
+				do_action( 'wp101_after_custom_help_topics', self::$instance );
+			?>
 			<?php endif; ?>
 		</div>
 		<?php else : ?>
