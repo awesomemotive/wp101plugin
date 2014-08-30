@@ -80,7 +80,7 @@ class WP101_Plugin {
 		return $result->data->status;
 	}
 
-	private function get_key() {
+	public function get_key() {
 			global $_wp101_api_key;
 
 			$db = get_option( 'wp101_api_key' );
@@ -170,7 +170,7 @@ class WP101_Plugin {
 		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20120418b' );
 	}
 
-	private function validate_api_key() {
+	public function validate_api_key() {
 		if ( ! get_transient( 'wp101_api_key_valid' ) ) {
 			if ( !$this->get_key() ) {
 				// Hasn't set API key yet
