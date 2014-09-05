@@ -9,8 +9,7 @@ class WP101_WPSEO_Videos {
 	}
 
 	public function init() {
-		add_filter( 'wp101_get_document'     , array( self::$instance, 'get_document' ), 10, 3 );
-		add_action( 'wp101_after_help_topics', array( self::$instance, 'wpseo_help_topics_html' ) );
+		add_filter( 'wp101_get_help_topics', array( $this, 'get_wpseo_help_topics' ) );
 	}
 
 	public function get_wpseo_help_topics( $wp_101 ) {
