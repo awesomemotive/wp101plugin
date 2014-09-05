@@ -9,8 +9,9 @@ class WP101_WPSEO_Videos {
 	}
 
 	public function init() {
-		add_filter( 'wp101_get_document'     , array( self::$instance, 'get_document' ), 10, 3 );
-		add_action( 'wp101_after_help_topics', array( self::$instance, 'wpseo_help_topics_html' ) );
+		add_filter( 'wp101_get_document'          , array( self::$instance, 'get_document' ), 10, 3 );
+		add_action( 'wp101_after_help_topics'     , array( self::$instance, 'wpseo_help_topics_html' ) );
+		add_action( 'wp101_after_edit_help_topics', array( self::$instance, 'wpseo_edit_help_topics_html' ) );
 	}
 
 	public function get_wpseo_help_topics( $wp_101 ) {
@@ -43,7 +44,11 @@ class WP101_WPSEO_Videos {
 		echo self::$instance->get_wpseo_help_topics_html( $wp_101 );
 	}
 
-	public function get_wpseo_help_topics_html( $wp_101 ) {
+	public function wpseo_edit_help_topics_html( $wp_101 ) {
+		echo self::$instance->get_wpseo_help_topics_html( $wp_101, true );
+	}
+
+	public function get_wpseo_help_topics_html( $wp_101, $edit_mode = false ) {
 
 		$topics = $this->get_wpseo_help_topics( $wp_101 );
 
@@ -56,7 +61,20 @@ class WP101_WPSEO_Videos {
 		$output .= '<ul class="wp101-topic-ul">';
 
 		foreach ( $topics as $topic ) {
-			$output .= '<li page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+			if ( $edit_mode ) {
+				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
+				if ( $wp_101->is_hidden( $topic['id'] ) ) {
+					$addl_class = 'wp101-hidden';
+				} else {
+					$addl_class = 'wp101-shown';
+				}
+			} else {
+				if ( $wp_101->is_hidden( $topic['id'] ) ) {
+					continue;
+				}
+				$edit_links = $addl_class = '';
+			}
+			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
 		$output .= '</ul>';

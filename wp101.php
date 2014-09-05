@@ -294,18 +294,18 @@ class WP101_Plugin {
 		return (array) apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ), self::$instance );
 	}
 
-	private function is_hidden( $topic_id ) {
+	public function is_hidden( $topic_id ) {
 		$hidden_topics = $this->get_hidden_topics();
 		return in_array( $topic_id, $hidden_topics );
 	}
 
-	private function hide_topic( $topic_id ) {
+	public function hide_topic( $topic_id ) {
 		$hidden_topics = $this->get_hidden_topics();
 		$hidden_topics[] = $topic_id;
 		return update_option( 'wp101_hidden_topics', $hidden_topics );
 	}
 
-	private function show_topic( $topic_id ) {
+	public function show_topic( $topic_id ) {
 		$hidden_topics = $this->get_hidden_topics();
 		if ( $this->is_hidden( $topic_id ) ) {
 			unset( $hidden_topics[array_search( $topic_id, $hidden_topics )] );
@@ -416,7 +416,11 @@ class WP101_Plugin {
 		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
 		<h3 class="title"><?php _e( 'WordPress Tutorial Videos', 'wp101' ); ?></h3>
 		<p><?php _e( 'If there are specific videos or topics that don&#8217;t apply to this site, you can hide them.', 'wp101' ); ?></p>
-		<?php echo $this->get_help_topics_html( true ); ?>
+		<?php
+			echo $this->get_help_topics_html( true );
+			do_action( 'wp101_after_edit_help_topics', self::$instance );
+		?>
+
 		<?php endif; ?>
 	<?php endif; ?>
 
@@ -430,7 +434,10 @@ class WP101_Plugin {
 		<?php if ( !isset( $_GET['document'] ) ) : ?>
 			<p><?php _e( 'If you have your own videos, you can add them here. They will display in a separate section, below the WordPress tutorial videos.', 'wp101' ); ?></p>
 			<?php if ( $this->get_custom_help_topics() ) : ?>
-				<?php echo $this->get_custom_help_topics_html( true ); ?>
+				<?php
+					echo $this->get_custom_help_topics_html( true );
+					do_action( 'wp101_after_edit_custom_help_topics', self::$instance );
+				?>
 			<?php endif; ?>
 		<?php endif; ?>
 		<form action="" method="post">
