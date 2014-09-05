@@ -5,14 +5,14 @@ class WP101_WPSEO_Videos {
 
 	public function __construct() {
 		self::$instance = $this;
+		add_filter( 'wp101_get_help_topics', array( $this, 'get_wpseo_help_topics' ), 10, 2 );
 		add_action( 'init', array( $this, 'init' ) );
 	}
 
 	public function init() {
-		add_filter( 'wp101_get_help_topics', array( $this, 'get_wpseo_help_topics' ) );
 	}
 
-	public function get_wpseo_help_topics( $wp_101 ) {
+	public function get_wpseo_help_topics( $core_topics, $wp_101 ) {
 
 		$help_topics = false;
 
@@ -24,13 +24,13 @@ class WP101_WPSEO_Videos {
 				$result = wp_remote_get( $wp_101::$api_base . 'action=get_wpseo_topics&api_key=' . $wp_101->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( ! $result['error'] && count( $result['data'] ) ) {
-					set_transient( 'wp101_wpseo_topics', $result['data'], 30 ); // Good for a day.
+					set_transient( 'wp101_wpseo_topics', $result['data'], DAY_IN_SECONDS ); // Good for a day.
 					$help_topics = $result['data'];
 				}
 			}
 		}
 
-		return apply_filters( 'wp101_get_wpseo_help_topics', $help_topics, self::$instance );
+		return apply_filters( 'wp101_get_wpseo_help_topics', array_merge( $core_topics, $help_topics ), self::$instance );
 	}
 
 	public function wpseo_help_topics_html( $wp_101 ) {
