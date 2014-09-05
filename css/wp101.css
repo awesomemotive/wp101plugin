@@ -1,55 +1,54 @@
 div#wp101-topic-listing {
-	float: left;
-	width: 97%;
-	margin: 10px 10px 10px 0;
-	padding: 10px;
-	border: 1px solid #cfcfcf;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	background: #fefefe;
-	min-height: 400px;
-	clear: left;
-	z-index: 20;
+    float: left;
+    width: 97%;
+    margin: 10px 10px 10px 0;
+    padding: 10px;
+    border: 1px solid #cfcfcf;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: #fefefe;
+    min-height: 400px;
+    z-index: 20;
 }
 
 div#wp101-topic-listing h3 {
-	margin: 20px 0 0 0;
-	padding: 0;
-	color: #444;
-	}
+    margin: 20px 0 0 0;
+    padding: 0;
+    color: #444;
+}
 
 div#wp101-topic-listing h3:first-of-type {
-	margin: 0;
-	}
+    margin: 0;
+}
 
 div#wp101-topic-listing h3 span a {
-	float: right;
-	font-weight: normal;
-	}
+    float: right;
+    font-weight: normal;
+}
 
 div#wp101-topic-listing h3 span a:hover {
-	background: #fafafa;
-	border: 1px solid #c5c5c5;
-	}
+    background: #fafafa;
+    border: 1px solid #c5c5c5;
+}
 
 ul.wp101-topic-ul {
-	margin: 20px 10px 10px 10px;
-	}
+    margin: 20px 10px 10px 10px;
+}
 
 ul.wp101-topic-ul li {
-	list-style-type: none;
-	font-size: 110%;
-	}
+    list-style-type: none;
+    font-size: 110%;
+}
 
 ul.wp101-topic-ul ul li a {
-	text-decoration: none;
-	}
+    text-decoration: none;
+}
 
 div#wp101-topic {
-	max-width: 1280px;
-	padding-left: 320px;
+    max-width: 1280px;
+    padding-left: 320px;
 }
 
 div#wp101-topic iframe {
@@ -58,31 +57,31 @@ div#wp101-topic iframe {
 }
 
 div#wp101-topic h2 {
-	margin: 6px 0 10px 0;
-	border-bottom: 1px solid #ddd;
+    margin: 6px 0 10px 0;
+    border-bottom: 1px solid #ddd;
 }
 
 .wp101-topic-ul li small a {
-	color: #777;
+    color: #777;
 }
 
 .wp101-topic-ul li small a:hover {
-	color: #111;
+    color: #111;
 }
 
 ul.wp101-topic-ul li.wp101-shown small.wp101-show, ul.wp101-topic-ul li.wp101-hidden small.wp101-hide {
-	display: none;
+    display: none;
 }
 
 ul.wp101-topic-ul li.wp101-hidden span {
-	text-decoration: line-through;
+    text-decoration: line-through;
 }
 
 #wp101-settings h2.wp101title:before {
-	font-family: "dashicons";
-	content: "\f236";
-	font-size: 2rem;
-	line-height: 1;
+    font-family: "dashicons";
+    content: "\f236";
+    font-size: 2rem;
+    line-height: 1;
     float: left;
     margin-right: 7px;
     opacity: 0.7;
@@ -94,9 +93,9 @@ ul.wp101-topic-ul li.wp101-hidden span {
 }
 
 div#wp101-settings h3.title {
-	margin: 30px 0 0 0;
-	padding: 0;
-	color: #444;
+    margin: 30px 0 0 0;
+    padding: 0;
+    color: #444;
 }
 
 .wp101-valid-key {
@@ -104,41 +103,44 @@ div#wp101-settings h3.title {
     padding: 11px 15px;
     font-size: 13px;
     text-align: left;
-	background-color: #fff;
-	border-left: 4px solid #7ad03a;
-	-webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
-	box-shadow:         0px 1px 1px 0px rgba(0,0,0,0.1);
+    background-color: #fff;
+    border-left: 4px solid #7ad03a;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1);
+    box-shadow:         0px 1px 1px 0px rgba(0,0,0,0.1);
 }
 
 div#wp101-topic-listing {
-	float: left;
-	clear: both;
+    float: left;
+    clear: both;
 }
 
 div#wp101-topic {
-	padding-left: 0;
-	float: left;
-	z-index: 10;
+    padding-left: 0;
+    float: left;
+    z-index: 10;
 }
 
 @media screen and (min-width: 1043px) {
-	body.folded div#wp101-topic-listing {
-	    position: absolute;
-	    width: 270px;
-	}
-
-	body.folded div#wp101-topic {
-		padding-left: 320px;
-	}
+    body.folded div#wp101-topic-listing {
+        width: 270px;
+    }
+    
+    body.folded div#wp101-topic {
+        position: absolute;
+        padding-left: 320px;
+        padding-right: 30px;
+    }
 }
 
 @media screen and (min-width: 1155px) {
-	div#wp101-topic-listing {
-	    position: absolute;
-	    width: 270px;
-	}
-
-	div#wp101-topic {
-		padding-left: 320px;
-	}
+    div#wp101-topic-listing {
+        position: relative;
+        width: 270px;
+    }
+    
+    div#wp101-topic {
+        position: absolute;
+        padding-left: 320px;
+        padding-right: 30px;
+    }
 }
