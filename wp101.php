@@ -48,6 +48,10 @@ class WP101_Plugin {
 
 		delete_transient( 'wp101_topics' );
 	}
+	
+	public function get_api_base() {
+		return self::$api_base;
+	}
 
 	public function includes() {
 		do_action( 'wp101_pre_includes', self::$instance );
