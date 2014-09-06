@@ -23,7 +23,8 @@ class WP101_WPSEO_Videos {
 			if ( $topics = get_transient( 'wp101_wpseo_topics' ) ) {
 				$help_topics = $topics;
 			} else {
-				$result = wp_remote_get( $wp_101::$api_base . 'action=get_wpseo_topics&api_key=' . $wp_101->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
+				$api_base = $wp_101->get_api_base();
+				$result = wp_remote_get( $api_base . 'action=get_wpseo_topics&api_key=' . $wp_101->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( ! $result['error'] && count( $result['data'] ) ) {
 					set_transient( 'wp101_wpseo_topics', $result['data'], 30 ); // Good for a day.
