@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: WordPress tutorial videos, delivered directly in the dashboard.
-Version: 3.0
+Version: 3.0.1
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
