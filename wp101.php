@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: WordPress tutorial videos, delivered directly in the dashboard.
-Version: 3.0.1
+Version: 3.0.2
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
@@ -171,7 +171,7 @@ class WP101_Plugin {
 
 	private function enqueue() {
 		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20140905b' );
-		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20140905b' );
+		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20140922b' );
 	}
 
 	public function validate_api_key() {

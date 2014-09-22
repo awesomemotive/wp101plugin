@@ -1,7 +1,10 @@
-div#wp101-topic-listing {
-    float: left;
+.wrap {
     width: 97%;
-    margin: 10px 10px 10px 0;
+}
+
+div#wp101-topic-listing {
+    width: 97%;
+    margin: 10px 20px 10px 0;
     padding: 10px;
     border: 1px solid #cfcfcf;
     -moz-border-radius: 4px;
@@ -11,6 +14,16 @@ div#wp101-topic-listing {
     background: #fefefe;
     min-height: 400px;
     z-index: 20;
+}
+
+div#wp101-topic {
+    float: left;
+    width: 99%;
+}
+
+div#wp101-topic iframe {
+    position: relative;
+    width: 100%;
 }
 
 div#wp101-topic-listing h3 {
@@ -44,16 +57,6 @@ ul.wp101-topic-ul li {
 
 ul.wp101-topic-ul ul li a {
     text-decoration: none;
-}
-
-div#wp101-topic {
-    max-width: 1280px;
-    padding-left: 320px;
-}
-
-div#wp101-topic iframe {
-    position: relative;
-    max-width: 100%;
 }
 
 div#wp101-topic h2 {
@@ -122,25 +125,27 @@ div#wp101-topic {
 
 @media screen and (min-width: 1043px) {
     body.folded div#wp101-topic-listing {
-        width: 270px;
+        float: left;
+        clear: none;
+        width: 22%;
     }
     
     body.folded div#wp101-topic {
-        position: absolute;
-        padding-left: 320px;
-        padding-right: 30px;
+        float: right;
+        width: 74%;
     }
 }
 
 @media screen and (min-width: 1155px) {
     div#wp101-topic-listing {
-        position: relative;
-        width: 270px;
+        float: left;
+        clear: none;
+        width: 24%;
+        margin-right: 0px;
     }
     
     div#wp101-topic {
-        position: absolute;
-        padding-left: 320px;
-        padding-right: 30px;
+        float: right;
+        width: 72%;
     }
 }
