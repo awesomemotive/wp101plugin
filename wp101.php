@@ -294,7 +294,7 @@ class WP101_Plugin {
 		die( '1' );
 	}
 
-	private function get_hidden_topics() {
+	public function get_hidden_topics() {
 		return (array) apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ), self::$instance );
 	}
 
