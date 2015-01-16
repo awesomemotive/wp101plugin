@@ -72,7 +72,10 @@ div#wp101-topic h2 {
     color: #111;
 }
 
-ul.wp101-topic-ul li.wp101-shown small.wp101-show, ul.wp101-topic-ul li.wp101-hidden small.wp101-hide {
+ul.wp101-topic-ul li.wp101-shown small.wp101-show,
+small.wp101-show-all,
+ul.wp101-topic-ul li.wp101-hidden small.wp101-hide,
+small.wp101-hide-all {
     display: none;
 }
 
@@ -129,7 +132,7 @@ div#wp101-topic {
         clear: none;
         width: 22%;
     }
-    
+
     body.folded div#wp101-topic {
         float: right;
         width: 74%;
@@ -143,7 +146,7 @@ div#wp101-topic {
         width: 24%;
         margin-right: 0px;
     }
-    
+
     div#wp101-topic {
         float: right;
         width: 72%;
