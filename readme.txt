@@ -56,8 +56,8 @@ Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, 
 
 The `wp101_get_help_topics` filter is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
 
-```php
-array(
+    php
+    array(
 	1 => array( 
 		'id'      => 1, 
 		'title'   => 'The Dashboard', 
@@ -73,18 +73,17 @@ array(
 		'title'   => 'The Editor', 
 		'content' => '<iframe src="//player.vimeo.com/video/81743148" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>' 
 	)
-);		
-```
+    );		
+
 Suppose you have a site where you aren't using any posts or pages.  Not inconceivable, as you might be entirely dependent upon custom post types for a specific build.  It would make great sense in this situation to remove the _Posts vs. Pages_ video, as it would be irrelevant.  Here's how you might do that:
 
-```php
-add_filter( 'wp101_get_help_topics', function( $videos ) {
-	
+    php
+    add_filter( 'wp101_get_help_topics', function( $videos ) {
+    	
 	unset( $videos[2] );
 	return $videos;
-
-} );
-```
+    
+    } );
 
 And voila!  No more _Posts vs. Pages_ video in the core help topics.  Cool, right?
 
@@ -92,37 +91,35 @@ And voila!  No more _Posts vs. Pages_ video in the core help topics.  Cool, righ
 
 Maybe you have a really great plugin that you've made some instructional videos for, or someone else has made some tutorials that you'd like to include in the WP101 interface.  That's awesome! The `wp101_get_custom_help_topics` filter is applied to the output of the `get_custom_help_topics()` method, which outputs custom videos directly after the core videos, if any exist. Here's an example of how you might add a custom help topic.
 
-```php
-add_filter( 'wp101_get_custom_help_topics', function( $custom_videos ) {
-
+    php
+    add_filter( 'wp101_get_custom_help_topics', function( $custom_videos ) {
+    
 	$custom_videos['myplugin.1'] => array(
 		'id'      => 'myplugin.1',
 		'title'   => 'General Helpful Stuff',
 		'content' => '<iframe src="//player.vimeo.com/video/12345678" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
 	);
-
+    
 	return $custom_videos;
-} );
-```
+    } );
+
 And just like that, you have your own custom video inside WP101.
 
 = wp101_get_hidden_topics =
 
 Say you want to hide a video - not necessarily remove it completely from WP101, but have it hidden by default, rather than shown.  There's a filter for that:
 
-```php
-
-add_filter( 'wp101_get_hidden_topics', function( $hidden_videos ) {
+    php
+    add_filter( 'wp101_get_hidden_topics', function( $hidden_videos ) {
 	// As in the first example, we might want to hide the Posts vs. Pages video.  Instead of the whole array, we add the topic ID.
 	$topic_id = 2;
-	
+    	
 	if ( ! in_array( $topic_id, $hidden_videos ) ) {
 		$hidden_videos[] = $topic_id;
 	}
-	
+    	
 	return $hidden_videos;
-} );
-```
+    } );
 
 And there we go, we've added a video to the hidden topics. Pretty sweet, right?
 
