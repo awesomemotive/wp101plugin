@@ -48,7 +48,7 @@ class WP101_Plugin {
 
 		delete_transient( 'wp101_topics' );
 	}
-	
+
 	public function get_api_base() {
 		return self::$api_base;
 	}
