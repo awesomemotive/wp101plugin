@@ -90,6 +90,20 @@ class WP101_WPSEO_Videos {
 		return $output;
 	}
 
+	public function wpseo_help_topics_title( $edit_mode ) {
+
+		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' );
+
+		if ( $edit_mode ) {
+			$nonce   = wp_create_nonce( 'wp101-showhide-allwpseo' );
+			$output .= '&nbsp;&nbsp;<small class="wp101-show-all">[<a data-nonce="' . $nonce . '" href="#">show all</a>]</small><small class="wp101-hide-all">[<a data-nonce="' . $nonce. '" href="#">hide all</a>]</small>';
+		}
+
+		$output .= '</h3>';
+
+		return $output;
+	}
+
 	public function get_document( $document, $id, $wp_101 ) {
 
 		if ( ! $document ) {
