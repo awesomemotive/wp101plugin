@@ -3,13 +3,13 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.1
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-The WP101 Plugin is simply the easiest way to teach out clients how to use WordPress. It delivers a complete set of professionally-produced “WordPress 101” and WordPress SEO Plugin tutorial videos directly within your clients' dashboard.
+The WP101 Plugin is simply the easiest way to teach your clients how to use WordPress, cutting your support costs while providing an invaluable resource to your clients. It delivers a complete set of professionally-produced “WordPress 101” and WordPress SEO Plugin tutorial videos directly within your clients' dashboard.
 
 Simply enter your [WP101Plugin.com](http://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
 
@@ -19,10 +19,9 @@ NEW! Now includes a complete set of tutorial videos for the WordPress SEO Plugin
 
 == Installation ==
 
-1. Go to [WP101Plugin.com](http://wp101plugin.com/) and subscribe.
+1. Go to [WP101Plugin.com](http://wp101plugin.com/) to get your API key.
 2. Copy your API key from your [WP101Plugin.com](http://wp101plugin.com/) account page.
-3. Upload the `wp101` directory to the `wp-content/plugins/` directory.
-4. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Install and activate the WP101 Plugin in the 'Plugins' panel.
 5. Go to WP101 &rarr; Settings, and enter your API key.
 6. Selectively hide/show individual videos from the list.
 7. Add your own custom videos to the list using simple embed fields.
@@ -51,11 +50,84 @@ Yes! Simply enter your API key into the wp101.php file and then install your cus
 
 = Can I filter the list of videos, or add my own programmatically? =
 
-Absolutely! We've added the following filters for developers to add (or even remove) videos from the plugin.
+Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, removing, or modifying existing videos from a number of functions.  We'll walk through some of them, showing what you can do with them.
 
- * wp101_get_help_topics
- * wp101_get_custom_help_topics
- * wp101_get_hidden_topics
+= `wp101_get_help_topics` =
+
+`wp101_get_help_topics` is a helpful filter that is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
+
+```php
+array(
+	1 => array( 
+		'id'      => 1, 
+		'title'   => 'The Dashboard', 
+		'content' => '<iframe src="//player.vimeo.com/video/104639801" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>' 
+	),
+	2 => array( 
+		'id'      => 2, 
+		'title'   => 'Posts vs. Pages', 
+		'content' => '<iframe src="//player.vimeo.com/video/81744178" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>' 
+	),
+	3 => array( 
+		'id'      => 3, 
+		'title'   => 'The Editor', 
+		'content' => '<iframe src="//player.vimeo.com/video/81743148" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>' 
+	)
+);		
+```
+Suppose you have a site where you aren't using any posts or pages.  Not inconceivable, as you might be entirely dependent upon custom post types for a specific build.  It would make great sense in this situation to remove the _Posts vs. Pages_ video, as it would be irrelevant.  Here's how you might do that:
+
+```php
+add_filter( 'wp101_get_help_topics', function( $videos ) {
+	
+	unset( $videos[2] );
+	return $videos;
+
+} );
+```
+
+And voila!  No more _Posts vs. Pages_ video in the core help topics.  Cool, right?
+
+= `wp101_get_custom_help_topics` =
+
+Maybe you have a really great plugin that you've made some instructional videos for, or someone else has made some tutorials that you'd like to include in the WP101 interface.  That's awesome! The `wp101_get_custom_help_topics` filter is applied to the output of the `get_custom_help_topics()` method, which outputs custom videos directly after the core videos, if any exist. Here's an example of how you might add a custom help topic.
+
+```php
+add_filter( 'wp101_get_custom_help_topics', function( $custom_videos ) {
+
+	$custom_videos['myplugin.1'] => array(
+		'id'      => 'myplugin.1',
+		'title'   => 'General Helpful Stuff',
+		'content' => '<iframe src="//player.vimeo.com/video/12345678" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
+	);
+
+	return $custom_videos;
+} );
+```
+And just like that, you have your own custom video inside WP101.
+
+= `wp101_get_hidden_topics` =
+
+Say you want to hide a video - not necessarily remove it completely from WP101, but have it hidden by default, rather than shown.  There's a filter for that:
+
+```php
+
+add_filter( 'wp101_get_hidden_topics', function( $hidden_videos ) {
+	// As in the first example, we might want to hide the Posts vs. Pages video.  Instead of the whole array, we add the topic ID.
+	$topic_id = 2;
+	
+	if ( ! in_array( $topic_id, $hidden_videos ) ) {
+		$hidden_videos[] = $topic_id;
+	}
+	
+	return $hidden_videos;
+} );
+```
+
+And there we go, we've added a video to the hidden topics. Pretty sweet, right?
+
+_Note: All code examples are using anonymous functions, which work in PHP 5.3+.  If you're using anything less than PHP 5.3, you have our condolences.  Change the examples to use declared functions instead, unless you have a penchant for white._
+
 
 == Screenshots ==
 
@@ -63,6 +135,9 @@ Absolutely! We've added the following filters for developers to add (or even rem
 2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+
+= 3.0.3 =
+* Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own. Thanks, Justin Sainton!
 
 = 3.0.2 =
 * CSS bug fix for Firefox.
@@ -124,6 +199,9 @@ Absolutely! We've added the following filters for developers to add (or even rem
 * First version!
 
 == Upgrade Notice ==
+
+= 3.0.3 =
+* Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own!
 
 = 3.0 =
 * We’ve added videos for the WordPress SEO Plugin by Yoast, provided that plugin is installed.
