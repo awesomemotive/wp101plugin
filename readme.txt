@@ -50,11 +50,11 @@ Yes! Simply enter your API key into the wp101.php file and then install your cus
 
 = Can I filter the list of videos, or add my own programmatically? =
 
-Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, removing, or modifying existing videos from a number of functions.  We'll walk through some of them, showing what you can do with them.
+Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, removing, or modifying existing videos from a number of functions.  We'll walk through some of them, showing what you can do with them…
 
-= `wp101_get_help_topics` =
+= wp101_get_help_topics =
 
-`wp101_get_help_topics` is a helpful filter that is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
+The `wp101_get_help_topics` filter is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
 
 ```php
 array(
@@ -88,7 +88,7 @@ add_filter( 'wp101_get_help_topics', function( $videos ) {
 
 And voila!  No more _Posts vs. Pages_ video in the core help topics.  Cool, right?
 
-= `wp101_get_custom_help_topics` =
+= wp101_get_custom_help_topics =
 
 Maybe you have a really great plugin that you've made some instructional videos for, or someone else has made some tutorials that you'd like to include in the WP101 interface.  That's awesome! The `wp101_get_custom_help_topics` filter is applied to the output of the `get_custom_help_topics()` method, which outputs custom videos directly after the core videos, if any exist. Here's an example of how you might add a custom help topic.
 
@@ -106,7 +106,7 @@ add_filter( 'wp101_get_custom_help_topics', function( $custom_videos ) {
 ```
 And just like that, you have your own custom video inside WP101.
 
-= `wp101_get_hidden_topics` =
+= wp101_get_hidden_topics =
 
 Say you want to hide a video - not necessarily remove it completely from WP101, but have it hidden by default, rather than shown.  There's a filter for that:
 
