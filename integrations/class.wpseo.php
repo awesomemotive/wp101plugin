@@ -57,7 +57,14 @@ class WP101_WPSEO_Videos {
 			return false;
 		}
 
-		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' ) . '</h3>';
+		$hidden_topics = $wp_101->get_hidden_topics();
+		$topics_diff   = array_diff( array_keys( $topics ), $hidden_topics );
+
+		if ( empty( $topics_diff ) && ! $edit_mode ) {
+			return false;
+		}
+
+		$output = $this->wpseo_help_topics_title( $edit_mode );
 
 		$output .= '<ul class="wp101-topic-ul">';
 
