@@ -270,9 +270,18 @@ class WP101_Plugin {
 
 	public function ajax_handler() {
 
+		if ( isset( $_REQUEST['topic'] ) ) {
+			do_action( 'wp101_ajax_handler_' . $_REQUEST['topic'], self::$instance, $_REQUEST['direction'] );
+		}
+
+		if ( ! isset( $_REQUEST['topic_id'] ) ) {
+			die( '0' );
+		}
+
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) ) {
 			die( '-1' );
 		}
+
 		if ( 'hide' == $_REQUEST['direction'] ) {
 			$this->hide_topic( $_REQUEST['topic_id'] );
 			die( '1' );
