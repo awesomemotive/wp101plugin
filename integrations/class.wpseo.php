@@ -12,6 +12,7 @@ class WP101_WPSEO_Videos {
 		add_filter( 'wp101_get_document'          , array( self::$instance, 'get_document' ), 10, 3 );
 		add_action( 'wp101_after_help_topics'     , array( self::$instance, 'wpseo_help_topics_html' ) );
 		add_action( 'wp101_after_edit_help_topics', array( self::$instance, 'wpseo_edit_help_topics_html' ) );
+		add_action( 'wp101_ajax_handler_wpseo'    , array( self::$instance, 'change_topic_visiblity' ), 10, 2 );
 	}
 
 	public function get_wpseo_help_topics( $wp_101 ) {
@@ -57,7 +58,14 @@ class WP101_WPSEO_Videos {
 			return false;
 		}
 
-		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' ) . '</h3>';
+		$hidden_topics = $wp_101->get_hidden_topics();
+		$topics_diff   = array_diff( array_keys( $topics ), $hidden_topics );
+
+		if ( empty( $topics_diff ) && ! $edit_mode ) {
+			return false;
+		}
+
+		$output = $this->wpseo_help_topics_title( $edit_mode );
 
 		$output .= '<ul class="wp101-topic-ul">';
 
@@ -81,6 +89,37 @@ class WP101_WPSEO_Videos {
 		$output .= '</ul>';
 
 		return $output;
+	}
+
+	public function wpseo_help_topics_title( $edit_mode ) {
+
+		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' );
+
+		if ( $edit_mode ) {
+			$nonce   = wp_create_nonce( 'wp101-showhide-allwpseo' );
+			$output .= '&nbsp;&nbsp;<small class="wp101-show-all">[<a data-nonce="' . $nonce . '" data-topic="wpseo" href="#">show all</a>]</small><small class="wp101-hide-all">[<a data-nonce="' . $nonce. '" data-topic="wpseo" href="#">hide all</a>]</small>';
+		}
+
+		$output .= '</h3>';
+
+		return $output;
+	}
+
+	public function change_topic_visiblity( $wp_101, $direction ) {
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-allwpseo' ) ) {
+			die( '-1' );
+		}
+
+		foreach ( $this->get_wpseo_help_topics( $wp_101 ) as $topic_id => $value ) {
+
+			if ( 'hide-all' === $direction ) {
+				$wp_101->hide_topic( $topic_id );
+			} else {
+				$wp_101->show_topic( $topic_id );
+			}
+		}
+		die( '1' );
 	}
 
 	public function get_document( $document, $id, $wp_101 ) {
