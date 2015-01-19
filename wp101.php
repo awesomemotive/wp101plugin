@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP101
-Description: WordPress tutorial videos, delivered directly in the dashboard.
+Description: A complete set of WordPress video tutorials, delivered directly in your dashboard.
 Version: 3.0.4
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
