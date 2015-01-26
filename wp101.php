@@ -19,15 +19,15 @@ class WP101_Plugin {
 	public static $renew_url     = 'http://wp101plugin.com/';
 
 	public static function get_instance() {
-		
+
 		if ( ! self::$instance ) {
 			self::$instance = new self();
 		}
-		
+
 		return self::$instance;
-		
+
 	}
-	
+
 	public function __construct() {
 
 		self::$instance = $this;
@@ -393,8 +393,13 @@ class WP101_Plugin {
 	}
 
 	/**
-	 * [is_user_authorized description]
-	 * @return boolean [description]
+	 * Checks if current user is authorized to change WP101 settings.
+	 *
+	 * Prior to 3.0.5, anyone with `manage_options` caps could edit settings.
+	 * Now, settings management can be limited to a single user.
+	 *
+	 * @since  3.0.5
+	 * @return bool Whether or not user can access settings management area.
 	 */
 	private function is_user_authorized() {
 
@@ -408,11 +413,38 @@ class WP101_Plugin {
 		return apply_filters( 'wp101_is_user_authorized', $is_user_authorized, self::$instance );
 	}
 
+	/**
+	 * Gets admin count.
+	 *
+	 * Useful for our settings management restriction routine.
+	 * If a site has an unseemly amount of administrators, it's not going to be helpful
+	 * to have them all in a dropdown to select from.
+	 *
+	 * @since  3.0.5
+	 * @return int Number of administrators on site.
+	 */
+	public function get_admin_count() {
+
+		if ( false === ( $admins = get_transient( 'wp101_get_admin_count' ) ) ) {
+
+			$users        = count_users();
+			$default_role = apply_filters( 'wp101_default_settings_role', 'administrator' );
+			$admins       = isset( $users['avail_roles'][ $default_role ] ) ? $users['avail_roles'][ $default_role ] : 0;
+
+			// When min. version bumps to 3.5, we can use DAY_IN_SECONDS.
+			set_transient( 'wp101_get_admin_count', $admins, 60 * 60 * 24 );
+		}
+
+		return absint( $admins );
+	}
+
 	public function render_listing_page() {
 		$document_id = isset( $_GET['document'] ) ? sanitize_text_field( $_GET['document'] ) : 1;
+
 		while ( $this->is_hidden( $document_id ) ) {
 			$document_id++;
 		}
+
 		if ( $document_id ) : ?>
 			<style>
 			div#wp101-topic-listing .page-item-<?php echo $document_id; ?> > span a {
@@ -464,7 +496,7 @@ class WP101_Plugin {
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
+	<?php if ( $this->is_user_authorized() && current_user_can( 'unfiltered_html' ) ) : ?>
 		<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
 		<?php if ( $editable_video ) : ?>
 			<h3 class="title"><?php _e( 'Edit Custom Video', 'wp101' ); ?></h3>
@@ -506,8 +538,43 @@ class WP101_Plugin {
 			submit_button( __( 'Add Video', 'wp101' ) );
 		?>
 		</form>
-	<?php endif;
+	<?php
+		endif;
 
+		$admin_count = $this->get_admin_count();
+
+		if ( apply_filters( 'wp101_too_many_admins', ( $admin_count < 100 ), $admin_count ) ) :
+
+			$args   = apply_filters( 'wp101_settings_management_user_args', array(
+				'role' => 'administrator'
+			) );
+
+			$admins = get_users( $args );
+	?>
+		<h3 class="title"><?php _e( 'Settings Management', 'wp101' ); ?></h3>
+		<p class="description"><?php _e( 'By default, all administrators can change the settings above. Optionally, ', 'wp101' ); ?></p>
+		<form action="" method="post">
+		<input type="hidden" name="wp101-action" value="admin-restriction" />
+		<?php wp_nonce_field( 'wp101-admin_restriction' ); ?>
+		<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label for="wp101-admin-restriction"><?php _e( 'Settings Access:', 'wp101' ); ?></label></th>
+			<td>
+				<select class="regular-text" type="text" id="wp101-admin-restriction" name="wp101_admin_restriction">
+
+				</select>
+			</td>
+		</tr>
+		</table>
+		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
+			<?php submit_button( __( 'Change API Key', 'wp101' ) ); ?>
+		<?php else : ?>
+			<?php submit_button( __( 'Set API Key', 'wp101' ) ); ?>
+		<?php endif; ?>
+		</form>
+
+	<?php
+		endif;
 	else :
 		$pages        = $this->get_help_topics_html();
 		$custom_pages = $this->get_custom_help_topics_html();
