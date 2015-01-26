@@ -580,25 +580,26 @@ class WP101_Plugin {
 			$admins = get_users( $args );
 	?>
 		<h3 class="title"><?php _e( 'Settings Management', 'wp101' ); ?></h3>
-		<p class="description"><?php _e( 'By default, all administrators can change the settings above. Optionally, ', 'wp101' ); ?></p>
+		<p class="description"><?php _e( 'By default, all administrators can change the settings above. Optionally, choose a specific admin who alone will have access to this settings panel.', 'wp101' ); ?></p>
 		<form action="" method="post">
-		<input type="hidden" name="wp101-action" value="admin-restriction" />
+		<input type="hidden" name="wp101-action" value="restrict-admin" />
 		<?php wp_nonce_field( 'wp101-admin_restriction' ); ?>
 		<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label for="wp101-admin-restriction"><?php _e( 'Settings Access:', 'wp101' ); ?></label></th>
 			<td>
 				<select class="regular-text" type="text" id="wp101-admin-restriction" name="wp101_admin_restriction">
-
+					<option value=''><?php _e( 'All Administators', 'wp101' ); ?></option>
+					<?php
+						foreach ( $admins as $admin ) {
+							echo '<option value="' . $admin->ID . '" ' . selected( $admin->ID, get_option( 'wp101_admin_restriction' ), false ) . '>' . esc_html( $admin->display_name ) . '</option>';
+						}
+					?>
 				</select>
 			</td>
 		</tr>
 		</table>
-		<?php if ( 'valid' === $this->validate_api_key() ) : ?>
-			<?php submit_button( __( 'Change API Key', 'wp101' ) ); ?>
-		<?php else : ?>
-			<?php submit_button( __( 'Set API Key', 'wp101' ) ); ?>
-		<?php endif; ?>
+		<?php submit_button(); ?>
 		</form>
 
 	<?php
