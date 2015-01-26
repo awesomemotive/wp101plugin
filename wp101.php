@@ -12,12 +12,22 @@ Author URI: http://wp101plugin.com/
 $_wp101_api_key = '';
 
 class WP101_Plugin {
-	public static $db_version = 2;
-	public static $instance;
+	public static $db_version    = 2;
+	private static $instance     = false;
 	public static $api_base      = 'http://wp101plugin.com/?wp101-api-server&';
 	public static $subscribe_url = 'http://wp101plugin.com/';
 	public static $renew_url     = 'http://wp101plugin.com/';
 
+	public static function get_instance() {
+		
+		if ( ! self::$instance ) {
+			self::$instance = new self();
+		}
+		
+		return self::$instance;
+		
+	}
+	
 	public function __construct() {
 
 		self::$instance = $this;
@@ -540,4 +550,4 @@ class WP101_Plugin {
 	}
 }
 
-$wp101_plugin = new WP101_Plugin;
+new WP101_Plugin;
