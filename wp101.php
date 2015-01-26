@@ -46,7 +46,9 @@ class WP101_Plugin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_head', array( $this, 'wp101_admin_icon') );
 		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
-		add_action( 'wp_ajax_wp101-delete-topic', array( $this, 'ajax_delete_topic' ) );
+		add_action( 'wp_ajax_wp101-delete-topic'  , array( $this, 'ajax_delete_topic' ) );
+
+		$this->register_settings_hooks();
 
 		// Upgrades
 		$db_version = get_option( 'wp101_db_version' );
@@ -67,6 +69,56 @@ class WP101_Plugin {
 		do_action( 'wp101_pre_includes', self::$instance );
 
 		include_once 'integrations/class.wpseo.php';
+	}
+	public function register_settings_hooks() {
+		add_action( 'wp101_admin_action_api-key'       , array( $this, 'update_api_key' ) );
+		add_action( 'wp101_admin_action_add-video'     , array( $this, 'add_video' ) );
+		add_action( 'wp101_admin_action_update-video'  , array( $this, 'update_video' ) );
+		add_action( 'wp101_admin_action_restrict-admin', array( $this, 'admin_restriction' ) );
+	}
+
+	public function admin_restriction() {
+		check_admin_referer( 'wp101-admin_restriction' );
+
+		update_option( 'wp101_admin_restriction', absint( $_POST['wp101_admin_restriction'] ) );
+
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function update_api_key() {
+
+		check_admin_referer( 'wp101-update_key' );
+		$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
+		$result = $this->validate_api_key_with_server( $new_key );
+		if ( 'valid' == $result ) {
+			update_option( 'wp101_api_key', $new_key );
+			set_transient( 'wp101_message', 'valid', 300 );
+			wp_redirect( admin_url( 'admin.php?page=wp101' ) );
+			exit();
+		} elseif ( 'expired' == $result ) {
+			set_transient( 'wp101_message', 'expired', 300 );
+		} else {
+			set_transient( 'wp101_message', 'error', 300 );
+		}
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function add_video() {
+		check_admin_referer( 'wp101-add-video' );
+		$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+		set_transient( 'wp101_message', 'added_video', 300 );
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function update_video() {
+		check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
+		$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+		set_transient( 'wp101_message', 'updated_video', 300 );
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
 	}
 
 	public function admin_menu() {
@@ -116,38 +168,14 @@ class WP101_Plugin {
 
 		$this->enqueue();
 
-		if ( isset( $_POST['wp101-action'] ) && 'api-key' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-update_key' );
-			$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
-			$result = $this->validate_api_key_with_server( $new_key );
-			if ( 'valid' == $result ) {
-				update_option( 'wp101_api_key', $new_key );
-				set_transient( 'wp101_message', 'valid', 300 );
-				wp_redirect( admin_url( 'admin.php?page=wp101' ) );
-				exit();
-			} elseif ( 'expired' == $result ) {
-				set_transient( 'wp101_message', 'expired', 300 );
-			} else {
-				set_transient( 'wp101_message', 'error', 300 );
-			}
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( isset( $_POST['wp101-action'] ) && 'add-video' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-add-video' );
-			$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
-			set_transient( 'wp101_message', 'added_video', 300 );
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( isset( $_POST['wp101-action'] ) && 'update-video' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
-			$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
-			set_transient( 'wp101_message', 'updated_video', 300 );
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( $message = get_transient( 'wp101_message' ) ) {
+		if ( isset( $_POST['wp101-action'] ) && $this->is_user_authorized() ) {
+			do_action( 'wp101_admin_action_' . $_POST['wp101-action'] );
+		}
+
+		if ( $message = get_transient( 'wp101_message' ) ) {
 			delete_transient( 'wp101_message' );
 			add_action( 'admin_notices', array( $this, 'api_key_' . $message . '_message' ) );
-		} elseif ( !isset( $_GET['configure'] ) ) {
+		} else if ( ! isset( $_GET['configure'] ) ) {
 			$result = $this->validate_api_key();
 			if ( 'valid' !== $result && $this->is_user_authorized() ) {
 				set_transient( 'wp101_message', $result, 300 );
@@ -193,7 +221,7 @@ class WP101_Plugin {
 				// Check the API key against the server
 				$response = $this->validate_api_key_with_server();
 				if ( 'valid' == $response ) {
-					set_transient( 'wp101_api_key_valid', 1, 24*3600 ); // Good for a day.
+					set_transient( 'wp101_api_key_valid', 1, 24 * 3600 ); // Good for a day.
 					return $response;
 				} else {
 					return $response;
