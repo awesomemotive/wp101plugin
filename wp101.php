@@ -89,8 +89,10 @@ class WP101_Plugin {
 	public function update_api_key() {
 
 		check_admin_referer( 'wp101-update_key' );
+
 		$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
 		$result = $this->validate_api_key_with_server( $new_key );
+
 		if ( 'valid' == $result ) {
 			update_option( 'wp101_api_key', $new_key );
 			set_transient( 'wp101_message', 'valid', 300 );
@@ -101,6 +103,7 @@ class WP101_Plugin {
 		} else {
 			set_transient( 'wp101_message', 'error', 300 );
 		}
+
 		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
 		exit();
 	}
