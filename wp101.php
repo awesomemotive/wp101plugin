@@ -540,4 +540,4 @@ class WP101_Plugin {
 	}
 }
 
-new WP101_Plugin;
+$wp101_plugin = new WP101_Plugin;
