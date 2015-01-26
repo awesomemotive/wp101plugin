@@ -550,4 +550,4 @@ class WP101_Plugin {
 	}
 }
 
-new WP101_Plugin;
+WP101_Plugin::get_instance();
