@@ -3,7 +3,7 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.1
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -133,6 +133,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 3.0.4 =
+* Bug fixes for hiding and showing all the SEO videos. Thanks, Justin Sainton!
+
 = 3.0.3 =
 * Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own. Thanks, Justin Sainton!
 
@@ -196,6 +199,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+
+= 3.0.4 =
+* Bug fixes for hiding and showing all the SEO videos. Thanks, Justin Sainton!
 
 = 3.0.3 =
 * Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own!

@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: WP101
-Description: WordPress tutorial videos, delivered directly in the dashboard.
-Version: 3.0.3
+Description: A complete set of WordPress video tutorials, delivered directly in your dashboard.
+Version: 3.0.4
 Author: WP101Plugin.com
 Author URI: http://wp101plugin.com/
 */
@@ -12,12 +12,22 @@ Author URI: http://wp101plugin.com/
 $_wp101_api_key = '';
 
 class WP101_Plugin {
-	public static $db_version = 2;
-	public static $instance;
+	public static $db_version    = 2;
+	private static $instance     = false;
 	public static $api_base      = 'http://wp101plugin.com/?wp101-api-server&';
 	public static $subscribe_url = 'http://wp101plugin.com/';
 	public static $renew_url     = 'http://wp101plugin.com/';
 
+	public static function get_instance() {
+		
+		if ( ! self::$instance ) {
+			self::$instance = new self();
+		}
+		
+		return self::$instance;
+		
+	}
+	
 	public function __construct() {
 
 		self::$instance = $this;
@@ -557,4 +567,4 @@ class WP101_Plugin {
 	}
 }
 
-new WP101_Plugin;
+WP101_Plugin::get_instance();
