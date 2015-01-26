@@ -139,7 +139,7 @@ class WP101_Plugin {
 			add_action( 'admin_notices', array( $this, 'api_key_' . $message . '_message' ) );
 		} elseif ( !isset( $_GET['configure'] ) ) {
 			$result = $this->validate_api_key();
-			if ( 'valid' !== $result && current_user_can( 'manage_options' ) ) {
+			if ( 'valid' !== $result && $this->is_user_authorized() ) {
 				set_transient( 'wp101_message', $result, 300 );
 				wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
 				exit();
@@ -176,7 +176,7 @@ class WP101_Plugin {
 
 	public function validate_api_key() {
 		if ( ! get_transient( 'wp101_api_key_valid' ) ) {
-			if ( !$this->get_key() ) {
+			if ( ! $this->get_key() ) {
 				// Hasn't set API key yet
 				return 'notset';
 			} else {
@@ -382,6 +382,22 @@ class WP101_Plugin {
 		return $output;
 	}
 
+	/**
+	 * [is_user_authorized description]
+	 * @return boolean [description]
+	 */
+	private function is_user_authorized() {
+
+		$is_user_authorized = current_user_can( 'manage_options' );
+		$restriction        = get_option( 'wp101_admin_restriction' );
+
+		if ( ! empty( $restriction ) ) {
+			$is_user_authorized = get_current_user_id() == $restriction;
+		}
+
+		return apply_filters( 'wp101_is_user_authorized', $is_user_authorized, self::$instance );
+	}
+
 	public function render_listing_page() {
 		$document_id = isset( $_GET['document'] ) ? sanitize_text_field( $_GET['document'] ) : 1;
 		while ( $this->is_hidden( $document_id ) ) {
@@ -397,8 +413,9 @@ class WP101_Plugin {
 <div class="wrap" id="wp101-settings">
 	<h2 class="wp101title"><?php _ex( 'WordPress Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
-	<?php if ( current_user_can( 'manage_options' ) && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
-	<?php if ( !isset( $_GET['document'] ) ) : ?>
+	<?php if ( $this->is_user_authorized() && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
+
+	<?php if ( ! isset( $_GET['document'] ) ) : ?>
 		<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
 
 		<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
@@ -479,8 +496,8 @@ class WP101_Plugin {
 			submit_button( __( 'Add Video', 'wp101' ) );
 		?>
 		</form>
-	<?php endif; ?>
-<?php
+	<?php endif;
+
 	else :
 		$pages        = $this->get_help_topics_html();
 		$custom_pages = $this->get_custom_help_topics_html();
@@ -512,7 +529,7 @@ class WP101_Plugin {
 		});
 		</script>
 		<div id="wp101-topic-listing">
-			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 			<?php
 				echo $pages;
 				do_action( 'wp101_after_help_topics', self::$instance );
@@ -526,7 +543,7 @@ class WP101_Plugin {
 			<?php endif; ?>
 		</div>
 		<?php else : ?>
-			<?php if ( current_user_can( 'manage_options' ) ) : ?>
+			<?php if ( $this->is_user_authorized() ) : ?>
 				<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
 			<?php else : ?>
 				<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
