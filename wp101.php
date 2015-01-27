@@ -19,15 +19,15 @@ class WP101_Plugin {
 	public static $renew_url     = 'http://wp101plugin.com/';
 
 	public static function get_instance() {
-		
+
 		if ( ! self::$instance ) {
 			self::$instance = new self();
 		}
-		
+
 		return self::$instance;
-		
+
 	}
-	
+
 	public function __construct() {
 
 		self::$instance = $this;
@@ -46,7 +46,9 @@ class WP101_Plugin {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		add_action( 'admin_head', array( $this, 'wp101_admin_icon') );
 		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
-		add_action( 'wp_ajax_wp101-delete-topic', array( $this, 'ajax_delete_topic' ) );
+		add_action( 'wp_ajax_wp101-delete-topic'  , array( $this, 'ajax_delete_topic' ) );
+
+		$this->register_settings_hooks();
 
 		// Upgrades
 		$db_version = get_option( 'wp101_db_version' );
@@ -67,6 +69,59 @@ class WP101_Plugin {
 		do_action( 'wp101_pre_includes', self::$instance );
 
 		include_once 'integrations/class.wpseo.php';
+	}
+	public function register_settings_hooks() {
+		add_action( 'wp101_admin_action_api-key'       , array( $this, 'update_api_key' ) );
+		add_action( 'wp101_admin_action_add-video'     , array( $this, 'add_video' ) );
+		add_action( 'wp101_admin_action_update-video'  , array( $this, 'update_video' ) );
+		add_action( 'wp101_admin_action_restrict-admin', array( $this, 'admin_restriction' ) );
+	}
+
+	public function admin_restriction() {
+		check_admin_referer( 'wp101-admin_restriction' );
+
+		update_option( 'wp101_admin_restriction', absint( $_POST['wp101_admin_restriction'] ) );
+
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function update_api_key() {
+
+		check_admin_referer( 'wp101-update_key' );
+
+		$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
+		$result = $this->validate_api_key_with_server( $new_key );
+
+		if ( 'valid' == $result ) {
+			update_option( 'wp101_api_key', $new_key );
+			set_transient( 'wp101_message', 'valid', 300 );
+			wp_redirect( admin_url( 'admin.php?page=wp101' ) );
+			exit();
+		} elseif ( 'expired' == $result ) {
+			set_transient( 'wp101_message', 'expired', 300 );
+		} else {
+			set_transient( 'wp101_message', 'error', 300 );
+		}
+
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function add_video() {
+		check_admin_referer( 'wp101-add-video' );
+		$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+		set_transient( 'wp101_message', 'added_video', 300 );
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
+	}
+
+	public function update_video() {
+		check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
+		$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
+		set_transient( 'wp101_message', 'updated_video', 300 );
+		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		exit();
 	}
 
 	public function admin_menu() {
@@ -116,40 +171,16 @@ class WP101_Plugin {
 
 		$this->enqueue();
 
-		if ( isset( $_POST['wp101-action'] ) && 'api-key' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-update_key' );
-			$new_key = preg_replace( '#[^a-f0-9]#', '', stripslashes( $_POST['wp101_api_key'] ) );
-			$result = $this->validate_api_key_with_server( $new_key );
-			if ( 'valid' == $result ) {
-				update_option( 'wp101_api_key', $new_key );
-				set_transient( 'wp101_message', 'valid', 300 );
-				wp_redirect( admin_url( 'admin.php?page=wp101' ) );
-				exit();
-			} elseif ( 'expired' == $result ) {
-				set_transient( 'wp101_message', 'expired', 300 );
-			} else {
-				set_transient( 'wp101_message', 'error', 300 );
-			}
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( isset( $_POST['wp101-action'] ) && 'add-video' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-add-video' );
-			$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
-			set_transient( 'wp101_message', 'added_video', 300 );
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( isset( $_POST['wp101-action'] ) && 'update-video' == $_POST['wp101-action'] ) {
-			check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
-			$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
-			set_transient( 'wp101_message', 'updated_video', 300 );
-			wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
-			exit();
-		} elseif ( $message = get_transient( 'wp101_message' ) ) {
+		if ( isset( $_POST['wp101-action'] ) && $this->is_user_authorized() ) {
+			do_action( 'wp101_admin_action_' . $_POST['wp101-action'] );
+		}
+
+		if ( $message = get_transient( 'wp101_message' ) ) {
 			delete_transient( 'wp101_message' );
 			add_action( 'admin_notices', array( $this, 'api_key_' . $message . '_message' ) );
-		} elseif ( !isset( $_GET['configure'] ) ) {
+		} else if ( ! isset( $_GET['configure'] ) ) {
 			$result = $this->validate_api_key();
-			if ( 'valid' !== $result && current_user_can( 'manage_options' ) ) {
+			if ( 'valid' !== $result && $this->is_user_authorized() ) {
 				set_transient( 'wp101_message', $result, 300 );
 				wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
 				exit();
@@ -186,14 +217,14 @@ class WP101_Plugin {
 
 	public function validate_api_key() {
 		if ( ! get_transient( 'wp101_api_key_valid' ) ) {
-			if ( !$this->get_key() ) {
+			if ( ! $this->get_key() ) {
 				// Hasn't set API key yet
 				return 'notset';
 			} else {
 				// Check the API key against the server
 				$response = $this->validate_api_key_with_server();
 				if ( 'valid' == $response ) {
-					set_transient( 'wp101_api_key_valid', 1, 24*3600 ); // Good for a day.
+					set_transient( 'wp101_api_key_valid', 1, 24 * 3600 ); // Good for a day.
 					return $response;
 				} else {
 					return $response;
@@ -392,11 +423,59 @@ class WP101_Plugin {
 		return $output;
 	}
 
+	/**
+	 * Checks if current user is authorized to change WP101 settings.
+	 *
+	 * Prior to 3.0.5, anyone with `manage_options` caps could edit settings.
+	 * Now, settings management can be limited to a single user.
+	 *
+	 * @since  3.0.5
+	 * @return bool Whether or not user can access settings management area.
+	 */
+	private function is_user_authorized() {
+
+		$is_user_authorized = current_user_can( 'manage_options' );
+		$restriction        = get_option( 'wp101_admin_restriction' );
+
+		if ( ! empty( $restriction ) ) {
+			$is_user_authorized = get_current_user_id() == $restriction;
+		}
+
+		return apply_filters( 'wp101_is_user_authorized', $is_user_authorized, self::$instance );
+	}
+
+	/**
+	 * Gets admin count.
+	 *
+	 * Useful for our settings management restriction routine.
+	 * If a site has an unseemly amount of administrators, it's not going to be helpful
+	 * to have them all in a dropdown to select from.
+	 *
+	 * @since  3.0.5
+	 * @return int Number of administrators on site.
+	 */
+	public function get_admin_count() {
+
+		if ( false === ( $admins = get_transient( 'wp101_get_admin_count' ) ) ) {
+
+			$users        = count_users();
+			$default_role = apply_filters( 'wp101_default_settings_role', 'administrator' );
+			$admins       = isset( $users['avail_roles'][ $default_role ] ) ? $users['avail_roles'][ $default_role ] : 0;
+
+			// When min. version bumps to 3.5, we can use DAY_IN_SECONDS.
+			set_transient( 'wp101_get_admin_count', $admins, 60 * 60 * 24 );
+		}
+
+		return absint( $admins );
+	}
+
 	public function render_listing_page() {
 		$document_id = isset( $_GET['document'] ) ? sanitize_text_field( $_GET['document'] ) : 1;
+
 		while ( $this->is_hidden( $document_id ) ) {
 			$document_id++;
 		}
+
 		if ( $document_id ) : ?>
 			<style>
 			div#wp101-topic-listing .page-item-<?php echo $document_id; ?> > span a {
@@ -407,8 +486,9 @@ class WP101_Plugin {
 <div class="wrap" id="wp101-settings">
 	<h2 class="wp101title"><?php _ex( 'WordPress Video Tutorials', 'h2 title', 'wp101' ); ?></h2>
 
-	<?php if ( current_user_can( 'manage_options' ) && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
-	<?php if ( !isset( $_GET['document'] ) ) : ?>
+	<?php if ( $this->is_user_authorized() && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
+
+	<?php if ( ! isset( $_GET['document'] ) ) : ?>
 		<h3 class="title"><?php _e( 'API Key', 'wp101' ); ?></h3>
 
 		<?php if ( 'valid' !== $this->validate_api_key() ) : ?>
@@ -447,7 +527,7 @@ class WP101_Plugin {
 		<?php endif; ?>
 	<?php endif; ?>
 
-	<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
+	<?php if ( $this->is_user_authorized() && current_user_can( 'unfiltered_html' ) ) : ?>
 		<?php $editable_video = isset( $_GET['document'] ) ? $this->get_custom_help_topic( $_GET['document'] ) : false; ?>
 		<?php if ( $editable_video ) : ?>
 			<h3 class="title"><?php _e( 'Edit Custom Video', 'wp101' ); ?></h3>
@@ -489,8 +569,44 @@ class WP101_Plugin {
 			submit_button( __( 'Add Video', 'wp101' ) );
 		?>
 		</form>
-	<?php endif; ?>
-<?php
+	<?php
+		endif;
+
+		$admin_count = $this->get_admin_count();
+
+		if ( apply_filters( 'wp101_too_many_admins', ( $admin_count < 100 ), $admin_count ) ) :
+
+			$args   = apply_filters( 'wp101_settings_management_user_args', array(
+				'role' => 'administrator'
+			) );
+
+			$admins = get_users( $args );
+	?>
+		<h3 class="title"><?php _e( 'Settings Management', 'wp101' ); ?></h3>
+		<p class="description"><?php _e( 'By default, all administrators can change the settings above. Optionally, choose a specific admin who alone will have access to this settings panel.', 'wp101' ); ?></p>
+		<form action="" method="post">
+		<input type="hidden" name="wp101-action" value="restrict-admin" />
+		<?php wp_nonce_field( 'wp101-admin_restriction' ); ?>
+		<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label for="wp101-admin-restriction"><?php _e( 'Settings Access:', 'wp101' ); ?></label></th>
+			<td>
+				<select class="regular-text" type="text" id="wp101-admin-restriction" name="wp101_admin_restriction">
+					<option value=''><?php _e( 'All Administators', 'wp101' ); ?></option>
+					<?php
+						foreach ( $admins as $admin ) {
+							echo '<option value="' . $admin->ID . '" ' . selected( $admin->ID, get_option( 'wp101_admin_restriction' ), false ) . '>' . esc_html( $admin->display_name ) . '</option>';
+						}
+					?>
+				</select>
+			</td>
+		</tr>
+		</table>
+		<?php submit_button(); ?>
+		</form>
+
+	<?php
+		endif;
 	else :
 		$pages        = $this->get_help_topics_html();
 		$custom_pages = $this->get_custom_help_topics_html();
@@ -522,7 +638,7 @@ class WP101_Plugin {
 		});
 		</script>
 		<div id="wp101-topic-listing">
-			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( current_user_can( 'manage_options' ) ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 			<?php
 				echo $pages;
 				do_action( 'wp101_after_help_topics', self::$instance );
@@ -536,7 +652,7 @@ class WP101_Plugin {
 			<?php endif; ?>
 		</div>
 		<?php else : ?>
-			<?php if ( current_user_can( 'manage_options' ) ) : ?>
+			<?php if ( $this->is_user_authorized() ) : ?>
 				<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
 			<?php else : ?>
 				<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
