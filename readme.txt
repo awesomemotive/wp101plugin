@@ -1,9 +1,9 @@
 === WP101 ===
-Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith
+Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.1
-Stable tag: 3.0.4
+Stable tag: 3.1
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -40,13 +40,30 @@ Yes! You can selectively hide or show individual tutorial videos. Simply go to t
 
 Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
+= Why aren’t the WordPress SEO videos showing up? =
+
+The tutorial videos for the WordPress SEO Plugin by Yoast will only appear in the list if that plugin is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
 You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](http://wp101plugin.com/) to start your own subscription and get access to updated content.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
-Yes! Simply enter your API key into the wp101.php file and then install your customized version of the plugin across your clients' sites. Or, if you prefer, define $_wp101_api_key within your wp-config file. Either way, your API key will be preserved when you upgrade to future versions of the plugin.
+Yes! Simply enter your API key into the `wp101.php` file and then install your customized version of the plugin across your clients' sites.
+
+Or, if you prefer, define the `$_wp101_api_key` variable within your `wp-config` file. Either way, your API key will be preserved when you upgrade to future versions of the plugin.
+
+= Can I limit access to the settings panel? =
+
+Yes! By default, all administrators have access to the settings panel. Optionally, you may choose a specific administrator who alone will have access to the settings panel.
+
+We've also added a series of filters to allow for a couple helpful scenarios:
+
+* `wp101_is_user_authorized` - allows a developer to override the authorization routine. A great use case would be if someone's client has their user set to be the only admin, but the developer also needs to access the settings. Filtering this conditionally would allow for a whitelist of sorts.
+* `wp101_default_settings_role` - When counting admins, we default to counting the administrators. This filter can be used in conjunction with the `wp101_settings_management_user_args` filter to change the actual role that we're allowing for. A good example might be a site that actually has no administrator roles, but a custom role, like a store manager or something.
+* `wp101_too_many_admins` - This provides a sane default for what we consider to be too many admins for this UX. Drop-downs are pretty crappy when you're dealing with a bunch of options, so we have a super high limit of 100. This can be changed to whatever one desires.
+* `wp101_settings_management_user_args` - Used in conjunction with `wp101_default_settings_role`, this filters the array of arguments passed to `get_users()` to populate the drop-down.
 
 = Can I filter the list of videos, or add my own programmatically? =
 
@@ -133,6 +150,11 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 3.1 =
+* By popular request, we’ve now added the ability to limit access to the settings panel to a specific administrator.
+* We've also added several new filters to facilitate overrides for this new feature. See the FAQ for documentation on these new filters. Thanks, Justin Sainton!
+* Last, we’ve assigned the plugin instance to a (global) variable, to make it accessible outside the plugin for modifications. Thanks, John Sundberg!
+
 = 3.0.4 =
 * Bug fixes for hiding and showing all the SEO videos. Thanks, Justin Sainton!
 
@@ -199,6 +221,10 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+
+= 3.1 =
+* This important update adds the ability to limit access to the settings panel to a specific administrator, plus adds several new filters for this new feature. Thanks, Justin Sainton!
+* We’ve also assigned the plugin instance to a (global) variable, to make it accessible outside the plugin for modifications. Thanks, John Sundberg!
 
 = 3.0.4 =
 * Bug fixes for hiding and showing all the SEO videos. Thanks, Justin Sainton!
