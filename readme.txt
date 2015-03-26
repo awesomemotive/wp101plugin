@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.1
-Stable tag: 3.1
+Tested up to: 4.2
+Stable tag: 3.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -15,7 +15,7 @@ Simply enter your [WP101Plugin.com](http://wp101plugin.com/) API key to deliver 
 
 Selectively choose which tutorial videos are shown, and even embed your own custom videos!
 
-NEW! Now includes a complete set of tutorial videos for the WordPress SEO Plugin by Yoast, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
+Plus, the WP101 Plugin also includes a complete set of tutorial videos for the WordPress SEO Plugin by Yoast, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
 
 == Installation ==
 
@@ -150,6 +150,10 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 3.2 =
+* Updated the WordPress SEO Plugin videos for version 2.0.
+* Tested and verified for WordPress 4.2!
+
 = 3.1 =
 * By popular request, we’ve now added the ability to limit access to the settings panel to a specific administrator.
 * We've also added several new filters to facilitate overrides for this new feature. See the FAQ for documentation on these new filters. Thanks, Justin Sainton!
@@ -221,6 +225,10 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+
+= 3.2 =
+* We’ve updated the WordPress SEO Plugin videos for version 2.0.
+* Tested and verified for WordPress 4.2!
 
 = 3.1 =
 * This important update adds the ability to limit access to the settings panel to a specific administrator, plus adds several new filters for this new feature. Thanks, Justin Sainton!
