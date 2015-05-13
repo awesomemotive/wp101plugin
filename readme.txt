@@ -2,7 +2,7 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.2
+Tested up to: 4.2.2
 Stable tag: 3.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
@@ -52,7 +52,11 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 
 Yes! Simply enter your API key into the `wp101.php` file and then install your customized version of the plugin across your clients' sites.
 
-Or, if you prefer, define the `$_wp101_api_key` variable within your `wp-config` file. Either way, your API key will be preserved when you upgrade to future versions of the plugin.
+Or, if you prefer, define the `$_wp101_api_key` variable within your `wp-config` file:
+
+`define('WP101_API_KEY', 'XXXXXXXXXXXX');`
+
+Either way you choose, your API key will be preserved when you upgrade to future versions of the plugin.
 
 = Can I limit access to the settings panel? =
 
