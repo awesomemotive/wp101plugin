@@ -4,7 +4,7 @@ Plugin Name: WP101
 Description: A complete set of WordPress video tutorials, delivered directly in your dashboard.
 Version: 3.2
 Author: WP101Plugin.com
-Author URI: http://wp101plugin.com/
+Author URI: https://wp101plugin.com/
 */
 
 // API KEY
@@ -14,9 +14,9 @@ $_wp101_api_key = '';
 class WP101_Plugin {
 	public static $db_version    = 2;
 	private static $instance     = false;
-	public static $api_base      = 'http://wp101plugin.com/?wp101-api-server&';
-	public static $subscribe_url = 'http://wp101plugin.com/';
-	public static $renew_url     = 'http://wp101plugin.com/';
+	public static $api_base      = 'https://wp101plugin.com/?wp101-api-server&';
+	public static $subscribe_url = 'https://wp101plugin.com/';
+	public static $renew_url     = 'https://wp101plugin.com/';
 
 	public static function get_instance() {
 
