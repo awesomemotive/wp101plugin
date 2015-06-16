@@ -11,7 +11,7 @@ Delivers a complete set of WordPress tutorial videos directly within the dashboa
 
 The WP101 Plugin is simply the easiest way to teach your clients how to use WordPress, cutting your support costs while providing an invaluable resource to your clients. It delivers a complete set of professionally-produced “WordPress 101” and WordPress SEO Plugin tutorial videos directly within your clients' dashboard.
 
-Simply enter your [WP101Plugin.com](http://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
+Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
 
 Selectively choose which tutorial videos are shown, and even embed your own custom videos!
 
@@ -19,8 +19,8 @@ Plus, the WP101 Plugin also includes a complete set of tutorial videos for the W
 
 == Installation ==
 
-1. Go to [WP101Plugin.com](http://wp101plugin.com/) to get your API key.
-2. Copy your API key from your [WP101Plugin.com](http://wp101plugin.com/) account page.
+1. Go to [WP101Plugin.com](https://wp101plugin.com/) to get your API key.
+2. Copy your API key from your [WP101Plugin.com](https://wp101plugin.com/) account page.
 3. Install and activate the WP101 Plugin in the 'Plugins' panel.
 5. Go to WP101 &rarr; Settings, and enter your API key.
 6. Selectively hide/show individual videos from the list.
@@ -30,7 +30,7 @@ Plus, the WP101 Plugin also includes a complete set of tutorial videos for the W
 
 = How do I get an API key? =
 
-Simply go to: [WP101Plugin.com](http://wp101plugin.com/) and follow the instructions to set up an API key in less than a minute.
+Simply go to: [WP101Plugin.com](https://wp101plugin.com/) and follow the instructions to set up an API key in less than a minute.
 
 = Can I choose which video topics are displayed? =
 
@@ -46,7 +46,7 @@ The tutorial videos for the WordPress SEO Plugin by Yoast will only appear in th
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
-You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](http://wp101plugin.com/) to start your own subscription and get access to updated content.
+You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to updated content.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
