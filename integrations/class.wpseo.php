@@ -93,7 +93,7 @@ class WP101_WPSEO_Videos {
 
 	public function wpseo_help_topics_title( $edit_mode ) {
 
-		$output = '<h3 class="title">' . __( 'WP SEO Tutorial Videos', 'wp101' );
+		$output = '<h3 class="title">' . __( 'Yoast SEO Tutorial Videos', 'wp101' );
 
 		if ( $edit_mode ) {
 			$nonce   = wp_create_nonce( 'wp101-showhide-allwpseo' );
