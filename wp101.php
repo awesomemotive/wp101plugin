@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: WP101
-Description: A complete set of WordPress video tutorials, delivered directly in your dashboard.
-Version: 3.2
+Description: A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.
+Version: 3.2.2
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
 */
@@ -592,7 +592,7 @@ class WP101_Plugin {
 			<th scope="row"><label for="wp101-admin-restriction"><?php _e( 'Settings Access:', 'wp101' ); ?></label></th>
 			<td>
 				<select class="regular-text" type="text" id="wp101-admin-restriction" name="wp101_admin_restriction">
-					<option value=''><?php _e( 'All Administators', 'wp101' ); ?></option>
+					<option value=''><?php _e( 'All Administrators', 'wp101' ); ?></option>
 					<?php
 						foreach ( $admins as $admin ) {
 							echo '<option value="' . $admin->ID . '" ' . selected( $admin->ID, get_option( 'wp101_admin_restriction' ), false ) . '>' . esc_html( $admin->display_name ) . '</option>';

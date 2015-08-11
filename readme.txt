@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.2.2
-Stable tag: 3.2
+Tested up to: 4.3
+Stable tag: 3.2.2
 
 Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -15,7 +15,7 @@ Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to deliver
 
 Selectively choose which tutorial videos are shown, and even embed your own custom videos!
 
-Plus, the WP101 Plugin also includes a complete set of tutorial videos for the WordPress SEO Plugin by Yoast, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
+Plus, the WP101 Plugin also includes a complete set of tutorial videos for the Yoast SEO plugin, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
 
 == Installation ==
 
@@ -40,9 +40,9 @@ Yes! You can selectively hide or show individual tutorial videos. Simply go to t
 
 Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
-= Why aren’t the WordPress SEO videos showing up? =
+= Why aren’t the Yoast SEO videos showing up? =
 
-The tutorial videos for the WordPress SEO Plugin by Yoast will only appear in the list if that plugin is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+The tutorial videos for the Yoast SEO plugin will only appear in the list if that plugin is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
@@ -154,8 +154,15 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 3.2.2 =
+* Minor changes to description verbiage and fixed a tiny typo.
+* Tested and verified for WordPress 4.3!
+
+= 3.2.1 =
+* Changed title to reflect the new name of the Yoast SEO plugin.
+
 = 3.2 =
-* Updated the WordPress SEO Plugin videos for version 2.0.
+* Updated the Yoast SEO plugin videos for version 2.0.
 * Tested and verified for WordPress 4.2!
 
 = 3.1 =
@@ -176,7 +183,7 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * Bug fix for unexpected T_PAAMAYIM_NEKUDOTAYIM error on PHP 5.2 and older.
 
 = 3.0 =
-* We’ve added videos for the WordPress SEO Plugin by Yoast, provided that plugin is installed.
+* We’ve added videos for the Yoast SEO plugin, provided that plugin is installed.
 * Added new filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
 * Increased the default size of the video player, plus added responsive support for all your devices!
 * Minor coding standards cleanup.
@@ -230,8 +237,15 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Upgrade Notice ==
 
+= 3.2.2 =
+* Minor changes to description verbiage and fixed a tiny typo.
+* Tested and verified for WordPress 4.3!
+
+= 3.2.1 =
+* Changed title to reflect the new name of the Yoast SEO plugin.
+
 = 3.2 =
-* We’ve updated the WordPress SEO Plugin videos for version 2.0.
+* We’ve updated the Yoast SEO plugin videos for version 2.0.
 * Tested and verified for WordPress 4.2!
 
 = 3.1 =
@@ -245,7 +259,7 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own!
 
 = 3.0 =
-* We’ve added videos for the WordPress SEO Plugin by Yoast, provided that plugin is installed.
+* We’ve added videos for the Yoast SEO plugin, provided that plugin is installed.
 * Added new filters for developers. You can now filter the topics and videos returned on wp101_get_help_topics and wp101_get_custom_help_topics.
 * Increased the default size of the video player, plus added responsive support for all your devices!
 * Minor coding standards cleanup.
