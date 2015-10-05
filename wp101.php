@@ -5,6 +5,7 @@ Description: A complete set of WordPress video tutorials for beginners, delivere
 Version: 3.2.2
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
+Text Domain: wp101
 */
 
 // API KEY
