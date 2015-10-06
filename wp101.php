@@ -2,9 +2,10 @@
 /*
 Plugin Name: WP101
 Description: A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.
-Version: 3.2.2
+Version: 3.2.3
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
+Text Domain: wp101
 */
 
 // API KEY
@@ -40,7 +41,6 @@ class WP101_Plugin {
 	public function init() {
 		// Translations
 		load_plugin_textdomain( 'wp101', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
