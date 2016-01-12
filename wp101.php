@@ -211,8 +211,8 @@ class WP101_Plugin {
 	public function api_key_notset_message(){ /* no message needed */ }
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "js/wp101.js", __FILE__ ), array( 'jquery' ), '20140905b' );
-		wp_enqueue_style( 'wp101', plugins_url( "css/wp101.css", __FILE__ ), array(), '20140922b' );
+		wp_enqueue_script( 'wp101', plugins_url( "assets/js/wp101.min.js", __FILE__ ), array( 'jquery' ), '20140905b' );
+		wp_enqueue_style( 'wp101', plugins_url( "assets/css/wp101.css", __FILE__ ), array(), '20140922b' );
 	}
 
 	public function validate_api_key() {
