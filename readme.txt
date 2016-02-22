@@ -22,7 +22,7 @@ Plus, the WP101 Plugin also includes a complete set of tutorial videos for the Y
 1. Go to [WP101Plugin.com](https://wp101plugin.com/) to get your API key.
 2. Copy your API key from your [WP101Plugin.com](https://wp101plugin.com/) account page.
 3. Install and activate the WP101 Plugin in the 'Plugins' panel.
-5. Go to WP101 &rarr; Settings, and enter your API key.
+5. Go to the Video Tutorials menu item and click the Settings button to enter your API key.
 6. Selectively hide/show individual videos from the list.
 7. Add your own custom videos to the list using simple embed fields.
 
@@ -34,7 +34,7 @@ Simply go to: [WP101Plugin.com](https://wp101plugin.com/) and follow the instruc
 
 = Can I choose which video topics are displayed? =
 
-Yes! You can selectively hide or show individual tutorial videos. Simply go to the Settings panel to choose which videos you'd like to include.
+Yes! You can selectively hide or show individual tutorial videos. Simply go to the Video Tutorials menu item and click the Settings button to choose which videos you'd like to include.
 
 = Can I add my own custom videos? =
 
