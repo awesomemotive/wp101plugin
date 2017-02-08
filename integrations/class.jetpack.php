@@ -86,7 +86,7 @@ class WP101_Jetpack_Videos {
 			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
-		$output .= '</ul>';
+		$output .= '</ol></div>';
 
 		return $output;
 	}

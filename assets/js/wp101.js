@@ -51,7 +51,7 @@
 			} );
 		});
 
-		$('ul.wp101-topic-ul li small.wp101-show a').click(function(e){
+		$('ol.wp101-topic-ol li small.wp101-show a').click(function(e){
 			e.preventDefault();
 			$(this).parents('li.wp101-hidden').removeClass('wp101-hidden').addClass('wp101-shown');
 			$.post( ajaxurl, {
@@ -83,7 +83,7 @@
 			} );
 		});
 
-		$('ul.wp101-topic-ul li small.wp101-delete a').click(function(e){
+		$('ol.wp101-topic-ol li small.wp101-delete a').click(function(e){
 			e.preventDefault();
 			$.post( ajaxurl, {
 				_wpnonce: $(this).data('nonce'),
@@ -92,8 +92,16 @@
 			});
 			$(this).parents('li').remove();
 		});
-
-
-
+		
+	    $('.accordion').accordion({
+    		collapsible: true,
+    		heightStyle: "content",
+    		//set localStorage to save state on page reload
+		    activate: function(event, ui) {        
+		        localStorage.setItem("wp101ListState", $(this).accordion("option", "active"));
+		    },
+		    active: parseInt(localStorage.getItem("wp101ListState")),
+	    });
+				
 	});
 })(jQuery);
