@@ -1,6 +1,6 @@
 <?php
 
-class WP101_Jetpack_Videos {
+class WP101_WooCommerce_Videos {
 	public static $instance;
 
 	public function __construct() {
@@ -10,49 +10,49 @@ class WP101_Jetpack_Videos {
 
 	public function init() {
 		add_filter( 'wp101_get_document'          , array( self::$instance, 'get_document' ), 10, 3 );
-		add_action( 'wp101_after_help_topics'     , array( self::$instance, 'jetpack_help_topics_html' ) );
-		add_action( 'wp101_after_edit_help_topics', array( self::$instance, 'jetpack_edit_help_topics_html' ) );
-		add_action( 'wp101_ajax_handler_jetpack'    , array( self::$instance, 'change_topic_visiblity' ), 10, 2 );
+		add_action( 'wp101_after_help_topics'     , array( self::$instance, 'woocommerce_help_topics_html' ) );
+		add_action( 'wp101_after_edit_help_topics', array( self::$instance, 'woocommerce_edit_help_topics_html' ) );
+		add_action( 'wp101_ajax_handler_woocommerce'    , array( self::$instance, 'change_topic_visiblity' ), 10, 2 );
 	}
 
-	public function get_jetpack_help_topics( $wp_101 ) {
+	public function get_woocommerce_help_topics( $wp_101 ) {
 
 		$help_topics = false;
 
 		if ( 'valid' == $wp_101->validate_api_key() ) {
 
-			if ( $topics = get_transient( 'wp101_jetpack_topics' ) ) {
+			if ( $topics = get_transient( 'wp101_woocommerce_topics' ) ) {
 				$help_topics = $topics;
 			} else {
 				$api_base = $wp_101->get_api_base();
-				$result = wp_remote_get( $api_base . 'action=get_jetpack_topics&api_key=' . $wp_101->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
+				$result = wp_remote_get( $api_base . 'action=get_woocommerce_topics&api_key=' . $wp_101->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( ! $result['error'] && count( $result['data'] ) ) {
-					set_transient( 'wp101_jetpack_topics', $result['data'], 30 ); // Good for a day.
+					set_transient( 'wp101_woocommerce_topics', $result['data'], 30 ); // Good for a day.
 					$help_topics = $result['data'];
 				}
 			}
 		}
 
-		return apply_filters( 'wp101_get_jetpack_help_topics', $help_topics, self::$instance );
+		return apply_filters( 'wp101_get_woocommerce_help_topics', $help_topics, self::$instance );
 	}
 
-	public function jetpack_help_topics_html( $wp_101 ) {
+	public function woocommerce_help_topics_html( $wp_101 ) {
 
 		if ( 'valid' !== $wp_101->validate_api_key() ) {
 			return;
 		}
 
-		echo self::$instance->get_jetpack_help_topics_html( $wp_101 );
+		echo self::$instance->get_woocommerce_help_topics_html( $wp_101 );
 	}
 
-	public function jetpack_edit_help_topics_html( $wp_101 ) {
-		echo self::$instance->get_jetpack_help_topics_html( $wp_101, true );
+	public function woocommerce_edit_help_topics_html( $wp_101 ) {
+		echo self::$instance->get_woocommerce_help_topics_html( $wp_101, true );
 	}
 
-	public function get_jetpack_help_topics_html( $wp_101, $edit_mode = false ) {
+	public function get_woocommerce_help_topics_html( $wp_101, $edit_mode = false ) {
 
-		$topics = $this->get_jetpack_help_topics( $wp_101 );
+		$topics = $this->get_woocommerce_help_topics( $wp_101 );
 
 		if ( ! $topics ) {
 			return false;
@@ -65,7 +65,7 @@ class WP101_Jetpack_Videos {
 			return false;
 		}
 
-		$output = $this->jetpack_help_topics_title( $edit_mode );
+		$output = $this->woocommerce_help_topics_title( $edit_mode );
 
 		$output .= '<div><ol class="wp101-topic-ol">';
 
@@ -86,18 +86,18 @@ class WP101_Jetpack_Videos {
 			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
-		$output .= '</ul>';
+		$output .= '</ol></div>';
 
 		return $output;
 	}
 
-	public function jetpack_help_topics_title( $edit_mode ) {
+	public function woocommerce_help_topics_title( $edit_mode ) {
 
-		$output = '<h3 class="title">' . __( 'Jetpack Tutorial Videos', 'wp101' );
+		$output = '<h3 class="title">' . __( 'WooCommerce Tutorial Videos', 'wp101' );
 
 		if ( $edit_mode ) {
-			$nonce   = wp_create_nonce( 'wp101-showhide-alljetpack' );
-			$output .= '&nbsp;&nbsp;<small class="wp101-show-all">[<a data-nonce="' . $nonce . '" data-topic="jetpack" href="#">show all</a>]</small><small class="wp101-hide-all">[<a data-nonce="' . $nonce. '" data-topic="jetpack" href="#">hide all</a>]</small>';
+			$nonce   = wp_create_nonce( 'wp101-showhide-allwoocommerce' );
+			$output .= '&nbsp;&nbsp;<small class="wp101-show-all">[<a data-nonce="' . $nonce . '" data-topic="woocommerce" href="#">show all</a>]</small><small class="wp101-hide-all">[<a data-nonce="' . $nonce. '" data-topic="woocommerce" href="#">hide all</a>]</small>';
 		}
 
 		$output .= '</h3>';
@@ -107,11 +107,11 @@ class WP101_Jetpack_Videos {
 
 	public function change_topic_visiblity( $wp_101, $direction ) {
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-alljetpack' ) ) {
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-allwoocommerce' ) ) {
 			die( '-1' );
 		}
 
-		foreach ( $this->get_jetpack_help_topics( $wp_101 ) as $topic_id => $value ) {
+		foreach ( $this->get_woocommerce_help_topics( $wp_101 ) as $topic_id => $value ) {
 
 			if ( 'hide-all' === $direction ) {
 				$wp_101->hide_topic( $topic_id );
@@ -126,22 +126,22 @@ class WP101_Jetpack_Videos {
 
 		if ( ! $document ) {
 
-			$topics = $this->get_jetpack_help_topics( $wp_101 );
+			$topics = $this->get_woocommerce_help_topics( $wp_101 );
 
 			if ( isset( $topics[ $id ] ) ) {
 				$document = $topics[ $id ];
 			}
 		}
 
-		return apply_filters( 'wp101_jetpack_get_document', $document, $id, self::$instance );
+		return apply_filters( 'wp101_woocommerce_get_document', $document, $id, self::$instance );
 	}
 
 }
 
-add_action( 'plugins_loaded', 'wp101_maybe_activate_jetpack_videos' );
+add_action( 'plugins_loaded', 'wp101_maybe_activate_woocommerce_videos' );
 
-function wp101_maybe_activate_jetpack_videos() {
-	if ( class_exists( 'Jetpack' ) ) {
-		return new WP101_Jetpack_Videos;
+function wp101_maybe_activate_woocommerce_videos() {
+	if ( class_exists( 'WooCommerce' ) ) {
+		return new WP101_WooCommerce_Videos;
 	}
 }

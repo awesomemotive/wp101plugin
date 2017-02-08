@@ -3,21 +3,21 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.7.2
-Stable tag: 3.3
+Stable tag: 4.0
 
 A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-The WP101 Plugin is simply the easiest way to teach your clients how to use WordPress, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your clients' dashboard.
+The WP101 Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your client’s dashboard!
 
-Plus, the WP101 Plugin also includes a complete set of tutorial videos for Jetpack and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
+Plus, the WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
 
-Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
+Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
-Selectively choose which tutorial videos are shown, and even embed your own custom videos!
+You can choose which tutorial videos are shown, and even embed your own custom videos!
 
-Stop wasting time teaching WordPress to your clients. Let the Wp101 Plugin free your time to focus on what you do best!
+Stop wasting time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
 
 == Installation ==
 
@@ -40,15 +40,15 @@ Yes! You can selectively hide or show individual tutorial videos. Simply go to t
 
 = Can I add my own custom videos? =
 
-Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
+Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
-= Why aren’t the Jetpack or Yoast SEO videos showing up? =
+= Why aren’t the Jetpack, WooCommerce, or Yoast SEO videos showing up? =
 
-The tutorial videos for Jetpack and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+The tutorial videos for Jetpack, WooCommerce, and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
-You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to updated content.
+You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
@@ -77,7 +77,7 @@ Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, 
 
 = wp101_get_help_topics =
 
-The `wp101_get_help_topics` filter is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
+The `wp101_get_help_topics` filter is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 Plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
 
     php
     array(
@@ -156,8 +156,11 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
-= 3.3 =
-* We’ve added videos for the Jetpack plugin, provided that plugin is installed.
+= 4.0 =
+* Jetpack and WooCommerce videos are now included, for a total of 90 tutorial videos!
+* Collapsible sections to make the long list of videos more manageable.
+* Added a Settings link on the Plugins page, if user is authorized.
+* Minor CSS revisions and bug fixes.
 
 = 3.2.3 =
 * Updated for new translation system on WordPress.org.
@@ -245,8 +248,8 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Upgrade Notice ==
 
-= 3.3 =
-* The WP101 Plugin now includes videos for the Jetpack plugin, provided that plugin is installed.
+= 4.0 =
+* This is a big one! The WP101 Plugin now includes videos for WooCommerce and Jetpack, provided those plugins are also installed. Plus a few more goodies.
 
 = 3.2.2 =
 * Minor changes to description verbiage and fixed a tiny typo.

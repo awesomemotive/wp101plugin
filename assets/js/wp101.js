@@ -19,7 +19,7 @@
 
 		maybeShowAll();
 
-		$('ul.wp101-topic-ul li small.wp101-hide a').click(function(e){
+		$('ol.wp101-topic-ol li small.wp101-hide a').click(function(e){
 			e.preventDefault();
 			$(this).parents('li.wp101-shown').removeClass('wp101-shown').addClass('wp101-hidden');
 			$.post( ajaxurl, {

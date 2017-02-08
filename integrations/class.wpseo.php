@@ -67,7 +67,7 @@ class WP101_WPSEO_Videos {
 
 		$output = $this->wpseo_help_topics_title( $edit_mode );
 
-		$output .= '<ul class="wp101-topic-ul">';
+		$output .= '<div><ol class="wp101-topic-ol">';
 
 		foreach ( $topics as $topic ) {
 			if ( $edit_mode ) {
@@ -86,7 +86,7 @@ class WP101_WPSEO_Videos {
 			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
-		$output .= '</ul>';
+		$output .= '</ol></div>';
 
 		return $output;
 	}
