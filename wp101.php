@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.
-Version: 3.2.3
+Version: 3.3
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
 Text Domain: wp101
@@ -68,6 +68,7 @@ class WP101_Plugin {
 	public function includes() {
 		do_action( 'wp101_pre_includes', self::$instance );
 
+		include_once 'integrations/class.jetpack.php';
 		include_once 'integrations/class.wpseo.php';
 	}
 	public function register_settings_hooks() {
@@ -638,7 +639,7 @@ class WP101_Plugin {
 		});
 		</script>
 		<div id="wp101-topic-listing">
-			<h3><?php _e( 'Video Tutorials', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
+			<h3><?php _e( 'WordPress Tutorials', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h3>
 			<?php
 				echo $pages;
 				do_action( 'wp101_after_help_topics', self::$instance );

@@ -2,20 +2,22 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.7
-Stable tag: 3.2.3
+Tested up to: 4.7.2
+Stable tag: 3.3
 
-Delivers a complete set of WordPress tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
+A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-The WP101 Plugin is simply the easiest way to teach your clients how to use WordPress, cutting your support costs while providing an invaluable resource to your clients. It delivers a complete set of professionally-produced “WordPress 101” and WordPress SEO Plugin tutorial videos directly within your clients' dashboard.
+The WP101 Plugin is simply the easiest way to teach your clients how to use WordPress, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your clients' dashboard.
+
+Plus, the WP101 Plugin also includes a complete set of tutorial videos for Jetpack and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to deliver WordPress tutorial videos within the WordPress administration panel. Perfect for teaching your clients the basics of how to use WordPress!
 
 Selectively choose which tutorial videos are shown, and even embed your own custom videos!
 
-Plus, the WP101 Plugin also includes a complete set of tutorial videos for the Yoast SEO plugin, provided that plugin is also installed on the site. Videos for other popular plugins coming soon!
+Stop wasting time teaching WordPress to your clients. Let the Wp101 Plugin free your time to focus on what you do best!
 
 == Installation ==
 
@@ -40,9 +42,9 @@ Yes! You can selectively hide or show individual tutorial videos. Simply go to t
 
 Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos, along with the WP101 videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
-= Why aren’t the Yoast SEO videos showing up? =
+= Why aren’t the Jetpack or Yoast SEO videos showing up? =
 
-The tutorial videos for the Yoast SEO plugin will only appear in the list if that plugin is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+The tutorial videos for Jetpack and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
@@ -154,6 +156,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 3.3 =
+* We’ve added videos for the Jetpack plugin, provided that plugin is installed.
+
 = 3.2.3 =
 * Updated for new translation system on WordPress.org.
 
@@ -174,7 +179,7 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * Last, we’ve assigned the plugin instance to a (global) variable, to make it accessible outside the plugin for modifications. Thanks, John Sundberg!
 
 = 3.0.4 =
-* Bug fixes for hiding and showing all the SEO videos. Thanks, Justin Sainton!
+* Bug fixes for hiding and showing all the Yoast SEO videos. Thanks, Justin Sainton!
 
 = 3.0.3 =
 * Added more detailed docs on the built-in hooks to filter the list of videos, or even add your own. Thanks, Justin Sainton!
@@ -239,6 +244,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+
+= 3.3 =
+* The WP101 Plugin now includes videos for the Jetpack plugin, provided that plugin is installed.
 
 = 3.2.2 =
 * Minor changes to description verbiage and fixed a tiny typo.
