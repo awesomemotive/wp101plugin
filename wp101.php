@@ -58,8 +58,6 @@ class WP101_Plugin {
 			delete_transient( 'wp101_topics' );
 			update_option( 'wp101_db_version', 2 );
 		}
-
-		delete_transient( 'wp101_topics' );
 	}
 	
 	function showp101_settings_link($links) {
@@ -314,7 +312,7 @@ class WP101_Plugin {
 				$result = wp_remote_get( self::$api_base . 'action=get_topics&api_key=' . $this->get_key(), array( 'timeout' => 45, 'sslverify' => false, 'user-agent' => 'WP101Plugin' ) );
 				$result = json_decode( $result['body'], true );
 				if ( ! $result['error'] && count( $result['data'] ) ) {
-					set_transient( 'wp101_topics', $result['data'], 30 ); // Good for a day.
+					set_transient( 'wp101_topics', $result['data'], 24 * 3600 ); // Good for a day.
 					$help_topics =  $result['data'];
 				}
 			}
