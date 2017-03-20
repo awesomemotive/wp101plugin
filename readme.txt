@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.7.2
-Stable tag: 4.0
+Tested up to: 4.7.3
+Stable tag: 4.0.1
 
 A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -156,6 +156,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 
 == Changelog ==
 
+= 4.0.1 =
+* Transient for get_help_topics was shortened for testing, but left in the last release. It's now good for a day. Nothing to see here. Move along.
+
 = 4.0 =
 * Jetpack and WooCommerce videos are now included, for a total of 90 tutorial videos!
 * Collapsible sections to make the long list of videos more manageable.
@@ -247,6 +250,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+
+= 4.0.1 =
+* Minor fix.
 
 = 4.0 =
 * This is a big one! The WP101 Plugin now includes videos for WooCommerce and Jetpack, provided those plugins are also installed. Plus a few more goodies.
