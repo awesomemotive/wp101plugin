@@ -8,6 +8,7 @@
 
 	<!-- FILES -->
 	<exclude-pattern>phpcs.xml</exclude-pattern>
+	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>tests/*</exclude-pattern>
 	<exclude-pattern>vendor/*</exclude-pattern>
 
