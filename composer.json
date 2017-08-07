@@ -39,5 +39,13 @@
         "source": "https://github.com/leftlane/wp101plugin",
         "docs": "https://wp101plugin.com"
     },
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "stevegrunwell/wp-enforcer": "^0.5.0"
+    },
+    "scripts": {
+      "post-install-cmd": [
+        "wp-enforcer"
+      ]
+    }
 }
