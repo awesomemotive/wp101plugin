@@ -33,31 +33,18 @@ matrix:
 
 install:
   - composer install --prefer-source
-  - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
-      if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
-        composer global require "phpunit/phpunit=4.8.*"
-      else
-        composer global require "phpunit/phpunit=5.7.*"
-      fi
+  - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - if [[ ${TRAVIS_PHP_VERSION:0:2} == "5." ]]; then
+      composer global require "phpunit/phpunit=4.8.*"
+    else
+      composer global require "phpunit/phpunit=5.7.*"
     fi
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - |
-    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      wp-enforcer
-    fi
+  - wp-enforcer
 
 script:
-  - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      phpunit
-      echo -e "\033[0;32mRunning tests as WordPress multisite:\033[0m"
-      WP_MULTISITE=1 phpunit
-    fi
-  - |
-    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs --standard=phpcs.xml
-    fi
+  - WP_MULTISITE=0 phpunit
+  - WP_MULTISITE=1 phpunit
+  - phpcs --standard=phpcs.xml
