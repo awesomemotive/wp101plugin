@@ -22,6 +22,19 @@ class SettingsTest extends WP_UnitTestCase {
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
 	}
 
+	public function test_registers_menu_page() {
+		global $menu;
+
+		$this->assertEmpty( $menu );
+
+		WP101_Plugin::get_instance()->admin_menu();
+
+		$menu_item = $menu[0];
+
+		$this->assertEquals( 'wp101', $menu_item[2], 'Expected "wp101" as the menu slug' );
+		$this->assertNotEmpty( menu_page_url( 'wp101', false ) );
+	}
+
 	/**
 	 * WP101 enables the user's API key to be set in-code two different ways:
 	 * 1. By populating a $_wp101_api_key global variable.
