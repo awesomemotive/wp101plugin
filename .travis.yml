@@ -48,4 +48,4 @@ before_script:
 script:
   - WP_MULTISITE=0 phpunit
   - WP_MULTISITE=1 phpunit
-  - phpcs --standard=phpcs.xml
+  - ./vendor/bin/phpcs --standard=phpcs.xml
