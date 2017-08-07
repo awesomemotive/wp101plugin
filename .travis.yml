@@ -43,7 +43,7 @@ install:
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - wp-enforcer
+  - ./vendor/bin/wp-enforcer
 
 script:
   - WP_MULTISITE=0 phpunit
