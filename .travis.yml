@@ -18,18 +18,8 @@ matrix:
       env: WP_VERSION=latest
     - php: 5.6
       env: WP_VERSION=latest
-
-    # Test against the trunk version of core.
     - php: 5.6
       env: WP_VERSION=trunk
-
-    # Run against the minimum-supported WordPress version, per readme.txt.
-    - php: 5.6
-      env: WP_VERSION=3.2
-
-    # Run against the minimum-supported PHP version.
-    - php: 5.3
-      env: WP_VERSION=latest
 
 install:
   - composer install --prefer-source
