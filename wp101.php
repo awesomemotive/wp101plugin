@@ -47,7 +47,6 @@ class WP101_Plugin {
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_head', array( $this, 'wp101_admin_icon') );
 		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_wp101-delete-topic'  , array( $this, 'ajax_delete_topic' ) );
 
@@ -138,13 +137,9 @@ class WP101_Plugin {
 	}
 
 	public function admin_menu() {
-		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'Video Tutorials', 'menu title', 'wp101' ), 'read', 'wp101', array( $this, 'render_listing_page' ) );
+		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'Video Tutorials (Old)', 'menu title', 'wp101' ), 'read', 'wp101-old', array( $this, 'render_listing_page' ) );
 		add_action( "load-{$hook}", array( $this, 'load' ) );
 	}
-
-    public function wp101_admin_icon() {
-	    echo '<style>#adminmenu #toplevel_page_wp101 div.wp-menu-image:before { content: "\f236" !important; }</style>';
-    }
 
 	private function validate_api_key_with_server( $key = null ) {
 		if ( null === $key ) {
