@@ -8,6 +8,8 @@ Author URI: https://wp101plugin.com/
 Text Domain: wp101
 */
 
+require_once __DIR__ . '/includes/class-api.php';
+
 // API KEY
 // You can hardcode the API key here, and it will be used as a starting value for the key
 $_wp101_api_key = '';

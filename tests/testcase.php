@@ -29,7 +29,7 @@ class TestCase extends WP_UnitTestCase {
 	 * @param  string        $method The method that should be made accessible.
 	 * @return ReflectionMethod
 	 */
-	protected function getAccessibleMethod( $class, $method ) {
+	protected function get_accessible_method( $class, $method ) {
 		$reflection = new ReflectionMethod( $class, $method );
 		$reflection->setAccessible( true );
 
