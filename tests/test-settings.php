@@ -8,12 +8,12 @@
 namespace WP101\Settings;
 
 use WP101_Plugin;
-use WP_UnitTestCase;
+use WP101\TestCase;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
  */
-class SettingsTest extends WP_UnitTestCase {
+class SettingsTest extends TestCase {
 
 	public function test_settings_link_is_injected_into_plugin_action_links() {
 		$this->markTestSkipped( 'Plugin action links filter is not behaving correctly' );

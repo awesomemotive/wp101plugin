@@ -7,14 +7,14 @@
 
 namespace WP101\Settings;
 
-use WP_UnitTestCase;
+use WP101\TestCase;
 
 /**
  * Tests for the plugin's uninstallation procedure, defined in uninstall.php.
  *
  * @runTestsInSeparateProcesses To avoid pollution of the WP_UNINSTALL_PLUGIN constant.
  */
-class UninstallTest extends WP_UnitTestCase {
+class UninstallTest extends TestCase {
 
 	public function test_script_checks_uninstall_plugin_constant() {
 		add_option( 'wp101_api_key', uniqid() );
