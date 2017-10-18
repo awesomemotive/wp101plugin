@@ -220,8 +220,8 @@ class WP101_Plugin {
 	public function api_key_notset_message(){ /* no message needed */ }
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "assets/js/wp101.min.js", __FILE__ ), array( 'jquery' ) );
-		wp_enqueue_style( 'wp101', plugins_url( "assets/css/wp101.css", __FILE__ ), array() );
+		wp_enqueue_script( 'wp101-legacy', plugins_url( "assets/js/wp101-legacy.min.js", __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_style( 'wp101-legacy', plugins_url( "assets/css/wp101-legacy.css", __FILE__ ), array() );
         wp_enqueue_script('jquery-ui-accordion');
 	}
 

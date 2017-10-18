@@ -92,16 +92,16 @@
 			});
 			$(this).parents('li').remove();
 		});
-		
+
 	    $('.accordion').accordion({
     		collapsible: true,
     		heightStyle: "content",
     		//set localStorage to save state on page reload
-		    activate: function(event, ui) {        
+		    activate: function(event, ui) {
 		        localStorage.setItem("wp101ListState", $(this).accordion("option", "active"));
 		    },
 		    active: parseInt(localStorage.getItem("wp101ListState")),
 	    });
-				
+
 	});
 })(jQuery);
