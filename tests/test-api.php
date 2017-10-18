@@ -8,6 +8,7 @@
 namespace WP101;
 
 use ReflectionProperty;
+use WP_Error;
 use WP101_Plugin;
 use WP101\API;
 use WP101\TestCase;
@@ -50,6 +51,28 @@ class ApiTest extends TestCase {
 
 		$api = new API;
 		$this->assertEquals( WP101_API_KEY, $api->get_api_key() );
+	}
+
+	public function test_get_playlist() {
+		$api  = new API;
+		$json = [ 'foo' => 'bar' ];
+
+		$this->set_expected_response([
+			'body' => wp_json_encode( $json ),
+		]);
+
+		$this->assertEquals( $json, $api->get_playlist() );
+	}
+
+	public function test_get_playlist_surfaces_wp_errors() {
+		$api  = new API;
+		$error = new WP_Error( 'Some message' );
+
+		$this->set_expected_response( function () use ( $error ) {
+			return $error;
+		} );
+
+		$this->assertSame( $error, $api->get_playlist() );
 	}
 
 	/**
@@ -119,6 +142,7 @@ class ApiTest extends TestCase {
 			$this->assertEquals( 'GET', $args['method'] );
 			$this->assertContains( '/test-endpoint', $url );
 			$this->assertEquals( 'Bearer ' . $key, $args['headers']['Authorization'] );
+			$this->assertEquals( site_url(), $args['headers']['X-Forwarded-Host'] );
 			$this->assertEquals( API::USER_AGENT, $args['user-agent']);
 
 			return $response;

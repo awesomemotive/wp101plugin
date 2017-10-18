@@ -61,6 +61,21 @@ class API {
 	}
 
 	/**
+	 * Retrieve all series available to the user, based on API key.
+	 *
+	 * @return array An array of all available series and topics.
+	 */
+	public function get_playlist() {
+		$response = $this->send_request( 'GET', '/playlist' );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		return json_decode( wp_remote_retrieve_body( $response ), true );
+	}
+
+	/**
 	 * Build an API request URI.
 	 *
 	 * @param string $path Optional. The API endpoint. Default is '/'.
@@ -96,7 +111,8 @@ class API {
 			'timeout'    => 30,
 			'user-agent' => self::USER_AGENT,
 			'headers'    => [
-				'Authorization' => 'Bearer ' . $this->get_api_key(),
+				'Authorization'    => 'Bearer ' . $this->get_api_key(),
+				'X-Forwarded-Host' => site_url(),
 			],
 		]);
 
