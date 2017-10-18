@@ -1,3 +1,4 @@
+tests/coverage
 vendor
 .DS_Store
 Thumbs.db
