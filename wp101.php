@@ -8,7 +8,13 @@ Author URI: https://wp101plugin.com/
 Text Domain: wp101
 */
 
-require_once __DIR__ . '/includes/class-api.php';
+define( 'WP101_INC', __DIR__ . '/includes' );
+define( 'WP101_VIEWS', __DIR__ . '/views' );
+define( 'WP101_URL', plugins_url( null, __FILE__ ) );
+define( 'WP101_VERSION', '5.0.0' );
+
+require_once WP101_INC . '/admin.php';
+require_once WP101_INC . '/class-api.php';
 
 // API KEY
 // You can hardcode the API key here, and it will be used as a starting value for the key

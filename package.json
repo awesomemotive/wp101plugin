@@ -1,0 +1,27 @@
+{
+  "name": "wp101",
+  "description": "A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.",
+  "main": "Gruntfile.js",
+  "author": {
+    "name": "WP101",
+    "url": "https://wp101.com"
+  },
+  "contributors": [
+    {
+      "name": "Liquid Web",
+      "url": "https://www.liquidweb.com"
+    },
+    {
+      "name": "Steve Grunwell",
+      "url": "https://stevegrunwell.com"
+    }
+  ],
+  "private": true,
+  "devDependencies": {
+    "eslint-config-wordpress": "^2.0.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-eslint": "^20.0.0",
+    "grunt-sass": "^2.0.0",
+    "grunt-wp-i18n": "^1.0.0"
+  }
+}
