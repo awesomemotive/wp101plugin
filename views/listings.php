@@ -12,8 +12,11 @@
 		<?php echo esc_html( _x( 'WordPress Video Tutorials', 'listings page title', 'wp101' ) ); ?>
 	</h1>
 
-	<main id="wp101-media">
-		<p>The main content will go here.</p>
+	<main class="wp101-media">
+		<h2 id="wp101-player-title"></h2>
+		<div class="wp101-player-wrap">
+			<iframe id="wp101-player" allowfullscreen></iframe>
+		</div>
 	</main>
 
 	<nav class="wp101-playlist card">
@@ -25,7 +28,7 @@
 					<?php foreach ( $series['topics'] as $topic ) : ?>
 
 						<li>
-							<a href="#"><?php echo esc_html( $topic['title'] ); ?></a>
+							<a href="#<?php echo esc_attr( $topic['slug'] ); ?>" data-media-title="<?php echo esc_attr( $topic['title'] ); ?>" data-media-slug="<?php echo esc_attr( $topic['slug'] ); ?>" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>"><?php echo esc_html( $topic['title'] ); ?></a>
 						</li>
 
 					<?php endforeach; ?>
