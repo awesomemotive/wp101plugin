@@ -22,6 +22,17 @@
 	<nav class="wp101-playlist card">
 		<?php foreach ( $playlist as $series ) : ?>
 
+			<?php
+				/*
+				 * Potentially skip over a series if there are restrictions which the current site
+				 * does not meet (e.g. "don't show Jetpack videos on a site not running Jetpack.").
+				 */
+				if ( ! empty( $series['restrictions'] ) && ! empty( $series['restrictions']['plugins'] ) ) {
+					if ( empty( array_filter( $series['restrictions']['plugins'], 'is_plugin_active' ) ) ) {
+						continue;
+					}
+				}
+			?>
 			<div class="wp101-series">
 				<h2><?php echo esc_html( $series['title'] ); ?></h2>
 				<ol class="wp101-topics-list">
