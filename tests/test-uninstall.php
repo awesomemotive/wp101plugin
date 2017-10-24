@@ -20,7 +20,10 @@ class UninstallTest extends TestCase {
 		add_option( 'wp101_api_key', uniqid() );
 		set_transient( 'wp101_topics', uniqid() );
 
-		$this->assertFalse( defined( 'WP_UNINSTALL_PLUGIN' ) );
+		$this->assertFalse(
+			defined( 'WP_UNINSTALL_PLUGIN' ),
+			'This test is predicated on WP_UNINSTALL_PLUGIN not being defined.'
+		);
 
 		require PROJECT_DIR . '/uninstall.php';
 

@@ -2,6 +2,9 @@
 /**
  * Show available content from WP101.
  *
+ * @global $api      An instance of WP101\API;
+ * @global $playlist An array of media from the WP101 API.
+ *
  * @package WP101
  */
 
