@@ -55,6 +55,8 @@ class API {
 
 		if ( defined( 'WP101_API_KEY' ) ) {
 			$this->api_key = WP101_API_KEY;
+		} else {
+			$this->api_key = get_option( 'wp101_api_key', '' );
 		}
 
 		return $this->api_key;

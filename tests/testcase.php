@@ -35,4 +35,21 @@ class TestCase extends WP_UnitTestCase {
 
 		return $reflection;
 	}
+
+	/**
+	 * Set the environment's API key.
+	 *
+	 * @param string $api_key|bool Optional. The API key value to set. If equal to FALSE, a random
+	 *                             key will be generated.
+	 * @return string The API key stored.
+	 */
+	protected function set_api_key( $api_key = false ) {
+		if ( false === $api_key ) {
+			$api_key = uniqid();
+		}
+
+		update_option( 'wp101_api_key', $api_key );
+
+		return $api_key;
+	}
 }

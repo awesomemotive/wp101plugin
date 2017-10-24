@@ -53,6 +53,19 @@ class ApiTest extends TestCase {
 		$this->assertEquals( WP101_API_KEY, $api->get_api_key() );
 	}
 
+	public function test_get_api_key_reads_from_options() {
+		$key = uniqid();
+		$this->set_api_key($key);
+
+		$this->assertFalse(
+			defined( 'WP101_API_KEY' ),
+			'This test is predicated on the WP101_API_KEY constant not being set.'
+		);
+
+		$api = new API;
+		$this->assertEquals( $key, $api->get_api_key() );
+	}
+
 	public function test_get_playlist() {
 		$api  = new API;
 		$json = [ 'foo' => 'bar' ];
