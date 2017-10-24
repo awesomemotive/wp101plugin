@@ -51,6 +51,15 @@ function register_menu_pages() {
 		__NAMESPACE__ . '\render_listings_page',
 		'dashicons-video-alt3'
 	);
+
+	add_submenu_page(
+		'wp101',
+		_x( 'WP101 Settings', 'page title', 'wp101' ),
+		_x( 'Settings', 'menu title', 'wp101' ),
+		'manage_options',
+		'wp101-settings',
+		__NAMESPACE__ . '\render_settings_page'
+	);
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
@@ -62,4 +71,11 @@ function render_listings_page() {
 	$playlist = $api->get_playlist();
 
 	require_once WP101_VIEWS . '/listings.php';
+}
+
+/**
+ * Render the WP101 settings page.
+ */
+function render_settings_page() {
+	require_once WP101_VIEWS . '/settings.php';
 }
