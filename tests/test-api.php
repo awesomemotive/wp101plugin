@@ -44,7 +44,7 @@ class ApiTest extends TestCase {
 	}
 
 	/**
-	 * @runTestInSeparateProcess
+	 * @runInSeparateProcess
 	 */
 	public function test_get_api_key_reads_constant() {
 		define( 'WP101_API_KEY', uniqid() );
@@ -114,7 +114,7 @@ class ApiTest extends TestCase {
 	}
 
 	/**
-	 * @runTestInSeparateProcess
+	 * @runInSeparateProcess
 	 */
 	public function test_build_uri_enables_base_to_be_changed_via_constant() {
 		define( 'WP101_API_URL', 'http://example.com' );
