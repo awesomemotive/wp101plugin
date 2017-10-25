@@ -9,12 +9,14 @@ namespace WP101;
 
 use Mockery;
 use ReflectionMethod;
+use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 use WP_UnitTestCase;
 
 /**
  * Base test case, with a bit of extra logic.
  */
 class TestCase extends WP_UnitTestCase {
+	use MarkupAssertionsTrait;
 
 	public function tearDown() {
 		parent::tearDown();

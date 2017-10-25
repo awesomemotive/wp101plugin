@@ -33,4 +33,5 @@ tests_add_filter( 'http_api_transports', '_mock_http_library' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+require_once PROJECT_DIR . '/vendor/autoload.php';
 require_once __DIR__ . '/testcase.php';

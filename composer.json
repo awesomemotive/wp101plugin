@@ -43,7 +43,8 @@
     "require-dev": {
         "stevegrunwell/wp-enforcer": "^0.5.0",
         "phpunit/phpunit": "^5.7",
-        "mockery/mockery": "^0.9.9"
+        "mockery/mockery": "^0.9.9",
+        "stevegrunwell/phpunit-markup-assertions": "^1.0"
     },
     "scripts": {
       "post-install-cmd": [
