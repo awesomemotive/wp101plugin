@@ -68,13 +68,16 @@ class ApiTest extends TestCase {
 
 	public function test_get_playlist() {
 		$api  = new API;
-		$json = [ 'foo' => 'bar' ];
+		$json = [
+			'status' => 'success',
+			'data'   => [],
+		];
 
 		$this->set_expected_response([
 			'body' => wp_json_encode( $json ),
 		]);
 
-		$this->assertEquals( $json, $api->get_playlist() );
+		$this->assertEquals( $json['data'], $api->get_playlist() );
 	}
 
 	public function test_get_playlist_surfaces_wp_errors() {
@@ -147,9 +150,12 @@ class ApiTest extends TestCase {
 		$api    = new API( $key );
 		$method = $this->get_accessible_method( $api, 'send_request' );
 
-		$response = $this->mock_http_response([
-			'body' => uniqid(),
-		]);
+		$response = $this->mock_http_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [],
+			] )
+		] );
 
 		$this->set_expected_response( function ( $preempt, $args, $url ) use ( $key, $response ) {
 			$this->assertEquals( 'GET', $args['method'] );
@@ -162,10 +168,26 @@ class ApiTest extends TestCase {
 		} );
 
 		$this->assertEquals(
-			$response,
+			[], // Value of $response['body']['data'] after being decoded.
 			$method->invoke( $api, 'GET', '/test-endpoint' ),
 			'Did not receive expected response from send_request().'
 		);
+	}
+
+	public function test_send_request_checks_response_status() {
+		$api    = new API;
+		$method = $this->get_accessible_method( $api, 'send_request' );
+
+		$response = $this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status'  => 'fail',
+				'data'    => [
+					'apiKey' => 'Invalid API key.',
+				],
+			] ),
+		] );
+
+		$this->assertTrue( is_wp_error( $method->invoke( $api, 'GET', '/test-endpoint' ) ) );
 	}
 
 	/**

@@ -68,13 +68,7 @@ class API {
 	 * @return array An array of all available series and topics.
 	 */
 	public function get_playlist() {
-		$response = $this->send_request( 'GET', '/playlist' );
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		return json_decode( wp_remote_retrieve_body( $response ), true );
+		return $this->send_request( 'GET', '/playlist' );
 	}
 
 	/**
@@ -104,7 +98,7 @@ class API {
 	 * @param array  $args   Optional. Additional HTTP arguments. For a full list of options,
 	 *                       @see wp_remote_request().
 	 *
-	 * @return array|WP_Error The HTTP response array or a WP_Error object if something went wrong.
+	 * @return array|WP_Error The HTTP response body or a WP_Error object if something went wrong.
 	 */
 	protected function send_request( $method, $path, $query = [], $args = [] ) {
 		$uri  = $this->build_uri( $path, $query );
@@ -118,6 +112,22 @@ class API {
 			],
 		]);
 
-		return wp_remote_request( $uri, $args );
+		$response = wp_remote_request( $uri, $args );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 'fail' === $body['status'] ) {
+			return new WP_Error(
+				'wp101-api',
+				__( 'The WP101 API request failed.', 'wp101' ),
+				$body['data']
+			);
+		}
+
+		return $body['data'];
 	}
 }
