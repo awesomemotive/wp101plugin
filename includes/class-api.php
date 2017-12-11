@@ -72,6 +72,15 @@ class API {
 	}
 
 	/**
+	 * Determine if an API key has been set.
+	 *
+	 * @return bool
+	 */
+	public function has_api_key() {
+		return (bool) $this->get_api_key();
+	}
+
+	/**
 	 * Build an API request URI.
 	 *
 	 * @param string $path Optional. The API endpoint. Default is '/'.

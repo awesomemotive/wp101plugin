@@ -66,6 +66,16 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
+	public function test_has_api_key() {
+		$api = new API;
+
+		$this->assertFalse( $api->has_api_key() );
+
+		$this->set_api_key();
+
+		$this->assertTrue( $api->has_api_key() );
+	}
+
 	public function test_get_playlist() {
 		$api  = new API;
 		$json = [
