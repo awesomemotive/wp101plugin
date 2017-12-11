@@ -15,6 +15,14 @@ use WP101\TestCase;
  */
 class AdminTest extends TestCase {
 
+	public function tearDown() {
+		global $menu;
+
+		parent::tearDown();
+
+		$menu = [];
+	}
+
 	public function test_enqueue_scripts() {
 		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
@@ -59,6 +67,7 @@ class AdminTest extends TestCase {
 		global $menu;
 
 		$this->assertEmpty( $menu, 'The $menu global should start off empty.' );
+		$this->set_api_key();
 
 		do_action( 'admin_menu' );
 
@@ -75,8 +84,27 @@ class AdminTest extends TestCase {
 		);
 	}
 
+	public function test_register_settings_page_shows_settings_page_as_only_link_if_api_key_not_set() {
+		global $menu;
+
+		do_action( 'admin_menu' );
+
+		$menu_item = $menu[0];
+
+		$this->assertEquals(
+			'wp101-settings',
+			$menu_item[2],
+			'Expected "wp101-settings" as the menu slug.'
+		);
+		$this->assertNotEmpty(
+			menu_page_url( 'wp101-settings', false ),
+			'WordPress should be able to generate the menu page URL.'
+		);
+	}
+
 	public function test_settings_link_is_injected_into_plugin_action_links() {
 		$this->markTestSkipped( 'Plugin action links filter is not behaving correctly' );
+
 		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
 
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );

@@ -21,6 +21,8 @@ class TestCase extends WP_UnitTestCase {
 	public function tearDown() {
 		parent::tearDown();
 
+		delete_option( 'wp101_api_key' );
+
 		Mockery::close();
 	}
 

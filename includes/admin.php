@@ -43,23 +43,38 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
-	add_menu_page(
-		_x( 'WP101', 'page title', 'wp101' ),
-		_x( 'Video Tutorials', 'menu title', 'wp101' ),
-		'read',
-		'wp101',
-		__NAMESPACE__ . '\render_listings_page',
-		'dashicons-video-alt3'
-	);
+	$api = new API;
 
-	add_submenu_page(
-		'wp101',
-		_x( 'WP101 Settings', 'page title', 'wp101' ),
-		_x( 'Settings', 'menu title', 'wp101' ),
-		'manage_options',
-		'wp101-settings',
-		__NAMESPACE__ . '\render_settings_page'
-	);
+	// If the API key hasn't been configured, *only* show the settings page.
+	if ( ! $api->has_api_key() ) {
+		add_menu_page(
+			_x( 'WP101', 'page title', 'wp101' ),
+			_x( 'Video Tutorials', 'menu title', 'wp101' ),
+			'manage_options',
+			'wp101-settings',
+			__NAMESPACE__ . '\render_settings_page',
+			'dashicons-video-alt3'
+		);
+
+	} else {
+		add_menu_page(
+			_x( 'WP101', 'page title', 'wp101' ),
+			_x( 'Video Tutorials', 'menu title', 'wp101' ),
+			'read',
+			'wp101',
+			__NAMESPACE__ . '\render_listings_page',
+			'dashicons-video-alt3'
+		);
+
+		add_submenu_page(
+			'wp101',
+			_x( 'WP101 Settings', 'page title', 'wp101' ),
+			_x( 'Settings', 'menu title', 'wp101' ),
+			'manage_options',
+			'wp101-settings',
+			__NAMESPACE__ . '\render_settings_page'
+		);
+	}
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
