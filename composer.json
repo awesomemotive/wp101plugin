@@ -41,9 +41,9 @@
     },
     "require": {},
     "require-dev": {
-        "stevegrunwell/wp-enforcer": "^0.5.0",
-        "phpunit/phpunit": "^5.7",
         "mockery/mockery": "^0.9.9",
+        "phpunit/phpunit": "^6.0",
+        "stevegrunwell/wp-enforcer": "^0.5.0",
         "stevegrunwell/phpunit-markup-assertions": "^1.0"
     },
     "scripts": {
