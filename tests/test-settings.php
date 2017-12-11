@@ -22,8 +22,12 @@ class SettingsTest extends TestCase {
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertContains(
-			'<input name="wp101[api-key]" id="wp101-api-key" type="text" value="' . $key . '"',
+		$this->assertHasElementWithAttributes(
+			[
+				'name'  => 'wp101[api-key]',
+				'id'    => 'wp101-api-key',
+				'value' => $key,
+			],
 			$output
 		);
 	}
@@ -38,9 +42,6 @@ class SettingsTest extends TestCase {
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertNotContains(
-			'<input name="wp101[api-key]"',
-			$output
-		);
+		$this->assertNotContainsSelector('#wp101-api-key', $output);
 	}
 }
