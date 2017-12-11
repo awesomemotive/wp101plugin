@@ -7,6 +7,7 @@
 
 namespace WP101\Admin;
 
+use WP101\Admin;
 use WP101\API;
 use WP101\TestCase;
 
@@ -63,7 +64,7 @@ class AdminTest extends TestCase {
 		);
 	}
 
-	public function test_register_settings_page() {
+	public function test_register_menu_pages() {
 		global $menu;
 
 		$this->assertEmpty( $menu, 'The $menu global should start off empty.' );
@@ -84,7 +85,7 @@ class AdminTest extends TestCase {
 		);
 	}
 
-	public function test_register_settings_page_shows_settings_page_as_only_link_if_api_key_not_set() {
+	public function test_register_menu_pages_shows_settings_page_as_only_link_if_api_key_not_set() {
 		global $menu;
 
 		do_action( 'admin_menu' );
@@ -100,6 +101,17 @@ class AdminTest extends TestCase {
 			menu_page_url( 'wp101-settings', false ),
 			'WordPress should be able to generate the menu page URL.'
 		);
+	}
+
+	public function test_register_settings() {
+		Admin\register_settings();
+
+		$settings = get_registered_settings();
+
+		$this->assertArrayHasKey( 'wp101_api_key', $settings );
+		$this->assertEquals( 'wp101', $settings['wp101_api_key']['group'] );
+		$this->assertEquals( 'sanitize_text_field', $settings['wp101_api_key']['sanitize_callback'] );
+		$this->assertFalse( $settings['wp101_api_key']['show_in_rest'], 'The API key should never be exposed via the WP REST API.' );
 	}
 
 	public function test_settings_link_is_injected_into_plugin_action_links() {

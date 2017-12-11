@@ -24,7 +24,7 @@ class SettingsTest extends TestCase {
 
 		$this->assertHasElementWithAttributes(
 			[
-				'name'  => 'wp101[api-key]',
+				'name'  => 'wp101_api_key',
 				'id'    => 'wp101-api-key',
 				'value' => $key,
 			],

@@ -79,6 +79,18 @@ function register_menu_pages() {
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
 /**
+ * Register the settings within WordPress.
+ */
+function register_settings() {
+	register_setting( 'wp101', 'wp101_api_key', [
+		'description'       => _x( 'The key used to authenticate with WP101plugin.com.', 'wp101' ),
+		'sanitize_callback' => 'sanitize_text_field',
+		'show_in_rest'      => false,
+	] );
+}
+add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
+
+/**
  * Render the WP101 listings page.
  */
 function render_listings_page() {
