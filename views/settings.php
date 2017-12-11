@@ -13,7 +13,7 @@ use WP101\TemplateTags as TemplateTags;
 	<h1><?php echo esc_html( _x( 'WP101 Settings', 'settings page title', 'wp101' ) ); ?></h1>
 
 	<section id="api-key">
-		<?php if ( defined( 'WP101_API_KEY' ) ) : ?>
+		<?php if ( defined( 'WP101_API_KEY' ) && WP101_API_KEY ) : ?>
 			<div class="notice notice-info">
 				<p><?php esc_html_e( 'Your API key has been set in your wp-config.php file.', 'wp101' ); ?></p>
 			</div>
