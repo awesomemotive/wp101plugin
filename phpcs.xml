@@ -11,11 +11,18 @@
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>Gruntfile.js</exclude-pattern>
 
 	<!-- Temporary exclusion for legacy code. -->
 	<exclude-pattern>*/assets/*</exclude-pattern>
 	<exclude-pattern>integrations/*</exclude-pattern>
 	<exclude-pattern>wp101.php</exclude-pattern>
+
+	<!-- Don't worry about missing class comments on tests. -->
+	<rule ref="Squiz.Commenting.ClassComment.Missing">
+		<exclude-pattern>includes/class-*</exclude-pattern>
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
 
 	<!--
 		Don't get angry about checking files that don't contain code

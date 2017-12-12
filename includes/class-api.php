@@ -105,7 +105,7 @@ class API {
 	 * @param string $path   The API request path.
 	 * @param array  $query  Optional. Query string arguments. Default is empty.
 	 * @param array  $args   Optional. Additional HTTP arguments. For a full list of options,
-	 *                       @see wp_remote_request().
+	 *                       see wp_remote_request().
 	 *
 	 * @return array|WP_Error The HTTP response body or a WP_Error object if something went wrong.
 	 */
