@@ -1,0 +1,27 @@
+/**
+ * Styles for the add-ons page.
+ *
+ * @package WP101
+ */
+
+@media (min-width: 1080px) {
+	.wp101-addon-list {
+		display: flex;
+		flex-wrap: wrap;
+		margin-top: -20px;
+
+		.card {
+			flex: 1;
+			position: relative;
+			margin-right: 20px;
+			padding-bottom: 4em;
+		}
+
+		.wp101-addon-button {
+			position: absolute;
+			bottom: 2em;
+			right: 1em;
+			margin: 0;
+		}
+	}
+}
