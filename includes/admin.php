@@ -74,6 +74,15 @@ function register_menu_pages() {
 		'wp101-settings',
 		__NAMESPACE__ . '\render_settings_page'
 	);
+
+	add_submenu_page(
+		'wp101',
+		_x( 'WP101 Add-ons', 'page title', 'wp101' ),
+		_x( 'Add-ons', 'menu title', 'wp101' ),
+		'manage_options',
+		'wp101-addons',
+		__NAMESPACE__ . '\render_addons_page'
+	);
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
@@ -88,6 +97,16 @@ function register_settings() {
 	] );
 }
 add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
+
+/**
+ * Render the WP101 add-ons page.
+ */
+function render_addons_page() {
+	$api    = new API();
+	$addons = $api->get_addons();
+
+	require_once WP101_VIEWS . '/add-ons.php';
+}
 
 /**
  * Render the WP101 listings page.

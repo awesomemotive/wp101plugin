@@ -76,10 +76,12 @@ class AdminTest extends TestCase {
 		$this->assertEquals( 'wp101', $menu['parent'][2], 'Expected "wp101" as the menu slug.' );
 		$this->assertEquals( 'wp101', $menu['children'][0][2], 'The first child should be "wp101".' );
 		$this->assertEquals( 'wp101-settings', $menu['children'][1][2], 'The second child should be "wp101-settings".' );
+		$this->assertEquals( 'wp101-addons', $menu['children'][2][2], 'The third child should be "wp101-addons".' );
 
 		// Ensure WordPress can generate corresponding menu page URLs.
 		$this->assertNotEmpty( menu_page_url( 'wp101', false ) );
 		$this->assertNotEmpty( menu_page_url( 'wp101-settings', false ) );
+		$this->assertNotEmpty( menu_page_url( 'wp101-addons', false ) );
 	}
 
 	/**

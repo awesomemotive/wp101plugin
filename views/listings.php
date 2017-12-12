@@ -10,7 +10,7 @@
 
 ?>
 
-<div class="wrap" class="wp101-settings">
+<div class="wrap wp101-settings">
 	<h1>
 		<?php echo esc_html( _x( 'WordPress Video Tutorials', 'listings page title', 'wp101' ) ); ?>
 	</h1>
