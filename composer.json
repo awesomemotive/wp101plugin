@@ -41,6 +41,7 @@
     },
     "require": {},
     "require-dev": {
+        "php": "^7.0",
         "stevegrunwell/wp-enforcer": "^0.5.0",
         "phpunit/phpunit": "~5.7"
     },
