@@ -17,5 +17,5 @@ use WP101\API;
  * @return string The current API key, or an empty string if one is not set.
  */
 function get_api_key() {
-	return (new API)->get_api_key();
+	return ( new API() )->get_api_key();
 }
