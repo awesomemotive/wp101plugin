@@ -49,7 +49,9 @@
 						</ol>
 					<?php endif; ?>
 
-					<p class="wp101-addon-button"><a href="" class="button button-primary"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a></p>
+					<p class="wp101-addon-button">
+						<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
+					</p>
 				</div>
 
 			<?php endforeach; ?>
