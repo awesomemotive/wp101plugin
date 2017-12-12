@@ -65,8 +65,8 @@ class WP101_Plugin {
 	        $url = get_admin_url() . 'admin.php?page=wp101&configure=1';
 	        $settings_link = '<a href="'.$url.'">' . __( 'Settings', 'wp101' ) . '</a>';
 	        array_unshift( $links, $settings_link );
-	        return $links;
 	    }
+	    return $links;
 	}
 
 	public function get_api_base() {
