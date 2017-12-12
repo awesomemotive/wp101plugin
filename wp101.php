@@ -59,9 +59,9 @@ class WP101_Plugin {
 			update_option( 'wp101_db_version', 2 );
 		}
 	}
-	
+
 	function showp101_settings_link($links) {
-	    if ( $this->is_user_authorized() ) { 
+	    if ( $this->is_user_authorized() ) {
 	        $url = get_admin_url() . 'admin.php?page=wp101&configure=1';
 	        $settings_link = '<a href="'.$url.'">' . __( 'Settings', 'wp101' ) . '</a>';
 	        array_unshift( $links, $settings_link );
@@ -80,7 +80,7 @@ class WP101_Plugin {
 		include_once 'integrations/class.woocommerce.php';
 		include_once 'integrations/class.wpseo.php';
 	}
-	
+
 	public function register_settings_hooks() {
 		add_action( 'wp101_admin_action_api-key'       , array( $this, 'update_api_key' ) );
 		add_action( 'wp101_admin_action_add-video'     , array( $this, 'add_video' ) );
@@ -227,7 +227,7 @@ class WP101_Plugin {
 		wp_enqueue_style( 'wp101', plugins_url( "assets/css/wp101.css", __FILE__ ), array() );
         wp_enqueue_script('jquery-ui-accordion');
 	}
-	
+
 	public function validate_api_key() {
 		if ( ! get_transient( 'wp101_api_key_valid' ) ) {
 			if ( ! $this->get_key() ) {
