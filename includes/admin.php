@@ -12,7 +12,7 @@ use WP101\API;
 /**
  * Register scripts and styles to be used in WP admin.
  *
- * @param string $hook
+ * @param string $hook The page being loaded.
  */
 function enqueue_scripts( $hook ) {
 	wp_register_style(
@@ -43,7 +43,7 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
-	$api = new API;
+	$api = new API();
 
 	// If the API key hasn't been configured, *only* show the settings page.
 	if ( ! $api->has_api_key() ) {
@@ -94,7 +94,7 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * Render the WP101 listings page.
  */
 function render_listings_page() {
-	$api = new API;
+	$api      = new API();
 	$playlist = $api->get_playlist();
 
 	require_once WP101_VIEWS . '/listings.php';
