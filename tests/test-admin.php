@@ -16,15 +16,7 @@ use WP101\TestCase;
  */
 class AdminTest extends TestCase {
 
-	public function tearDown() {
-		global $menu;
-
-		parent::tearDown();
-
-		$menu = [];
-	}
-
-	public function test_enqueue_scripts() {
+	public function test_enqueue_scripts_registers_scripts() {
 		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
 
@@ -40,28 +32,31 @@ class AdminTest extends TestCase {
 		);
 	}
 
-	public function test_enqueue_scripts_only_enqueues_on_wp101_pages() {
-		enqueue_scripts( 'some-hook' );
+	/**
+	 * Ensure that WP101 assets are only enqueued on WP101 pages.
+	 *
+	 * @dataProvider enqueue_hook_provider()
+	 *
+	 * @param string $hook     The hook to be executed.
+	 * @param bool   $enqueued Whether or not the assets should be enqueued for this hook.
+	 */
+	public function test_enqueue_scripts_enqueues_on_wp101_pages( $hook, bool $enqueued ) {
+		enqueue_scripts( $hook );
 
-		$this->assertFalse(
-			wp_style_is( 'wp101', 'enqueued' ),
-			'WP101 styles should only be enqueued on WP101 pages.'
-		);
-		$this->assertFalse(
-			wp_script_is( 'wp101', 'enqueued' ),
-			'WP101 scripts should only be enqueued on WP101 pages.'
-		);
+		$this->assertEquals( $enqueued, wp_style_is( 'wp101', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_script_is( 'wp101', 'enqueued' ) );
+	}
 
-		enqueue_scripts( 'toplevel_page_wp101' );
-
-		$this->assertTrue(
-			wp_style_is( 'wp101', 'enqueued' ),
-			'WP101 should be enqueued on WP101 pages.'
-		);
-		$this->assertTrue(
-			wp_script_is( 'wp101', 'enqueued' ),
-			'WP101 should be enqueued on WP101 pages.'
-		);
+	/**
+	 * Data provider for test_enqueue_scripts_enqueues_on_wp101_pages().
+	 */
+	public function enqueue_hook_provider() {
+		return [
+			'Generic page'   => [ 'some-hook', false ],
+			'WP101 listings' => [ 'toplevel_page_wp101', true ],
+			'WP101 settings' => [ 'video-tutorials_page_wp101-settings', true ],
+			'WP101 add-ons'  => [ 'video-tutorials_page_wp101-addons', true ],
+		];
 	}
 
 	public function test_register_menu_pages() {

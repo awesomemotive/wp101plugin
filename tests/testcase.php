@@ -27,6 +27,30 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Dequeue all scripts and styles.
+	 *
+	 * @after
+	 */
+	public function dequeue_assets() {
+		global $wp_styles, $wp_scripts;
+
+		$wp_styles->queue  = [];
+		$wp_scripts->queue = [];
+	}
+
+	/**
+	 * Tear down any custom menus.
+	 *
+	 * @after
+	 */
+	public function reset_menus() {
+		global $menu, $submenu;
+
+		$menu    = null;
+		$submenu = null;
+	}
+
+	/**
 	 * Return a ReflectionMethod with given protected/private $method accessible.
 	 *
 	 * @param  object|string $class  A class name or instance that contains the given method.
