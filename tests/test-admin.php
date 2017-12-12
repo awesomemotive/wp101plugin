@@ -65,42 +65,36 @@ class AdminTest extends TestCase {
 	}
 
 	public function test_register_menu_pages() {
-		global $menu;
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
 
-		$this->assertEmpty( $menu, 'The $menu global should start off empty.' );
 		$this->set_api_key();
 
-		do_action( 'admin_menu' );
+		$menu = $this->get_menu_items();
 
-		$menu_item = $menu[0];
+		$this->assertEquals( 'wp101', $menu['parent'][2], 'Expected "wp101" as the menu slug.' );
+		$this->assertEquals( 'wp101', $menu['children'][0][2], 'The first child should be "wp101".' );
+		$this->assertEquals( 'wp101-settings', $menu['children'][1][2], 'The second child should be "wp101-settings".' );
 
-		$this->assertEquals(
-			'wp101',
-			$menu_item[2],
-			'Expected "wp101" as the menu slug.'
-		);
-		$this->assertNotEmpty(
-			menu_page_url( 'wp101', false ),
-			'WordPress should be able to generate the menu page URL.'
-		);
+		// Ensure WordPress can generate corresponding menu page URLs.
+		$this->assertNotEmpty( menu_page_url( 'wp101', false ) );
+		$this->assertNotEmpty( menu_page_url( 'wp101-settings', false ) );
 	}
 
-	public function test_register_menu_pages_shows_settings_page_as_only_link_if_api_key_not_set() {
-		global $menu;
+	/**
+	 * If an API key hasn't been set, only the WP101 Settings page should be shown.
+	 */
+	public function test_register_menu_pages_hides_listings_if_no_api_key_is_set() {
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
 
-		do_action( 'admin_menu' );
+		$this->set_api_key( '' );
 
-		$menu_item = $menu[0];
+		$menu = $this->get_menu_items();
 
-		$this->assertEquals(
-			'wp101-settings',
-			$menu_item[2],
-			'Expected "wp101-settings" as the menu slug.'
-		);
-		$this->assertNotEmpty(
-			menu_page_url( 'wp101-settings', false ),
-			'WordPress should be able to generate the menu page URL.'
-		);
+		$this->assertEquals( 'wp101-settings', $menu['parent'][2], 'Expected "wp101-settings" as the menu slug.' );
 	}
 
 	public function test_register_settings() {
@@ -120,5 +114,21 @@ class AdminTest extends TestCase {
 		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
 
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
+	}
+
+	/**
+	 * Retrieve the WP101 menu node(s) visible for the current user.
+	 *
+	 * @return array
+	 */
+	protected function get_menu_items() {
+		global $menu, $submenu;
+
+		do_action( 'admin_menu' );
+
+		return [
+			'parent'   => $menu[0],
+			'children' => $submenu['wp101'],
+		];
 	}
 }
