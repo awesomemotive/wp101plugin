@@ -102,8 +102,9 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * Render the WP101 add-ons page.
  */
 function render_addons_page() {
-	$api    = new API();
-	$addons = $api->get_addons();
+	$api       = new API();
+	$addons    = $api->get_addons();
+	$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug' );
 
 	require_once WP101_VIEWS . '/add-ons.php';
 }

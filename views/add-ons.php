@@ -2,8 +2,9 @@
 /**
  * Show available add-ons from WP101.
  *
- * @global $api    An instance of WP101\API;
- * @global $addons An array of add-ons from the WP101 API.
+ * @global $api       An instance of WP101\API;
+ * @global $addons    An array of add-ons from the WP101 API.
+ * @global $purchased Slugs of any Series this site already has access to.
  *
  * @package WP101
  */
@@ -29,6 +30,7 @@
 
 		<div class="wp101-addon-list">
 			<?php foreach ( $addons['addons'] as $addon ) : ?>
+				<?php $has_addon = in_array( $addon['slug'], $purchased, true ); ?>
 
 				<div class="card wp101-addon">
 					<h2><?php echo esc_html( $addon['title'] ); ?></h2>
@@ -50,7 +52,12 @@
 					<?php endif; ?>
 
 					<p class="wp101-addon-button">
-						<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
+						<?php if ( $has_addon ) : ?>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary"><?php echo esc_html_e( 'Watch Videos', 'wp101' ); ?></a>
+
+						<?php else : ?>
+							<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
+						<?php endif; ?>
 					</p>
 				</div>
 
