@@ -170,6 +170,7 @@ class WP101_Plugin {
 				return $_wp101_api_key;
 			} elseif ( empty( $db ) && defined( 'WP101_API_KEY' ) ) {
 				update_option( 'wp101_api_key', WP101_API_KEY );
+				return WP101_API_KEY;
 			} else {
 				return $db;
 			}

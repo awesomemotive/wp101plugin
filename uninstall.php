@@ -1,18 +1,23 @@
 <?php
+/**
+ * Uninstall procedure for WP101.
+ *
+ * @package WP101
+ */
 
-// If uninstall is not called from WordPress, exit
-if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit();
+// Exit if the file is being accessed directly.
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	exit;
 }
 
-// Delete Options
+// Delete WP101 options.
 delete_option( 'wp101_api_key' );
 delete_option( 'wp101_db_version' );
 delete_option( 'wp101_hidden_topics' );
 delete_option( 'wp101_custom_topics' );
 delete_option( 'wp101_admin_restriction' );
 
-// Delete Transients
+// Delete WP101 transients.
 delete_transient( 'wp101_topics' );
 delete_transient( 'wp101_jetpack_topics' );
 delete_transient( 'wp101_woocommerce_topics' );
