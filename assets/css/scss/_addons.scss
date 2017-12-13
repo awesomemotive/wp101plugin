@@ -4,24 +4,33 @@
  * @package WP101
  */
 
-@media (min-width: 1080px) {
-	.wp101-addon-list {
+.wp101-addon-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: -20px;
+	margin-right: -20px;
+
+	.card {
 		display: flex;
-		flex-wrap: wrap;
-		margin-top: -20px;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		justify-content: flex-start;
+		flex: 1;
+		margin-right: 20px;
+	}
 
-		.card {
-			flex: 1;
-			position: relative;
-			margin-right: 20px;
-			padding-bottom: 4em;
-		}
+	.wp101-addon-button {
+		align-self: flex-end;
+		margin-top: auto;
+	}
 
-		.wp101-addon-button {
-			position: absolute;
-			bottom: 2em;
-			right: 1em;
-			margin: 0;
-		}
+	ol {
+		margin-top: 0;
+	}
+}
+
+.wp101-addon-description {
+	p:first-child {
+		margin-top: 0;
 	}
 }
