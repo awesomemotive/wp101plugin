@@ -9,6 +9,8 @@
  * @package WP101
  */
 
+use WP101\TemplateTags as TemplateTags;
+
 ?>
 
 <main class="wrap wp101-addons">
@@ -42,13 +44,7 @@
 
 					<?php if ( ! empty( $addon['topics'] ) ) : ?>
 						<h3><?php esc_html_e( 'In this series:', 'wp101' ); ?></h3>
-						<ol>
-							<?php foreach ( $addon['topics'] as $topic ) : ?>
-
-								<li><?php echo esc_html( $topic['title'] ); ?></li>
-
-							<?php endforeach; ?>
-						</ol>
+						<?php TemplateTags\list_topics( $addon['topics'], 3, $addon['url'] ); ?>
 					<?php endif; ?>
 
 					<p class="wp101-addon-button">
