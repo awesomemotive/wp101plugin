@@ -24,8 +24,10 @@
 	 * @param HTMLElement el - The playlist node.
 	 */
 	function loadTopic(el) {
+		el = el || getCurrentTopic();
+
 		if (! el) {
-			el = getCurrentTopic();
+			return;
 		}
 
 		$playlist.find('a.active').removeClass('active');
