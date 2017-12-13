@@ -45,7 +45,7 @@
 	// Enable jQuery accordion for list of series.
 	$playlist.accordion({
 		collapsible: true,
-		header: 'h2',
+		header: '.wp101-series h2',
 		heightStyle: 'content',
 		activate: function () {
 			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));

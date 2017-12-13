@@ -51,5 +51,11 @@
 			</div>
 
 		<?php endforeach; ?>
+
+		<div class="wp101-addon-notice">
+			<h2><?php echo esc_html_e( 'More from WP101', 'wp101' ); ?></h2>
+			<p><?php esc_html_e( 'Get the most out of WP101 with even more content!', 'wp101' ); ?></p>
+			<p><a href="<?php echo esc_url( menu_page_url( 'wp101-addons', false ) ); ?>" class="button button-secondary"><?php esc_html_e( 'Get more videos from WP101', 'wp101' ); ?></a></p>
+		</div>
 	</nav>
 </div>
