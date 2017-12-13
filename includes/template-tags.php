@@ -7,6 +7,7 @@
 
 namespace WP101\TemplateTags;
 
+use WP101\Admin as Admin;
 use WP101\API;
 
 /**
@@ -18,6 +19,15 @@ use WP101\API;
  */
 function get_api_key() {
 	return ( new API() )->get_api_key();
+}
+
+/**
+ * Determine if the current user can purchase add-ons.
+ *
+ * @return bool
+ */
+function current_user_can_purchase_addons() {
+	return current_user_can( Admin\get_addon_capability() );
 }
 
 /**

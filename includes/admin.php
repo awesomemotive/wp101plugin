@@ -40,6 +40,21 @@ function enqueue_scripts( $hook ) {
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
 
 /**
+ * Retrieve the capability necessary for users to view/purchase add-ons.
+ *
+ * @return string A WordPress capability name.
+ */
+function get_addon_capability() {
+
+	/**
+	 * Determine the capability a user must possess in order to purchase WP101 add-ons.
+	 *
+	 * @param string $capability The capability name.
+	 */
+	return apply_filters( 'wp101_addon_capability', 'publish_posts' );
+}
+
+/**
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
@@ -79,7 +94,7 @@ function register_menu_pages() {
 		'wp101',
 		_x( 'WP101 Add-ons', 'page title', 'wp101' ),
 		_x( 'Add-ons', 'menu title', 'wp101' ),
-		'manage_options',
+		get_addon_capability(),
 		'wp101-addons',
 		__NAMESPACE__ . '\render_addons_page'
 	);

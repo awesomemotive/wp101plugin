@@ -7,7 +7,7 @@
 
 namespace WP101\Admin;
 
-use WP101\Admin;
+use WP101\Admin as Admin;
 use WP101\API;
 use WP101\TestCase;
 
@@ -59,6 +59,24 @@ class AdminTest extends TestCase {
 		];
 	}
 
+	public function test_get_addon_capability() {
+		$this->assertEquals(
+			'publish_posts',
+			Admin\get_addon_capability(),
+			'Default should be "publish_posts".'
+		);
+
+		add_filter( 'wp101_addon_capability', function () {
+			return 'my_capability';
+		} );
+
+		$this->assertEquals(
+			'my_capability',
+			Admin\get_addon_capability(),
+			'Value should be overridden via the wp101_addon_capability filter.'
+		);
+	}
+
 	public function test_register_menu_pages() {
 		wp_set_current_user( $this->factory()->user->create( [
 			'role' => 'administrator',
@@ -70,6 +88,7 @@ class AdminTest extends TestCase {
 
 		$this->assertEquals( 'wp101', $menu['parent'][2], 'Expected "wp101" as the menu slug.' );
 		$this->assertEquals( 'wp101', $menu['children'][0][2], 'The first child should be "wp101".' );
+		$this->assertEquals( 'manage_options', $menu['children'][1][1], 'The wp101-settings page requires manage_options.' );
 		$this->assertEquals( 'wp101-settings', $menu['children'][1][2], 'The second child should be "wp101-settings".' );
 		$this->assertEquals( 'wp101-addons', $menu['children'][2][2], 'The third child should be "wp101-addons".' );
 
