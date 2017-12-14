@@ -15,6 +15,7 @@ define( 'WP101_VERSION', '5.0.0' );
 
 require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
+require_once WP101_INC . '/shortcode.php';
 require_once WP101_INC . '/template-tags.php';
 
 // API KEY
