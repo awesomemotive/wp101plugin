@@ -18,22 +18,31 @@ namespace WP101\Shortcode;
  * @return string The rendered shortcode content.
  */
 function render_shortcode( $atts ) {
-	$atts  = shortcode_atts( [
+	$atts = shortcode_atts( [
 		'video' => null,
 	], $atts, 'wp101' );
-	$debug = current_user_can( 'edit_posts' );
 
 	if ( ! $atts['video'] ) {
-		if ( $debug ) {
-			return sprintf(
-				'<!-- %s -->',
-				esc_html( __( 'No WP101 video ID was provided', 'wp101' ) )
-			);
-		} else {
-			return;
-		}
+		return shortcode_debug( __( 'No WP101 video ID was provided', 'wp101' ) );
 	}
 
 	return 'Embed';
 }
 add_shortcode( 'wp101', __NAMESPACE__ . '\render_shortcode' );
+
+/**
+ * If the current user is logged in and has the ability to edit_posts, print a debug message in the
+ * form of an HTML comment. Otherwise, return an empty string.
+ *
+ * @param string $message The debug message to *maybe* display.
+ * @return string Either an HTML comment with the $message or an empty string.
+ */
+function shortcode_debug( $message ) {
+	$output = '';
+
+	if ( current_user_can( 'edit_posts' ) ) {
+		$output = sprintf( '<!-- %1$s -->', esc_html( $message ) );
+	}
+
+	return $output;
+}

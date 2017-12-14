@@ -25,15 +25,20 @@ class ShortcodeTest extends TestCase {
 		);
 	}
 
-	public function test_renders_html_comment_for_authenticated_users_if_video_id_is_empty() {
+	public function test_shortcode_debug() {
+		$this->assertEmpty(
+			Shortcode\shortcode_debug( 'Foo bar' ),
+			'Unauthenticated users should see an empty string.'
+		);
+
 		wp_set_current_user( $this->factory()->user->create( [
 			'role' => 'editor',
 		] ) );
 
-		$this->assertStringMatchesFormat(
-			'<!-- %s -->',
-			(string) Shortcode\render_shortcode( [] ),
-			'Authenticated users should see an HTML comment, hinting at what might be wrong.'
+		$this->assertEquals(
+			'<!-- Foo bar -->',
+			Shortcode\shortcode_debug( 'Foo bar' ),
+			'Authenticated users should see the debug message.'
 		);
 	}
 }
