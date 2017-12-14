@@ -5,9 +5,7 @@
  * @package WP101
  */
 
-namespace WP101\Settings;
-
-use WP101\TestCase;
+namespace WP101\Tests;
 
 /**
  * Tests for the plugin's uninstallation procedure, defined in uninstall.php.
