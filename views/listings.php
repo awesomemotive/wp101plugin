@@ -23,7 +23,7 @@
 	</main>
 
 	<nav class="wp101-playlist card">
-		<?php foreach ( $playlist as $series ) : ?>
+		<?php foreach ( $playlist['series'] as $series ) : ?>
 
 			<?php
 
