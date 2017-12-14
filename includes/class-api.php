@@ -106,20 +106,29 @@ class API {
 	 * @param array  $query  Optional. Query string arguments. Default is empty.
 	 * @param array  $args   Optional. Additional HTTP arguments. For a full list of options,
 	 *                       see wp_remote_request().
+	 * @param int    $cache  Optional. The number of seconds for which the result should be cached.
+	 *                       Default is 0 seconds (no caching).
 	 *
 	 * @return array|WP_Error The HTTP response body or a WP_Error object if something went wrong.
 	 */
-	protected function send_request( $method, $path, $query = [], $args = [] ) {
-		$uri  = $this->build_uri( $path, $query );
-		$args = wp_parse_args( $args, [
-			'method'     => $method,
+	protected function send_request( $method, $path, $query = [], $args = [], $cache = 0 ) {
+		$uri       = $this->build_uri( $path, $query );
+		$args      = wp_parse_args( $args, [
 			'timeout'    => 30,
 			'user-agent' => self::USER_AGENT,
 			'headers'    => [
 				'Authorization'    => 'Bearer ' . $this->get_api_key(),
+				'Method'           => $method,
 				'X-Forwarded-Host' => site_url(),
 			],
-		]);
+		] );
+		$cache_key = self::generate_cache_key( $uri, $args );
+		$cached    = get_transient( $cache_key );
+
+		// Return the cached version, if we have it.
+		if ( $cache && $cached ) {
+			return $cached;
+		}
 
 		$response = wp_remote_request( $uri, $args );
 
@@ -137,6 +146,22 @@ class API {
 			);
 		}
 
+		// Cache the result.
+		if ( $cache ) {
+			set_transient( $cache_key, $body['data'], $cache );
+		}
+
 		return $body['data'];
+	}
+
+	/**
+	 * Given a URI and arguments, generate a cache key for use with WP101's internal caching system.
+	 *
+	 * @param string $uri  The API URI, with any query string arguments.
+	 * @param array  $args Optional. An array of HTTP arguments used in the request. Default is empty.
+	 * @return string A cache key.
+	 */
+	public static function generate_cache_key( $uri, $args = [] ) {
+		return 'wp101_' . substr( md5( $uri . wp_json_encode( $args ) ), 0, 12 );
 	}
 }
