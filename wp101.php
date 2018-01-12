@@ -8,6 +8,15 @@ Author URI: https://wp101plugin.com/
 Text Domain: wp101
 */
 
+define( 'WP101_INC', __DIR__ . '/includes' );
+define( 'WP101_VIEWS', __DIR__ . '/views' );
+define( 'WP101_URL', plugins_url( null, __FILE__ ) );
+define( 'WP101_VERSION', '5.0.0' );
+
+require_once WP101_INC . '/admin.php';
+require_once WP101_INC . '/class-api.php';
+require_once WP101_INC . '/template-tags.php';
+
 // API KEY
 // You can hardcode the API key here, and it will be used as a starting value for the key
 $_wp101_api_key = '';
@@ -45,7 +54,6 @@ class WP101_Plugin {
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'admin_head', array( $this, 'wp101_admin_icon') );
 		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_wp101-delete-topic'  , array( $this, 'ajax_delete_topic' ) );
 
@@ -62,7 +70,7 @@ class WP101_Plugin {
 
 	function showp101_settings_link($links) {
 	    if ( $this->is_user_authorized() ) {
-	        $url = get_admin_url() . 'admin.php?page=wp101&configure=1';
+	        $url = get_admin_url() . 'admin.php?page=wp101-old&configure=1';
 	        $settings_link = '<a href="'.$url.'">' . __( 'Settings', 'wp101' ) . '</a>';
 	        array_unshift( $links, $settings_link );
 	        return $links;
@@ -93,7 +101,7 @@ class WP101_Plugin {
 
 		update_option( 'wp101_admin_restriction', absint( $_POST['wp101_admin_restriction'] ) );
 
-		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		wp_redirect( admin_url( 'admin.php?page=wp101-old&configure=1' ) );
 		exit();
 	}
 
@@ -115,7 +123,7 @@ class WP101_Plugin {
 			set_transient( 'wp101_message', 'error', 300 );
 		}
 
-		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		wp_redirect( admin_url( 'admin.php?page=wp101-old&configure=1' ) );
 		exit();
 	}
 
@@ -123,7 +131,7 @@ class WP101_Plugin {
 		check_admin_referer( 'wp101-add-video' );
 		$this->add_custom_help_topic( stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
 		set_transient( 'wp101_message', 'added_video', 300 );
-		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		wp_redirect( admin_url( 'admin.php?page=wp101-old&configure=1' ) );
 		exit();
 	}
 
@@ -131,18 +139,14 @@ class WP101_Plugin {
 		check_admin_referer( 'wp101-update-video-' . $_POST['document'] );
 		$this->update_custom_help_topic( $_POST['document'], stripslashes( $_POST['wp101_video_title'] ), stripslashes( $_POST['wp101_video_code'] ) );
 		set_transient( 'wp101_message', 'updated_video', 300 );
-		wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+		wp_redirect( admin_url( 'admin.php?page=wp101-old&configure=1' ) );
 		exit();
 	}
 
 	public function admin_menu() {
-		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'Video Tutorials', 'menu title', 'wp101' ), 'read', 'wp101', array( $this, 'render_listing_page' ) );
+		$hook = add_menu_page( _x( 'WP101', 'page title', 'wp101' ), _x( 'Video Tutorials (Old)', 'menu title', 'wp101' ), 'read', 'wp101-old', array( $this, 'render_listing_page' ) );
 		add_action( "load-{$hook}", array( $this, 'load' ) );
 	}
-
-    public function wp101_admin_icon() {
-	    echo '<style>#adminmenu #toplevel_page_wp101 div.wp-menu-image:before { content: "\f236" !important; }</style>';
-    }
 
 	private function validate_api_key_with_server( $key = null ) {
 		if ( null === $key ) {
@@ -194,7 +198,7 @@ class WP101_Plugin {
 			$result = $this->validate_api_key();
 			if ( 'valid' !== $result && $this->is_user_authorized() ) {
 				set_transient( 'wp101_message', $result, 300 );
-				wp_redirect( admin_url( 'admin.php?page=wp101&configure=1' ) );
+				wp_redirect( admin_url( 'admin.php?page=wp101-old&configure=1' ) );
 				exit();
 			}
 		}
@@ -223,8 +227,8 @@ class WP101_Plugin {
 	public function api_key_notset_message(){ /* no message needed */ }
 
 	private function enqueue() {
-		wp_enqueue_script( 'wp101', plugins_url( "assets/js/wp101.min.js", __FILE__ ), array( 'jquery' ) );
-		wp_enqueue_style( 'wp101', plugins_url( "assets/css/wp101.css", __FILE__ ), array() );
+		wp_enqueue_script( 'wp101-legacy', plugins_url( "assets/js/wp101-legacy.min.js", __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_style( 'wp101-legacy', plugins_url( "assets/css/wp101-legacy.css", __FILE__ ), array() );
         wp_enqueue_script('jquery-ui-accordion');
 	}
 
@@ -406,7 +410,7 @@ class WP101_Plugin {
 				}
 				$edit_links = $addl_class = '';
 			}
-			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
+			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101-old&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
 		}
 
 		$output .= '</ol></div>';
@@ -425,9 +429,9 @@ class WP101_Plugin {
 			foreach ( $custom_topics as $id => $topic ) {
 
 				if ( $edit_mode ) {
-					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&configure=1&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
+					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101-old&configure=1&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span> <small class="wp101-delete">[<a href="#" data-topic-id="' . $id . '" data-nonce="' . wp_create_nonce( 'wp101-delete-topic-' . $id ) . '">delete</a>]</small></li>';
 				} else {
-					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
+					$output .= '<li class="page-item-' . $id . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101-old&document=' . $id ) ) . '">' . esc_html( $topic['title'] ) . '</a></span></li>';
 				}
 			}
 			$output .= '</ol></div>';
@@ -497,7 +501,7 @@ class WP101_Plugin {
 			</style>
 		<?php endif; ?>
 <div class="wrap" id="wp101-settings">
-	<h2 class="wp101title"><?php _ex( 'WordPress Video Tutorials', 'h2 title', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a id="wp101_settings_button" class="button" href="<?php echo admin_url( 'admin.php?page=wp101&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h2>
+	<h2 class="wp101title"><?php _ex( 'WordPress Video Tutorials', 'h2 title', 'wp101' ); ?><?php if ( $this->is_user_authorized() ) : ?><span><a id="wp101_settings_button" class="button" href="<?php echo admin_url( 'admin.php?page=wp101-old&configure=1' ); ?>"><?php _ex( 'Settings', 'Button with limited space', 'wp101' ); ?></a></span><?php endif; ?></h2>
 
 	<?php if ( $this->is_user_authorized() && isset( $_GET['configure'] ) && $_GET['configure'] ) : ?>
 
@@ -672,7 +676,7 @@ class WP101_Plugin {
 		</div>
 		<?php else : ?>
 			<?php if ( $this->is_user_authorized() ) : ?>
-				<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101&configure=1' ) ); ?></p>
+				<p><?php printf( __( 'No help topics found. <a href="%s">Configure your WP101Plugin.com API key</a>.', 'wp101' ), admin_url( 'admin.php?page=wp101-old&configure=1' ) ); ?></p>
 			<?php else : ?>
 				<p><?php _e( 'No help topics found. Contact the site administrator to configure your WP101Plugin.com API key.', 'wp101' ); ?></p>
 			<?php endif; ?>

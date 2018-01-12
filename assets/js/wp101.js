@@ -1,107 +1,56 @@
-(function($){
-	$(document).ready(function(){
+(function ($) {
+	'use strict';
 
-		var maybeShowAll = function() {
-			$.each( $( '.wp101-show-all' ), function() {
-				var $this       = $( this ),
-					$hide_link  = $( '.wp101-hide-all', $this.parent() ),
-					$maybe_hide = $this.parent().next().find( '.wp101-show:visible' );
+	var $playlist = $('.wp101-playlist'),
+		title = document.getElementById('wp101-player-title'),
+		player = document.getElementById('wp101-player');
 
-					if ( $maybe_hide.length < 1 ) {
-						$this.hide();
-						$hide_link.show();
-					} else {
-						$this.show();
-						$hide_link.hide();
-					}
-			} );
-		};
+	/**
+	 * Read window.location.hash and return the HTMLElement representing that topic
+	 * in the playlist.
+	 *
+	 * If no match is found, return the first playlist item.
+	 */
+	function getCurrentTopic() {
+		var hash = window.location.hash.substring(1),
+			topic = document.querySelector('a[data-media-slug="' + hash + '"]');
 
-		maybeShowAll();
+		return topic || document.querySelector('.wp101-topics-list a');
+	}
 
-		$('ol.wp101-topic-ol li small.wp101-hide a').click(function(e){
-			e.preventDefault();
-			$(this).parents('li.wp101-shown').removeClass('wp101-shown').addClass('wp101-hidden');
-			$.post( ajaxurl, {
-				_wpnonce: $(this).data('nonce'),
-				action: 'wp101-showhide-topic',
-				direction: 'hide',
-				topic_id: $(this).data('topic-id')
-			}, maybeShowAll );
-		});
+	/**
+	 * Load a topic based on its playlist node.
+	 *
+	 * @param HTMLElement el - The playlist node.
+	 */
+	function loadTopic(el) {
+		if (! el) {
+			el = getCurrentTopic();
+		}
 
-		$('small.wp101-hide-all a').click(function(e){
-			e.preventDefault();
+		$playlist.find('a.active').removeClass('active');
+		el.classList.add('active');
 
-			var $this       = $( this ),
-				$show_link  = $( '.wp101-show-all', $this.parent().parent() ),
-				$ul         = $this.parent().parent().next();
+		player.src = el.dataset.mediaSrc;
+		title.innerText = el.dataset.mediaTitle;
+	}
 
-			$this.parent().hide();
-			$show_link.show();
-
-			$ul.find( '.wp101-show' ).show().parents('li.wp101-shown').removeClass('wp101-shown').addClass('wp101-hidden');
-			$ul.find( '.wp101-hide' ).hide();
-
-			$.post( ajaxurl, {
-				_wpnonce : $this.data('nonce'),
-				action   : 'wp101-showhide-topic',
-				direction: 'hide-all',
-				topic    : $this.data('topic')
-			} );
-		});
-
-		$('ol.wp101-topic-ol li small.wp101-show a').click(function(e){
-			e.preventDefault();
-			$(this).parents('li.wp101-hidden').removeClass('wp101-hidden').addClass('wp101-shown');
-			$.post( ajaxurl, {
-				_wpnonce: $(this).data('nonce'),
-				action: 'wp101-showhide-topic',
-				direction: 'show',
-				topic_id: $(this).data('topic-id')
-			}, maybeShowAll);
-		});
-
-		$( 'small.wp101-show-all a' ).click(function(e){
-			e.preventDefault();
-
-			var $this       = $( this ),
-				$hide_link  = $( '.wp101-hide-all', $this.parent().parent() ),
-				$ul         = $this.parent().parent().next();
-
-			$this.parent().hide();
-			$hide_link.show();
-
-			$ul.find( '.wp101-hide' ).show().parents('li.wp101-hidden').removeClass('wp101-hidden').addClass('wp101-shown');
-			$ul.find( '.wp101-show' ).hide();
-
-			$.post( ajaxurl, {
-				_wpnonce: $(this).data('nonce'),
-				action: 'wp101-showhide-topic',
-				direction: 'show-all',
-				topic : $(this).data('topic')
-			} );
-		});
-
-		$('ol.wp101-topic-ol li small.wp101-delete a').click(function(e){
-			e.preventDefault();
-			$.post( ajaxurl, {
-				_wpnonce: $(this).data('nonce'),
-				action: 'wp101-delete-topic',
-				topic_id: $(this).data('topic-id')
-			});
-			$(this).parents('li').remove();
-		});
-		
-	    $('.accordion').accordion({
-    		collapsible: true,
-    		heightStyle: "content",
-    		//set localStorage to save state on page reload
-		    activate: function(event, ui) {        
-		        localStorage.setItem("wp101ListState", $(this).accordion("option", "active"));
-		    },
-		    active: parseInt(localStorage.getItem("wp101ListState")),
-	    });
-				
+	// Detect changes to window.location.hash.
+	window.addEventListener('hashchange', function () {
+		loadTopic();
 	});
-})(jQuery);
+
+	// Enable jQuery accordion for list of series.
+	$playlist.accordion({
+		collapsible: true,
+		header: 'h2',
+		heightStyle: 'content',
+		activate: function () {
+			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
+		},
+		active: parseInt(localStorage.getItem('wp101ListState'), 10)
+	});
+
+	// Load the default topic.
+	loadTopic();
+}(jQuery));
