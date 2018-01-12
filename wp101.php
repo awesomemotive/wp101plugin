@@ -16,6 +16,12 @@ define( 'WP101_VERSION', '5.0.0' );
 require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
 require_once WP101_INC . '/template-tags.php';
+require_once WP101_INC . '/uninstall.php';
+
+/**
+ * Register the uninstall callback.
+ */
+register_uninstall_hook( __FILE__, 'WP101\Uninstall\cleanup_plugin' );
 
 // API KEY
 // You can hardcode the API key here, and it will be used as a starting value for the key
