@@ -5,11 +5,9 @@
  * @package WP101
  */
 
-namespace WP101\Admin;
+namespace WP101\Tests;
 
-use WP101\Admin;
-use WP101\API;
-use WP101\TestCase;
+use WP101\Admin as Admin;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
@@ -28,7 +26,7 @@ class AdminTest extends TestCase {
 		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
 
-		enqueue_scripts( 'some-hook' );
+		Admin\enqueue_scripts( 'some-hook' );
 
 		$this->assertTrue(
 			wp_style_is( 'wp101', 'registered' ),
@@ -41,7 +39,7 @@ class AdminTest extends TestCase {
 	}
 
 	public function test_enqueue_scripts_only_enqueues_on_wp101_pages() {
-		enqueue_scripts( 'some-hook' );
+		Admin\enqueue_scripts( 'some-hook' );
 
 		$this->assertFalse(
 			wp_style_is( 'wp101', 'enqueued' ),
@@ -52,7 +50,7 @@ class AdminTest extends TestCase {
 			'WP101 scripts should only be enqueued on WP101 pages.'
 		);
 
-		enqueue_scripts( 'toplevel_page_wp101' );
+		Admin\enqueue_scripts( 'toplevel_page_wp101' );
 
 		$this->assertTrue(
 			wp_style_is( 'wp101', 'enqueued' ),

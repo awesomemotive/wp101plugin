@@ -5,10 +5,9 @@
  * @package WP101
  */
 
-namespace WP101;
+namespace WP101\Tests;
 
-use WP101\Admin;
-use WP101\TestCase;
+use WP101\Admin as Admin;
 
 /**
  * Tests for the plugin template tags, contained in includes/template-tags.php.
