@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.
-Version: 4.0.1
+Version: 4.0.2
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
 Text Domain: wp101
@@ -17,6 +17,12 @@ require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
 require_once WP101_INC . '/shortcode.php';
 require_once WP101_INC . '/template-tags.php';
+require_once WP101_INC . '/uninstall.php';
+
+/**
+ * Register the uninstall callback.
+ */
+register_uninstall_hook( __FILE__, 'WP101\Uninstall\cleanup_plugin' );
 
 // API KEY
 // You can hardcode the API key here, and it will be used as a starting value for the key
@@ -74,8 +80,8 @@ class WP101_Plugin {
 	        $url = get_admin_url() . 'admin.php?page=wp101-old&configure=1';
 	        $settings_link = '<a href="'.$url.'">' . __( 'Settings', 'wp101' ) . '</a>';
 	        array_unshift( $links, $settings_link );
-	        return $links;
 	    }
+	    return $links;
 	}
 
 	public function get_api_base() {
