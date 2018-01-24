@@ -8,21 +8,14 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
+use WP101\API;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
  */
 class AdminTest extends TestCase {
 
-	public function tearDown() {
-		global $menu;
-
-		parent::tearDown();
-
-		$menu = [];
-	}
-
-	public function test_enqueue_scripts() {
+	public function test_enqueue_scripts_registers_scripts() {
 		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
 
@@ -38,67 +31,85 @@ class AdminTest extends TestCase {
 		);
 	}
 
-	public function test_enqueue_scripts_only_enqueues_on_wp101_pages() {
-		Admin\enqueue_scripts( 'some-hook' );
+	/**
+	 * Ensure that WP101 assets are only enqueued on WP101 pages.
+	 *
+	 * @dataProvider enqueue_hook_provider()
+	 *
+	 * @param string $hook     The hook to be executed.
+	 * @param bool   $enqueued Whether or not the assets should be enqueued for this hook.
+	 */
+	public function test_enqueue_scripts_enqueues_on_wp101_pages( $hook, bool $enqueued ) {
+		Admin\enqueue_scripts( $hook );
 
-		$this->assertFalse(
-			wp_style_is( 'wp101', 'enqueued' ),
-			'WP101 styles should only be enqueued on WP101 pages.'
-		);
-		$this->assertFalse(
-			wp_script_is( 'wp101', 'enqueued' ),
-			'WP101 scripts should only be enqueued on WP101 pages.'
+		$this->assertEquals( $enqueued, wp_style_is( 'wp101', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_script_is( 'wp101', 'enqueued' ) );
+	}
+
+	/**
+	 * Data provider for test_enqueue_scripts_enqueues_on_wp101_pages().
+	 */
+	public function enqueue_hook_provider() {
+		return [
+			'Generic page'   => [ 'some-hook', false ],
+			'WP101 listings' => [ 'toplevel_page_wp101', true ],
+			'WP101 settings' => [ 'video-tutorials_page_wp101-settings', true ],
+			'WP101 add-ons'  => [ 'video-tutorials_page_wp101-addons', true ],
+		];
+	}
+
+	public function test_get_addon_capability() {
+		$this->assertEquals(
+			'publish_posts',
+			Admin\get_addon_capability(),
+			'Default should be "publish_posts".'
 		);
 
-		Admin\enqueue_scripts( 'toplevel_page_wp101' );
+		add_filter( 'wp101_addon_capability', function () {
+			return 'my_capability';
+		} );
 
-		$this->assertTrue(
-			wp_style_is( 'wp101', 'enqueued' ),
-			'WP101 should be enqueued on WP101 pages.'
-		);
-		$this->assertTrue(
-			wp_script_is( 'wp101', 'enqueued' ),
-			'WP101 should be enqueued on WP101 pages.'
+		$this->assertEquals(
+			'my_capability',
+			Admin\get_addon_capability(),
+			'Value should be overridden via the wp101_addon_capability filter.'
 		);
 	}
 
 	public function test_register_menu_pages() {
-		global $menu;
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
 
-		$this->assertEmpty( $menu, 'The $menu global should start off empty.' );
 		$this->set_api_key();
 
-		do_action( 'admin_menu' );
+		$menu = $this->get_menu_items();
 
-		$menu_item = $menu[0];
+		$this->assertEquals( 'wp101', $menu['parent'][2], 'Expected "wp101" as the menu slug.' );
+		$this->assertEquals( 'wp101', $menu['children'][0][2], 'The first child should be "wp101".' );
+		$this->assertEquals( 'manage_options', $menu['children'][1][1], 'The wp101-settings page requires manage_options.' );
+		$this->assertEquals( 'wp101-settings', $menu['children'][1][2], 'The second child should be "wp101-settings".' );
+		$this->assertEquals( 'wp101-addons', $menu['children'][2][2], 'The third child should be "wp101-addons".' );
 
-		$this->assertEquals(
-			'wp101',
-			$menu_item[2],
-			'Expected "wp101" as the menu slug.'
-		);
-		$this->assertNotEmpty(
-			menu_page_url( 'wp101', false ),
-			'WordPress should be able to generate the menu page URL.'
-		);
+		// Ensure WordPress can generate corresponding menu page URLs.
+		$this->assertNotEmpty( menu_page_url( 'wp101', false ) );
+		$this->assertNotEmpty( menu_page_url( 'wp101-settings', false ) );
+		$this->assertNotEmpty( menu_page_url( 'wp101-addons', false ) );
 	}
 
-	public function test_register_menu_pages_shows_settings_page_as_only_link_if_api_key_not_set() {
-		global $menu;
+	/**
+	 * If an API key hasn't been set, only the WP101 Settings page should be shown.
+	 */
+	public function test_register_menu_pages_hides_listings_if_no_api_key_is_set() {
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
 
-		do_action( 'admin_menu' );
+		$this->set_api_key( '' );
 
-		$menu_item = $menu[0];
+		$menu = $this->get_menu_items();
 
-		$this->assertEquals(
-			'wp101-settings',
-			$menu_item[2],
-			'Expected "wp101-settings" as the menu slug.'
-		);
-		$this->assertNotEmpty(
-			menu_page_url( 'wp101-settings', false ),
-			'WordPress should be able to generate the menu page URL.'
-		);
+		$this->assertEquals( 'wp101-settings', $menu['parent'][2], 'Expected "wp101-settings" as the menu slug.' );
 	}
 
 	public function test_register_settings() {
@@ -118,5 +129,21 @@ class AdminTest extends TestCase {
 		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
 
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
+	}
+
+	/**
+	 * Retrieve the WP101 menu node(s) visible for the current user.
+	 *
+	 * @return array
+	 */
+	protected function get_menu_items() {
+		global $menu, $submenu;
+
+		do_action( 'admin_menu' );
+
+		return [
+			'parent'   => $menu[0],
+			'children' => $submenu['wp101'],
+		];
 	}
 }

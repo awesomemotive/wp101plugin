@@ -74,6 +74,20 @@ class ApiTest extends TestCase {
 		$this->assertTrue( $api->has_api_key() );
 	}
 
+	public function test_get_addons() {
+		$api  = new API;
+		$json = [
+			'status' => 'success',
+			'data'   => [],
+		];
+
+		$this->set_expected_response([
+			'body' => wp_json_encode( $json ),
+		]);
+
+		$this->assertEquals( $json['data'], $api->get_addons() );
+	}
+
 	public function test_get_playlist() {
 		$api  = new API;
 		$json = [
