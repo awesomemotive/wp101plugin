@@ -5,10 +5,9 @@
  * @package WP101
  */
 
-namespace WP101\Core;
+namespace WP101\Tests;
 
 use WP101_Plugin;
-use WP101\TestCase;
 
 /**
  * Tests for the core plugin functionality, contained in includes/core.php.

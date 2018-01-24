@@ -5,7 +5,7 @@
  * @package WP101
  */
 
-namespace WP101;
+namespace WP101\Tests;
 
 use Mockery;
 use ReflectionMethod;

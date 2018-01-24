@@ -3,7 +3,7 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.9
-Stable tag: 4.0.1
+Stable tag: 4.0.2
 
 A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
@@ -155,6 +155,8 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+= 4.0.2 =
+* Return the ‘plugin_action_links_’ filter argument in all cases. Previously, it was only returned if the authorization check succeeded, causing errors in some edge-cases.
 
 = 4.0.1 =
 * Transient for get_help_topics was shortened for testing, but left in the last release. It's now good for a day. Nothing to see here. Move along.
@@ -250,6 +252,8 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+= 4.0.2 =
+* Minor bug fix.
 
 = 4.0.1 =
 * Minor fix.

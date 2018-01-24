@@ -5,13 +5,12 @@
  * @package WP101
  */
 
-namespace WP101;
+namespace WP101\Tests;
 
 use ReflectionProperty;
 use WP_Error;
-use WP101_Plugin;
 use WP101\API;
-use WP101\TestCase;
+use WP101_Plugin;
 
 /**
  * Tests for the core plugin functionality, contained in includes/class-api.php.
