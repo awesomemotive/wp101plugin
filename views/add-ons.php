@@ -51,7 +51,7 @@ use WP101\TemplateTags as TemplateTags;
 						<?php if ( $has_addon ) : ?>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary"><?php echo esc_html_e( 'Watch Videos', 'wp101' ); ?></a>
 
-						<?php else : ?>
+						<?php elseif ( ! empty( $addon['url'] ) ) : ?>
 							<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
 						<?php endif; ?>
 					</p>
