@@ -38,7 +38,7 @@ use WP101\TemplateTags as TemplateTags;
 					if ( empty( array_filter( $series['restrictions']['plugins'], 'is_plugin_active' ) ) ) {
 						continue;
 					}
-				} elseif ( ! empty( $series['topics'] ) ) {
+				} elseif ( empty( $series['topics'] ) ) {
 					continue;
 				}
 				?>
