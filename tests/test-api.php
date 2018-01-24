@@ -81,15 +81,15 @@ class ApiTest extends TestCase {
 			'data'   => [],
 		];
 
-		$this->set_expected_response([
+		$this->set_expected_response( [
 			'body' => wp_json_encode( $json ),
-		]);
+		] );
 
 		$this->assertEquals( $json['data'], $api->get_playlist() );
 	}
 
 	public function test_get_playlist_surfaces_wp_errors() {
-		$api  = new API;
+		$api   = new API;
 		$error = new WP_Error( 'Some message' );
 
 		$this->set_expected_response( function () use ( $error ) {
@@ -97,6 +97,94 @@ class ApiTest extends TestCase {
 		} );
 
 		$this->assertSame( $error, $api->get_playlist() );
+	}
+
+	public function test_get_topic() {
+		$api   = new API;
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'series' => [
+					[
+						'topics' => [
+							[
+								'slug' => 'first-topic',
+							],
+							[
+								'slug' => 'second-topic',
+							],
+						],
+					],
+				]
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( $json ),
+		] );
+
+		$this->assertEquals(
+			$json['data']['series'][0]['topics'][1],
+			$api->get_topic( 'second-topic' )
+		);
+	}
+
+	public function test_get_topic_can_traverse_series() {
+		$api   = new API;
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'series' => [
+					[
+						'topics' => [
+							[
+								'slug' => 'first-topic',
+							],
+						],
+					],
+					[
+						'topics' => [
+							[
+								'slug' => 'second-topic',
+							],
+						],
+					],
+				]
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( $json ),
+		] );
+
+		$this->assertEquals(
+			$json['data']['series'][1]['topics'][0],
+			$api->get_topic( 'second-topic' )
+		);
+	}
+
+	public function test_get_topic_returns_false_if_no_matching_topic_found() {
+		$api   = new API;
+		$json =
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'series' => [
+						[
+							'topics' => [
+								[
+									'slug' => 'first-topic',
+								],
+							],
+						],
+					]
+				],
+			] ),
+		] );
+
+		$this->assertFalse( $api->get_topic( 'second-topic' ) );
 	}
 
 	/**

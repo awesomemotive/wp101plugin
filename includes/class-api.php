@@ -72,6 +72,28 @@ class API {
 	}
 
 	/**
+	 * Retrieve a single topic by its slug.
+	 *
+	 * @param string $topic The topic slug.
+	 * @return array|bool The topic array for the given slug, or false if the given topic was not
+	 *                    found in the API-provided playlist.
+	 */
+	public function get_topic( $topic ) {
+		$playlist = $this->get_playlist();
+
+		// Iterate through the series and their topics to find a match.
+		foreach ( (array) $playlist['series'] as $series ) {
+			foreach ( $series['topics'] as $single_topic ) {
+				if ( $topic === $single_topic['slug'] ) {
+					return $single_topic;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Determine if an API key has been set.
 	 *
 	 * @return bool
