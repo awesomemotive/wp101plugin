@@ -5,15 +5,14 @@
  * @package WP101
  */
 
-namespace WP101\Core;
+namespace WP101\Tests;
 
 use WP101_Plugin;
-use WP_UnitTestCase;
 
 /**
  * Tests for the core plugin functionality, contained in includes/core.php.
  */
-class CoreTest extends WP_UnitTestCase {
+class CoreTest extends TestCase {
 
 	public function test_plugin_textdomain_is_loaded() {
 		$this->markTestSkipped( 'Even in the current production version, the text-domain is never actually loaded' );

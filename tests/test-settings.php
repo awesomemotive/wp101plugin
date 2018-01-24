@@ -1,113 +1,45 @@
 <?php
 /**
- * Tests for the plugin settings.
+ * Tests for the plugin template tags.
  *
  * @package WP101
  */
 
-namespace WP101\Settings;
+namespace WP101\Tests;
 
-use WP101_Plugin;
-use WP_UnitTestCase;
+use WP101\Admin as Admin;
 
 /**
- * Tests for the plugin settings UI, defined in includes/settings.php.
+ * Tests for the plugin template tags, contained in includes/template-tags.php.
  */
-class SettingsTest extends WP_UnitTestCase {
+class SettingsTest extends TestCase {
 
-	public function test_settings_link_is_injected_into_plugin_action_links() {
-		$this->markTestSkipped( 'Plugin action links filter is not behaving correctly' );
-		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
+	public function test_shows_api_key_form() {
+		$key = $this->set_api_key();
 
-		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
+		ob_start();
+		Admin\render_settings_page();
+		$output = ob_get_clean();
+
+		$this->assertHasElementWithAttributes(
+			[
+				'name'  => 'wp101_api_key',
+				'id'    => 'wp101-api-key',
+				'value' => $key,
+			],
+			$output
+		);
 	}
 
-	public function test_registers_menu_page() {
-		global $menu;
-
-		$this->assertEmpty( $menu );
-
-		WP101_Plugin::get_instance()->admin_menu();
-
-		$menu_item = $menu[0];
-
-		$this->assertEquals( 'wp101', $menu_item[2], 'Expected "wp101" as the menu slug' );
-		$this->assertNotEmpty( menu_page_url( 'wp101', false ) );
-	}
-
-	/**
-	 * WP101 enables the user's API key to be set in-code two different ways:
-	 * 1. By populating a $_wp101_api_key global variable.
-	 * 2. By setting the WP101_API_KEY constant in the wp-config.php file.
-	 *
-	 * The value stored in the database always takes precedence, followed by the global variable and
-	 * finally the constant.
-	 *
-	 * @runInSeparateProcess
-	 */
-	public function test_setting_api_key_via_global_variable() {
-		global $_wp101_api_key;
-
-		$this->assertEmpty( get_option( 'wp101_api_key' ), 'The test should start with an empty API key' );
-
-		$_wp101_api_key = uniqid();
-
-		$key = WP101_Plugin::get_instance()->get_key();
-
-		$this->assertEquals( $_wp101_api_key, $key );
-		$this->assertEquals( $_wp101_api_key, get_option( 'wp101_api_key' ) );
-	}
-
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function test_setting_api_key_via_global_variable_only_applies_if_option_is_empty() {
-		global $_wp101_api_key;
-
-		$stored = uniqid();
-		update_option( 'wp101_api_key', $stored );
-
-		$_wp101_api_key = uniqid();
-
-		$key = WP101_Plugin::get_instance()->get_key();
-
-		$this->assertEquals( $stored, $key );
-		$this->assertEquals( $stored, get_option( 'wp101_api_key' ) );
-	}
-
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function test_setting_api_key_via_constant() {
-		global $_wp101_api_key;
-
-		$this->assertEmpty( get_option( 'wp101_api_key' ), 'The test should start with an empty API key' );
-		$this->assertEmpty( $_wp101_api_key );
-		$this->assertFalse( defined( 'WP101_API_KEY' ) );
+	public function test_hides_api_key_form_if_set_via_constant() {
+		$this->markTestSkipped( 'Defining the constant in a test will break other tests.' );
 
 		define( 'WP101_API_KEY', uniqid() );
 
-		$key = WP101_Plugin::get_instance()->get_key();
+		ob_start();
+		Admin\render_settings_page();
+		$output = ob_get_clean();
 
-		$this->assertEquals( WP101_API_KEY, $key );
-		$this->assertEquals( WP101_API_KEY, get_option( 'wp101_api_key' ) );
-	}
-
-	/**
-	 * @runInSeparateProcess
-	 */
-	public function test_setting_api_key_defaults_to_stored_database_value() {
-		global $_wp101_api_key;
-
-		$this->assertEmpty( $_wp101_api_key );
-		$this->assertFalse( defined( 'WP101_API_KEY' ) );
-
-		$stored = uniqid();
-		update_option( 'wp101_api_key', $stored );
-
-		$key = WP101_Plugin::get_instance()->get_key();
-
-		$this->assertEquals( $stored, $key );
-		$this->assertEquals( $stored, get_option( 'wp101_api_key' ) );
+		$this->assertNotContainsSelector('#wp101-api-key', $output);
 	}
 }

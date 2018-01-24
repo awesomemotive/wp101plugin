@@ -8,7 +8,14 @@
 	>
 	<testsuites>
 		<testsuite>
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+			<directory prefix="test-" suffix=".php">tests/</directory>
 		</testsuite>
 	</testsuites>
+	<filter>
+        <whitelist>
+            <directory suffix=".php">includes</directory>
+            <file>uninstall.php</file>
+            <file>wp101.php</file>
+        </whitelist>
+    </filter>
 </phpunit>

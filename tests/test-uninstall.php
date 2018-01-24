@@ -5,32 +5,16 @@
  * @package WP101
  */
 
-namespace WP101\Settings;
+namespace WP101\Tests;
 
-use WP_UnitTestCase;
+use WP101\Uninstall as Uninstall;
 
 /**
  * Tests for the plugin's uninstallation procedure, defined in uninstall.php.
- *
- * @runTestsInSeparateProcesses To avoid pollution of the WP_UNINSTALL_PLUGIN constant.
  */
-class UninstallTest extends WP_UnitTestCase {
-
-	public function test_script_checks_uninstall_plugin_constant() {
-		add_option( 'wp101_api_key', uniqid() );
-		set_transient( 'wp101_topics', uniqid() );
-
-		$this->assertFalse( defined( 'WP_UNINSTALL_PLUGIN' ) );
-
-		require PROJECT_DIR . '/uninstall.php';
-
-		$this->assertNotEmpty( get_option( 'wp101_api_key' ) );
-		$this->assertNotEmpty( get_transient( 'wp101_topics' ) );
-	}
+class UninstallTest extends TestCase {
 
 	public function test_uninstall_script_clears_known_options() {
-		define( 'WP_UNINSTALL_PLUGIN', true );
-
 		$options = array(
 			'wp101_api_key',
 			'wp101_db_version',
@@ -43,7 +27,7 @@ class UninstallTest extends WP_UnitTestCase {
 			add_option( $option, uniqid() );
 		}
 
-		require PROJECT_DIR . '/uninstall.php';
+		Uninstall\cleanup_plugin();
 
 		foreach ( $options as $option ) {
 			$this->assertEmpty(
@@ -54,8 +38,6 @@ class UninstallTest extends WP_UnitTestCase {
 	}
 
 	public function test_uninstall_script_clears_known_transients() {
-		define( 'WP_UNINSTALL_PLUGIN', true );
-
 		$transients = array(
 			'wp101_topics',
 			'wp101_jetpack_topics',
@@ -70,7 +52,7 @@ class UninstallTest extends WP_UnitTestCase {
 			set_transient( $transient, uniqid() );
 		}
 
-		require PROJECT_DIR . '/uninstall.php';
+		Uninstall\cleanup_plugin();
 
 		foreach ( $transients as $transient ) {
 			$this->assertEmpty(
