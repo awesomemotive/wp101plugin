@@ -32,7 +32,7 @@ use WP101\TemplateTags as TemplateTags;
 
 		<div class="wp101-addon-list">
 			<?php foreach ( $addons['addons'] as $addon ) : ?>
-				<?php $has_addon = in_array( $addon['slug'], $purchased, true ); ?>
+				<?php $has_addon = isset( $addon['slug'] ) && in_array( $addon['slug'], $purchased, true ); ?>
 
 				<div class="card wp101-addon">
 					<h2><?php echo esc_html( $addon['title'] ); ?></h2>
