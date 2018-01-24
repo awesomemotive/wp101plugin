@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: A complete set of WordPress video tutorials for beginners, delivered directly in the dashboard.
-Version: 4.0.1
+Version: 4.0.2
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
 Text Domain: wp101
@@ -65,8 +65,8 @@ class WP101_Plugin {
 	        $url = get_admin_url() . 'admin.php?page=wp101&configure=1';
 	        $settings_link = '<a href="'.$url.'">' . __( 'Settings', 'wp101' ) . '</a>';
 	        array_unshift( $links, $settings_link );
-	        return $links;
 	    }
+	    return $links;
 	}
 
 	public function get_api_base() {
