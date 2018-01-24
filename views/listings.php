@@ -14,7 +14,7 @@ use WP101\TemplateTags as TemplateTags;
 
 <div class="wrap wp101-settings">
 	<h1>
-		<?php echo esc_html( _x( 'WordPress Video Tutorials', 'listings page title', 'wp101' ) ); ?>
+		<?php echo esc_html_x( 'WordPress Video Tutorials', 'listings page title', 'wp101' ); ?>
 	</h1>
 
 	<main class="wp101-media">
