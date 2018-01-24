@@ -19,3 +19,15 @@ use WP101\API;
 function get_api_key() {
 	return ( new API() )->get_api_key();
 }
+
+/**
+ * Retrieve a topic by its slug.
+ *
+ * @param string $slug The topic slug.
+ *
+ * @return array|bool Either the corresponding topic array or a boolean false if either the API key
+ *                    doesn't have access to the topic or the topic doesn't exist.
+ */
+function get_topic( $slug ) {
+	return ( new API() )->get_topic( $slug );
+}

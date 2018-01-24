@@ -7,6 +7,8 @@
 
 namespace WP101\Shortcode;
 
+use WP101\TemplateTags as TemplateTags;
+
 /**
  * Handle requests for the [wp101] shortcode.
  *
@@ -26,7 +28,9 @@ function render_shortcode( $atts ) {
 		return shortcode_debug( __( 'No WP101 video ID was provided', 'wp101' ) );
 	}
 
-	return 'Embed';
+	$topic = TemplateTags\get_topic( $atts['video'] );
+
+	return '<pre>' . print_r( $topic, true ) . '</pre>';
 }
 add_shortcode( 'wp101', __NAMESPACE__ . '\render_shortcode' );
 
