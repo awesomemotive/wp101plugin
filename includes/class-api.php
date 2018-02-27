@@ -28,6 +28,13 @@ class API {
 	const API_URL = 'https://wp101plugin.com/api';
 
 	/**
+	 * Option key for the site's public API key.
+	 *
+	 * @var string
+	 */
+	const PUBLIC_API_KEY_OPTION = 'wp101-public-api-key';
+
+	/**
 	 * The User-Agent string that will be passed with API requests.
 	 *
 	 * @var string
@@ -60,6 +67,37 @@ class API {
 		}
 
 		return $this->api_key;
+	}
+
+	/**
+	 * Retrieve the public API key from WP101.
+	 *
+	 * Public API keys are generated on a per-domain basis by the WP101 API, and thus are safe for
+	 * using client-side without fear of compromising the private key.
+	 *
+	 * @return string The public API key.
+	 */
+	public function get_public_api_key() {
+		$public_key = get_option( self::PUBLIC_API_KEY_OPTION );
+
+		if ( $public_key ) {
+			return $public_key;
+		}
+
+		$response = $this->send_request( 'GET', '/public-key' );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+
+		} elseif ( ! isset( $response['publicKey'] ) || empty( $response['publicKey'] ) ) {
+			return new WP_Error( 'missing-public-key', __( 'Unable to retrieve a valid public key from WP101.' ) );
+		}
+
+		$public_key = $response['publicKey'];
+
+		update_option( self::PUBLIC_API_KEY_OPTION, $public_key, false );
+
+		return $public_key;
 	}
 
 	/**

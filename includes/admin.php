@@ -33,8 +33,8 @@ function enqueue_scripts( $hook ) {
 
 	// Only enqueue on WP101 pages.
 	if ( 'toplevel_page_wp101' === $hook || preg_match( '/^video-tutorials_page_wp101/', $hook ) ) {
-		wp_enqueue_style( 'wp101' );
-		wp_enqueue_script( 'wp101' );
+		wp_enqueue_style( 'wp101-admin' );
+		wp_enqueue_script( 'wp101-admin' );
 	}
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );

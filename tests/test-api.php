@@ -74,6 +74,68 @@ class ApiTest extends TestCase {
 		$this->assertTrue( $api->has_api_key() );
 	}
 
+	public function test_get_public_api_key() {
+		$api = new API();
+
+		$this->assertFalse( get_option( API::PUBLIC_API_KEY_OPTION ) );
+
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'publicKey' => uniqid(),
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( $json ),
+		] );
+
+		$key = $api->get_public_api_key();
+
+		$this->assertEquals(
+			$json['data']['publicKey'],
+			$key,
+			'The public API should be determined by the WP101 API.'
+		);
+		$this->assertEquals( $key, get_option( API::PUBLIC_API_KEY_OPTION ) );
+	}
+
+	public function test_get_public_api_key_returns_from_options_table_if_populated() {
+		$api = new API();
+		$key = uniqid();
+
+		update_option( API::PUBLIC_API_KEY_OPTION, $key );
+
+		$this->assertEquals( $key, $api->get_public_api_key() );
+	}
+
+	public function test_get_public_api_key_surfaces_wp_errors() {
+		$api   = new API();
+		$error = new WP_Error( 'msg' );
+
+		$this->set_expected_response( function () use ( $error ) {
+			return $error;
+		} );
+
+		$this->assertSame( $error, $api->get_public_api_key() );
+	}
+
+	public function test_get_public_api_key_returns_wp_error_if_no_key_was_found() {
+		$api = new API();
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'error',
+				'data' => 'some message',
+			] ),
+		] );
+
+		$this->assertTrue(
+			is_wp_error( $api->get_public_api_key() ),
+			'If a public key can\'t be determined, return a WP_Error object.'
+		);
+	}
+
 	public function test_get_addons() {
 		$api  = new API;
 		$json = [
