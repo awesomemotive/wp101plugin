@@ -2,6 +2,7 @@
 	'use strict';
 
 	var $playlist = $('.wp101-playlist'),
+		$series = $playlist.find('.wp101-series'),
 		title = document.getElementById('wp101-player-title'),
 		player = document.getElementById('wp101-player');
 
@@ -29,6 +30,9 @@
 		if (! el) {
 			return;
 		}
+
+		// Set the accordion position.
+		$playlist.accordion('option', 'active', $series.index(el.parentElement.parentElement.parentElement));
 
 		$playlist.find('a.active').removeClass('active');
 		el.classList.add('active');
