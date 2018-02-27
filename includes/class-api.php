@@ -132,7 +132,20 @@ class API {
 	 * @return array An array of all available add-ons.
 	 */
 	public function get_addons() {
-		return $this->send_request( 'GET', '/add-ons' );
+		$response = $this->send_request( 'GET', '/add-ons' );
+
+		if ( is_wp_error( $response ) ) {
+			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
+			// phpcs:enable
+
+			return [
+				'addons'   => [],
+				'upgrades' => [],
+			];
+		}
+
+		return $response;
 	}
 
 	/**
@@ -141,7 +154,19 @@ class API {
 	 * @return array An array of all available series and topics.
 	 */
 	public function get_playlist() {
-		return $this->send_request( 'GET', '/playlist' );
+		$response = $this->send_request( 'GET', '/playlist' );
+
+		if ( is_wp_error( $response ) ) {
+			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
+			// phpcs:enable
+
+			return [
+				'series' => [],
+			];
+		}
+
+		return $response;
 	}
 
 	/**

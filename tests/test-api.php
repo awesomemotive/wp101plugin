@@ -7,6 +7,7 @@
 
 namespace WP101\Tests;
 
+use PHPUnit\Framework\Error\Warning;
 use ReflectionProperty;
 use WP_Error;
 use WP101\API;
@@ -134,6 +135,22 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $json['data'], API::get_instance()->get_addons() );
 	}
 
+	public function test_get_addons_handles_wp_error() {
+		$this->set_expected_response( function () {
+			return new WP_Error( 'code', 'some message' );
+		} );
+
+		$this->expectException( Warning::class );
+
+		$this->assertEquals(
+			[
+				'addons' => [],
+				'upgrades' => [],
+			],
+			API::get_instance()->get_addons()
+		);
+	}
+
 	public function test_get_playlist() {
 		$json = [
 			'status' => 'success',
@@ -147,14 +164,14 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $json['data'], API::get_instance()->get_playlist() );
 	}
 
-	public function test_get_playlist_surfaces_wp_errors() {
-		$error = new WP_Error( 'Some message' );
-
-		$this->set_expected_response( function () use ( $error ) {
-			return $error;
+	public function test_get_playlist_handles_wp_error() {
+		$this->set_expected_response( function () {
+			return new WP_Error( 'code', 'some message' );
 		} );
 
-		$this->assertSame( $error, API::get_instance()->get_playlist() );
+		$this->expectException( Warning::class );
+
+		$this->assertEquals( [ 'series' => [] ], API::get_instance()->get_playlist() );
 	}
 
 	public function test_get_series() {
