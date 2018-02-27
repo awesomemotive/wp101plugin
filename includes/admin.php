@@ -7,7 +7,7 @@
 
 namespace WP101\Admin;
 
-use WP101\API;
+use WP101\TemplateTags as TemplateTags;
 
 /**
  * Register scripts and styles to be used in WP admin.
@@ -58,10 +58,9 @@ function get_addon_capability() {
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
-	$api = new API();
 
 	// If the API key hasn't been configured, *only* show the settings page.
-	if ( ! $api->has_api_key() ) {
+	if ( ! TemplateTags\api()->has_api_key() ) {
 		return add_menu_page(
 			_x( 'WP101', 'page title', 'wp101' ),
 			_x( 'Video Tutorials', 'menu title', 'wp101' ),
@@ -117,7 +116,7 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * Render the WP101 add-ons page.
  */
 function render_addons_page() {
-	$api       = new API();
+	$api       = TemplateTags\api();
 	$addons    = $api->get_addons();
 	$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug' );
 
@@ -128,8 +127,7 @@ function render_addons_page() {
  * Render the WP101 listings page.
  */
 function render_listings_page() {
-	$api      = new API();
-	$playlist = $api->get_playlist();
+	$playlist = TemplateTags\api()->get_playlist();
 
 	require_once WP101_VIEWS . '/listings.php';
 }

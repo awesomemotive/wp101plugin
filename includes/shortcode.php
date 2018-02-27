@@ -29,10 +29,8 @@ function enqueue_scripts_styles() {
 		true
 	);
 
-	$api = new API();
-
 	wp_localize_script( 'wp101', 'wp101', [
-		'apiKey' => $api->get_public_api_key(),
+		'apiKey' => TemplateTags\api()->get_public_api_key(),
 	] );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
@@ -54,7 +52,7 @@ function render_shortcode( $atts ) {
 		'series' => null,
 		'video'  => null,
 	], $atts, 'wp101' );
-	$api  = new API();
+	$api  = TemplateTags\api();
 
 	if ( ! $api->account_can( 'embed-on-front-end' ) ) {
 		return shortcode_debug( __( 'Your WP101 subscription does not permit embedding on the front-end of a site.', 'wp101' ) );
@@ -69,11 +67,13 @@ function render_shortcode( $atts ) {
 
 		return render_shortcode_playlist( $series );
 
-	} else {
+	} elseif ( $atts['video'] ) {
 		$topic = TemplateTags\get_topic( $atts['video'] );
 
 		return render_shortcode_single( $topic );
 	}
+
+	return shortcode_debug( __( 'No WP101 series or video were specified.', 'wp101' ) );
 }
 add_shortcode( 'wp101', __NAMESPACE__ . '\render_shortcode' );
 

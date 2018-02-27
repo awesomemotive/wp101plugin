@@ -24,15 +24,8 @@ class ApiTest extends TestCase {
 		remove_all_filters( 'pre_http_request' );
 	}
 
-	public function test_constructor_sets_api_key() {
-		$key = uniqid();
-		$api = new API( $key );
-
-		$this->assertEquals( $key, $api->get_api_key() );
-	}
-
 	public function test_get_api_key_returns_from_cache() {
-		$api = new API;
+		$api = API::get_instance();
 		$key = uniqid();
 
 		$prop = new ReflectionProperty( $api, 'api_key' );
@@ -47,25 +40,23 @@ class ApiTest extends TestCase {
 
 		define( 'WP101_API_KEY', uniqid() );
 
-		$api = new API;
-		$this->assertEquals( WP101_API_KEY, $api->get_api_key() );
+		$this->assertEquals( WP101_API_KEY, API::get_instance()->get_api_key() );
 	}
 
 	public function test_get_api_key_reads_from_options() {
 		$key = uniqid();
-		$this->set_api_key($key);
+		$this->set_api_key( $key );
 
 		$this->assertFalse(
 			defined( 'WP101_API_KEY' ),
 			'This test is predicated on the WP101_API_KEY constant not being set.'
 		);
 
-		$api = new API;
-		$this->assertEquals( $key, $api->get_api_key() );
+		$this->assertEquals( $key, API::get_instance()->get_api_key() );
 	}
 
 	public function test_has_api_key() {
-		$api = new API;
+		$api = API::get_instance();
 
 		$this->assertFalse( $api->has_api_key() );
 
@@ -75,8 +66,6 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_public_api_key() {
-		$api = new API();
-
 		$this->assertFalse( get_option( API::PUBLIC_API_KEY_OPTION ) );
 
 		$json = [
@@ -90,7 +79,7 @@ class ApiTest extends TestCase {
 			'body' => wp_json_encode( $json ),
 		] );
 
-		$key = $api->get_public_api_key();
+		$key = API::get_instance()->get_public_api_key();
 
 		$this->assertEquals(
 			$json['data']['publicKey'],
@@ -101,28 +90,24 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_public_api_key_returns_from_options_table_if_populated() {
-		$api = new API();
 		$key = uniqid();
 
 		update_option( API::PUBLIC_API_KEY_OPTION, $key );
 
-		$this->assertEquals( $key, $api->get_public_api_key() );
+		$this->assertEquals( $key, API::get_instance()->get_public_api_key() );
 	}
 
 	public function test_get_public_api_key_surfaces_wp_errors() {
-		$api   = new API();
 		$error = new WP_Error( 'msg' );
 
 		$this->set_expected_response( function () use ( $error ) {
 			return $error;
 		} );
 
-		$this->assertSame( $error, $api->get_public_api_key() );
+		$this->assertSame( $error, API::get_instance()->get_public_api_key() );
 	}
 
 	public function test_get_public_api_key_returns_wp_error_if_no_key_was_found() {
-		$api = new API();
-
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [
 				'status' => 'error',
@@ -131,13 +116,12 @@ class ApiTest extends TestCase {
 		] );
 
 		$this->assertTrue(
-			is_wp_error( $api->get_public_api_key() ),
+			is_wp_error( API::get_instance()->get_public_api_key() ),
 			'If a public key can\'t be determined, return a WP_Error object.'
 		);
 	}
 
 	public function test_get_addons() {
-		$api  = new API;
 		$json = [
 			'status' => 'success',
 			'data'   => [],
@@ -147,11 +131,10 @@ class ApiTest extends TestCase {
 			'body' => wp_json_encode( $json ),
 		]);
 
-		$this->assertEquals( $json['data'], $api->get_addons() );
+		$this->assertEquals( $json['data'], API::get_instance()->get_addons() );
 	}
 
 	public function test_get_playlist() {
-		$api  = new API;
 		$json = [
 			'status' => 'success',
 			'data'   => [],
@@ -161,22 +144,20 @@ class ApiTest extends TestCase {
 			'body' => wp_json_encode( $json ),
 		] );
 
-		$this->assertEquals( $json['data'], $api->get_playlist() );
+		$this->assertEquals( $json['data'], API::get_instance()->get_playlist() );
 	}
 
 	public function test_get_playlist_surfaces_wp_errors() {
-		$api   = new API;
 		$error = new WP_Error( 'Some message' );
 
 		$this->set_expected_response( function () use ( $error ) {
 			return $error;
 		} );
 
-		$this->assertSame( $error, $api->get_playlist() );
+		$this->assertSame( $error, API::get_instance()->get_playlist() );
 	}
 
 	public function test_get_series() {
-		$api  = new API;
 		$json = [
 			'status' => 'success',
 			'data'   => [
@@ -197,13 +178,11 @@ class ApiTest extends TestCase {
 
 		$this->assertEquals(
 			$json['data']['series'][1],
-			$api->get_series( 'second-series' )
+			API::get_instance()->get_series( 'second-series' )
 		);
 	}
 
 	public function test_get_series_returns_false_if_no_matching_series_found() {
-		$api   = new API;
-
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [
 				'status' => 'success',
@@ -213,11 +192,10 @@ class ApiTest extends TestCase {
 			] ),
 		] );
 
-		$this->assertFalse( $api->get_series( 'first-series' ) );
+		$this->assertFalse( API::get_instance()->get_series( 'first-series' ) );
 	}
 
 	public function test_get_topic() {
-		$api   = new API;
 		$json = [
 			'status' => 'success',
 			'data'   => [
@@ -242,12 +220,11 @@ class ApiTest extends TestCase {
 
 		$this->assertEquals(
 			$json['data']['series'][0]['topics'][1],
-			$api->get_topic( 'second-topic' )
+			API::get_instance()->get_topic( 'second-topic' )
 		);
 	}
 
 	public function test_get_topic_can_traverse_series() {
-		$api   = new API;
 		$json = [
 			'status' => 'success',
 			'data'   => [
@@ -276,13 +253,11 @@ class ApiTest extends TestCase {
 
 		$this->assertEquals(
 			$json['data']['series'][1]['topics'][0],
-			$api->get_topic( 'second-topic' )
+			API::get_instance()->get_topic( 'second-topic' )
 		);
 	}
 
 	public function test_get_topic_returns_false_if_no_matching_topic_found() {
-		$api   = new API;
-
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [
 				'status' => 'success',
@@ -300,11 +275,11 @@ class ApiTest extends TestCase {
 			] ),
 		] );
 
-		$this->assertFalse( $api->get_topic( 'second-topic' ) );
+		$this->assertFalse( API::get_instance()->get_topic( 'second-topic' ) );
 	}
 
 	public function test_account_can() {
-		$api = new API();
+		$api = API::get_instance();
 
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [
@@ -320,20 +295,18 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_account_can_resolves_errors_to_false() {
-		$api = new API();
-
 		$this->set_expected_response( function () {
 			return new WP_Error( 'msg' );
 		} );
 
-		$this->assertFalse( $api->account_can( 'some-capability' ) );
+		$this->assertFalse( API::get_instance()->account_can( 'some-capability' ) );
 	}
 
 	/**
 	 * @dataProvider build_uri_provider()
 	 */
 	public function test_build_uri( $path, $args, $expected ) {
-		$api    = new API;
+		$api    = API::get_instance();
 		$method = $this->get_accessible_method( $api, 'build_uri' );
 
 		$this->assertEquals(
@@ -370,7 +343,7 @@ class ApiTest extends TestCase {
 	public function test_build_uri_enables_base_to_be_changed_via_constant() {
 		define( 'WP101_API_URL', 'http://example.com' );
 
-		$api    = new API;
+		$api    = API::get_instance();
 		$method = $this->get_accessible_method( $api, 'build_uri' );
 
 		$this->assertEquals(
@@ -382,8 +355,10 @@ class ApiTest extends TestCase {
 
 	public function test_send_request() {
 		$key    = uniqid();
-		$api    = new API( $key );
+		$api    = API::get_instance();
 		$method = $this->get_accessible_method( $api, 'send_request' );
+
+		$this->set_api_key( $key );
 
 		$response = $this->mock_http_response( [
 			'body' => wp_json_encode( [
@@ -410,7 +385,7 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_send_request_checks_response_status() {
-		$api    = new API;
+		$api    = API::get_instance();
 		$method = $this->get_accessible_method( $api, 'send_request' );
 
 		$response = $this->set_expected_response( [

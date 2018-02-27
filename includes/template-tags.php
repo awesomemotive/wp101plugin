@@ -29,14 +29,21 @@ function enqueue_scripts_styles() {
 		true
 	);
 
-	$api = new API();
-
 	wp_localize_script( 'wp101', 'wp101', [
-		'apiKey' => $api->get_public_api_key(),
+		'apiKey' => api()->get_public_api_key(),
 	] );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+
+/**
+ * Grant access to the API Singleton.
+ *
+ * @return API The API Singleton instance.
+ */
+function api() {
+	return API::get_instance();
+}
 
 /**
  * Shortcut for retrieving the current API key.
@@ -46,7 +53,7 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' )
  * @return string The current API key, or an empty string if one is not set.
  */
 function get_api_key() {
-	return ( new API() )->get_api_key();
+	return api()->get_api_key();
 }
 
 /**
@@ -67,7 +74,7 @@ function current_user_can_purchase_addons() {
  *                    key doesn't have access to the series or the series doesn't exist.
  */
 function get_series( $slug ) {
-	return ( new API() )->get_series( $slug );
+	return api()->get_series( $slug );
 }
 
 /**
@@ -79,7 +86,7 @@ function get_series( $slug ) {
  *                    doesn't have access to the topic or the topic doesn't exist.
  */
 function get_topic( $slug ) {
-	return ( new API() )->get_topic( $slug );
+	return api()->get_topic( $slug );
 }
 
 /**

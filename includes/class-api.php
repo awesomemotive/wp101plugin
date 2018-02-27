@@ -19,6 +19,13 @@ class API {
 	protected $api_key;
 
 	/**
+	 * The Singleton instance.
+	 *
+	 * @var API
+	 */
+	protected static $instance;
+
+	/**
 	 * Base URL for the WP101 plugin API.
 	 *
 	 * This value can be overridden via the WP101_API_URL constant.
@@ -43,11 +50,30 @@ class API {
 
 	/**
 	 * Construct a new instance of the API.
-	 *
-	 * @param string $api_key Optional. The API key to use for requests. Default is null.
 	 */
-	public function __construct( $api_key = null ) {
-		$this->api_key = $api_key;
+	protected function __construct() {}
+
+	/**
+	 * Prevent the object from being cloned.
+	 */
+	private function __clone() {}
+
+	/**
+	 * Prevent the object from being deserialized.
+	 */
+	private function __wakeup() {}
+
+	/**
+	 * Retrieve the singular instance of the class.
+	 *
+	 * @return API The API instance.
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new API();
+		}
+
+		return self::$instance;
 	}
 
 	/**
