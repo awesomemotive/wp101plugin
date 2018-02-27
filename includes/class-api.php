@@ -63,6 +63,15 @@ class API {
 	}
 
 	/**
+	 * Retrieve all available add-ons for WP101.
+	 *
+	 * @return array An array of all available add-ons.
+	 */
+	public function get_addons() {
+		return $this->send_request( 'GET', '/add-ons' );
+	}
+
+	/**
 	 * Retrieve all series available to the user, based on API key.
 	 *
 	 * @return array An array of all available series and topics.

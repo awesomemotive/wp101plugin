@@ -1,0 +1,40 @@
+/**
+ * Styles for the add-ons page.
+ *
+ * @package WP101
+ */
+
+.wp101-addon-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: -20px;
+	margin-right: -20px;
+
+	.card {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		justify-content: flex-start;
+		flex: 1;
+		margin-right: 20px;
+	}
+
+	.wp101-addon-button {
+		align-self: flex-end;
+		margin-top: auto;
+	}
+
+	ol {
+		margin-top: 0;
+	}
+}
+
+.wp101-addon-description {
+	p:first-child {
+		margin-top: 0;
+	}
+}
+
+.wp101-addon-more-topics {
+	list-style: none;
+}

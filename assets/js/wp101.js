@@ -24,8 +24,10 @@
 	 * @param HTMLElement el - The playlist node.
 	 */
 	function loadTopic(el) {
+		el = el || getCurrentTopic();
+
 		if (! el) {
-			el = getCurrentTopic();
+			return;
 		}
 
 		$playlist.find('a.active').removeClass('active');
@@ -43,7 +45,7 @@
 	// Enable jQuery accordion for list of series.
 	$playlist.accordion({
 		collapsible: true,
-		header: 'h2',
+		header: '.wp101-series h2',
 		heightStyle: 'content',
 		activate: function () {
 			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
