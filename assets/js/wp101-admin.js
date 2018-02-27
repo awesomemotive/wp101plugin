@@ -48,9 +48,9 @@
 		header: '.wp101-series h2',
 		heightStyle: 'content',
 		activate: function () {
-			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
+			sessionStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
 		},
-		active: parseInt(localStorage.getItem('wp101ListState'), 10)
+		active: parseInt(sessionStorage.getItem('wp101ListState'), 10)
 	});
 
 	// Load the default topic.
