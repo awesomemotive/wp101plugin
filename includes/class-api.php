@@ -119,6 +119,26 @@ class API {
 	}
 
 	/**
+	 * Retrieve a single series by its slug.
+	 *
+	 * @param string $series The series slug.
+	 * @return array|bool The series array for the given slug, or false if the given series was not
+	 *                    found in the API-provided playlist.
+	 */
+	public function get_series( $series ) {
+		$playlist = $this->get_playlist();
+
+		// Iterate through the series and their topics to find a match.
+		foreach ( (array) $playlist['series'] as $single_series ) {
+			if ( $series === $single_series['slug'] ) {
+				return $single_series;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Retrieve a single topic by its slug.
 	 *
 	 * @param string $topic The topic slug.

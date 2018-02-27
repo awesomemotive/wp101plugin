@@ -175,6 +175,47 @@ class ApiTest extends TestCase {
 		$this->assertSame( $error, $api->get_playlist() );
 	}
 
+	public function test_get_series() {
+		$api  = new API;
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'series' => [
+					[
+						'slug' => 'first-series',
+					],
+					[
+						'slug' => 'second-series',
+					],
+				]
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( $json ),
+		] );
+
+		$this->assertEquals(
+			$json['data']['series'][1],
+			$api->get_series( 'second-series' )
+		);
+	}
+
+	public function test_get_series_returns_false_if_no_matching_series_found() {
+		$api   = new API;
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'series' => [],
+				],
+			] ),
+		] );
+
+		$this->assertFalse( $api->get_series( 'first-series' ) );
+	}
+
 	public function test_get_topic() {
 		$api   = new API;
 		$json = [
@@ -241,7 +282,6 @@ class ApiTest extends TestCase {
 
 	public function test_get_topic_returns_false_if_no_matching_topic_found() {
 		$api   = new API;
-		$json =
 
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [

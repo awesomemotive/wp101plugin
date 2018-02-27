@@ -59,6 +59,18 @@ function current_user_can_purchase_addons() {
 }
 
 /**
+ * Retrieve a series by its slug.
+ *
+ * @param string $slug The series slug.
+ *
+ * @return array|bool Either the corresponding series array or a boolean false if either the API
+ *                    key doesn't have access to the series or the series doesn't exist.
+ */
+function get_series( $slug ) {
+	return ( new API() )->get_series( $slug );
+}
+
+/**
  * Retrieve a topic by its slug.
  *
  * @param string $slug The topic slug.
