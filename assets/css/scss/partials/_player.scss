@@ -23,3 +23,15 @@
 .wp101-video-details {
 	padding-top: 1em;
 }
+
+.wp101-video-grid-contents {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
+
+	.wp101-video {
+		flex: 1 0 50%;
+		max-width: 48%;
+	}
+}
