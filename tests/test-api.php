@@ -263,6 +263,32 @@ class ApiTest extends TestCase {
 		$this->assertFalse( $api->get_topic( 'second-topic' ) );
 	}
 
+	public function test_account_can() {
+		$api = new API();
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'capabilities' => [ 'some-capability' ],
+				],
+			] ),
+		] );
+
+		$this->assertTrue( $api->account_can( 'some-capability' ) );
+		$this->assertFalse( $api->account_can( 'some-other-capability' ) );
+	}
+
+	public function test_account_can_resolves_errors_to_false() {
+		$api = new API();
+
+		$this->set_expected_response( function () {
+			return new WP_Error( 'msg' );
+		} );
+
+		$this->assertFalse( $api->account_can( 'some-capability' ) );
+	}
+
 	/**
 	 * @dataProvider build_uri_provider()
 	 */

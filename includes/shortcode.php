@@ -51,8 +51,12 @@ function render_shortcode( $atts ) {
 	$atts = shortcode_atts( [
 		'video' => null,
 	], $atts, 'wp101' );
+	$api  = new API();
 
-	if ( ! $atts['video'] ) {
+	if ( ! $api->account_can( 'embed-on-front-end' ) ) {
+		return shortcode_debug( __( 'Your WP101 subscription does not permit embedding on the front-end of a site.', 'wp101' ) );
+
+	} elseif ( ! $atts['video'] ) {
 		return shortcode_debug( __( 'No WP101 video ID was provided.', 'wp101' ) );
 	}
 

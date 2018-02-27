@@ -84,7 +84,7 @@ class API {
 			return $public_key;
 		}
 
-		$response = $this->send_request( 'GET', '/public-key' );
+		$response = $this->send_request( 'GET', '/account' );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -147,6 +147,23 @@ class API {
 	 */
 	public function has_api_key() {
 		return (bool) $this->get_api_key();
+	}
+
+	/**
+	 * Determine if the current account has the given capability.
+	 *
+	 * @param string $cap The capability to check.
+	 *
+	 * @return bool Whether or not the user's account has the given capability.
+	 */
+	public function account_can( $cap ) {
+		$response = $this->send_request( 'GET', '/account', [], [], 12 * HOUR_IN_SECONDS );
+
+		if ( is_wp_error( $response ) ) {
+			return false;
+		}
+
+		return isset( $response['capabilities'] ) && in_array( $cap, (array) $response['capabilities'], true );
 	}
 
 	/**
