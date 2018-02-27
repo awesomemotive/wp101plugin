@@ -18,10 +18,84 @@ class ShortcodeTest extends TestCase {
 		);
 	}
 
-	public function test_returns_early_if_video_is_undefined() {
-		$this->assertEmpty(
-			Shortcode\render_shortcode( [] ),
-			'There should be no output if no video ID is provided.'
+	public function test_can_show_series() {
+		Shortcode\register_scripts_styles();
+
+		$post = $this->factory()->post->create( [
+			'post_status' => 'private',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_series' )
+			->with( 'test-series' )
+			->andReturn( [
+				'title' => 'Title',
+				'topics' => [],
+			] );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertNotEmpty(
+			Shortcode\render_shortcode( [
+				'series' => 'test-series',
+			] )
+		);
+		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
+		$this->assertTrue( wp_script_is( 'wp101', 'enqueued' ), 'Expected the scripts to be enqueued.' );
+	}
+
+	public function test_can_show_topic() {
+		Shortcode\register_scripts_styles();
+
+		$post = $this->factory()->post->create( [
+			'post_status' => 'private',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_topic' )
+			->with( 'test-topic' )
+			->andReturn( [
+				'title'       => 'Title',
+				'slug'        => 'test-topic',
+				'url'         => 'http://example.com/test-topic',
+				'description' => 'Foo bar baz',
+			] );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertNotEmpty(
+			Shortcode\render_shortcode( [
+				'video' => 'test-topic',
+			] )
+		);
+		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
+		$this->assertTrue( wp_script_is( 'wp101', 'enqueued' ), 'Expected the scripts to be enqueued.' );
+	}
+
+	public function test_gives_precedence_to_series_over_videos() {
+		$post = $this->factory()->post->create( [
+			'post_status' => 'private',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_series' )
+			->once()
+			->with( 'test-series' )
+			->andReturn( [
+				'title' => 'Title',
+				'topics' => [],
+			] );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertNotEmpty(
+			Shortcode\render_shortcode( [
+				'series' => 'test-series',
+				'video'  => 'test-topic',
+			] )
 		);
 	}
 

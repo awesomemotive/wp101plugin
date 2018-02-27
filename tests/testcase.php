@@ -70,6 +70,21 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Retrieve a Mockery version of the API class.
+	 *
+	 * @return Mockery\Mock A Mockery version of the API class.
+	 */
+	protected function mock_api() {
+		$api      = API::get_instance();
+		$mock     = Mockery::mock( $api )->shouldAllowMockingProtectedMethods()->makePartial();
+		$instance = new ReflectionProperty( $api, 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( $mock );
+
+		return API::get_instance();
+	}
+
+	/**
 	 * Set the environment's API key.
 	 *
 	 * @param string $api_key|bool Optional. The API key value to set. If equal to FALSE, a random

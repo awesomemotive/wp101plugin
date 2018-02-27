@@ -11,9 +11,9 @@ use WP101\API as API;
 use WP101\TemplateTags as TemplateTags;
 
 /**
- * Enqueue scripts used for front-end display.
+ * Register scripts used for front-end display.
  */
-function enqueue_scripts_styles() {
+function register_scripts_styles() {
 	wp_register_style(
 		'wp101',
 		WP101_URL . '/assets/css/wp101.css',
@@ -33,7 +33,7 @@ function enqueue_scripts_styles() {
 		'apiKey' => TemplateTags\api()->get_public_api_key(),
 	] );
 }
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts_styles' );
 
 /**
  * Handle requests for the [wp101] shortcode.
