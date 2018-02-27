@@ -19,6 +19,7 @@ class ShortcodeTest extends TestCase {
 	}
 
 	public function test_can_show_series() {
+		wp_set_current_user( $this->factory()->user->create() );
 		Shortcode\register_scripts_styles();
 
 		$post = $this->factory()->post->create( [
@@ -46,6 +47,7 @@ class ShortcodeTest extends TestCase {
 	}
 
 	public function test_can_show_topic() {
+		wp_set_current_user( $this->factory()->user->create() );
 		Shortcode\register_scripts_styles();
 
 		$post = $this->factory()->post->create( [
@@ -75,6 +77,7 @@ class ShortcodeTest extends TestCase {
 	}
 
 	public function test_gives_precedence_to_series_over_videos() {
+		wp_set_current_user( $this->factory()->user->create() );
 		$post = $this->factory()->post->create( [
 			'post_status' => 'private',
 		] );
@@ -95,6 +98,23 @@ class ShortcodeTest extends TestCase {
 			Shortcode\render_shortcode( [
 				'series' => 'test-series',
 				'video'  => 'test-topic',
+			] )
+		);
+	}
+
+	public function test_hides_content_on_public_pages() {
+		$post = $this->factory()->post->create( [
+			'post_status' => 'publish',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertEmpty(
+			Shortcode\render_shortcode( [
+				'video' => 'test-video',
 			] )
 		);
 	}
