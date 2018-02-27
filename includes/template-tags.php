@@ -11,6 +11,34 @@ use WP101\Admin as Admin;
 use WP101\API;
 
 /**
+ * Enqueue scripts used for front-end display.
+ */
+function enqueue_scripts_styles() {
+	wp_register_style(
+		'wp101',
+		WP101_URL . '/assets/css/wp101.css',
+		null,
+		WP101_VERSION
+	);
+
+	wp_register_script(
+		'wp101',
+		WP101_URL . '/assets/js/wp101.js',
+		null,
+		WP101_VERSION,
+		true
+	);
+
+	$api = new API();
+
+	wp_localize_script( 'wp101', 'wp101', [
+		'apiKey' => $api->get_public_api_key(),
+	] );
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+
+/**
  * Shortcut for retrieving the current API key.
  *
  * @see WP101\API::get_api_key()

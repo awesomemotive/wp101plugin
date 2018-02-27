@@ -81,7 +81,7 @@ function render_shortcode_single( $topic ) {
 
 	<figure class="wp101-video">
 		<div class="wp101-video-wrapper">
-			<iframe id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>" allowfullscreen></iframe>
+			<iframe id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>" border="0" allowfullscreen></iframe>
 		</div>
 		<figcaption class="wp101-video-details">
 			<h2 class="wp101-video-title"><?php echo esc_html( $topic['title'] ); ?></h2>

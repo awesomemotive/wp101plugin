@@ -1,58 +1,41 @@
-(function ($) {
+(function (wp101) {
 	'use strict';
 
-	var $playlist = $('.wp101-playlist'),
-		title = document.getElementById('wp101-player-title'),
-		player = document.getElementById('wp101-player');
+	var topics = document.querySelectorAll('.wp101-video'),
 
 	/**
-	 * Read window.location.hash and return the HTMLElement representing that topic
-	 * in the playlist.
-	 *
-	 * If no match is found, return the first playlist item.
+	 * Render a WP101 media object into its player.
 	 */
-	function getCurrentTopic() {
-		var hash = window.location.hash.substring(1),
-			topic = document.querySelector('a[data-media-slug="' + hash + '"]');
-
-		return topic || document.querySelector('.wp101-topics-list a');
-	}
-
-	/**
-	 * Load a topic based on its playlist node.
-	 *
-	 * @param HTMLElement el - The playlist node.
-	 */
-	function loadTopic(el) {
-		el = el || getCurrentTopic();
-
-		if (! el) {
+	renderVideo = function () {
+		if (200 !== this.status) {
 			return;
 		}
 
-		$playlist.find('a.active').removeClass('active');
-		el.classList.add('active');
+		this.wp101.player.src = URL.createObjectURL(this.response);
+	},
 
-		player.src = el.dataset.mediaSrc;
-		title.innerText = el.dataset.mediaTitle;
-	}
+	/**
+	 * Load a WP101 video into its player.
+	 *
+	 * @param HTMLElement el - The figure.wp101-video node.
+	 */
+	loadTopic = function (el) {
+		var player = el.querySelector('.wp101-video-player'),
+			xhr = new XMLHttpRequest();
 
-	// Detect changes to window.location.hash.
-	window.addEventListener('hashchange', function () {
-		loadTopic();
-	});
+		if (! player || ! player.dataset.mediaSrc) {
+			return;
+		}
 
-	// Enable jQuery accordion for list of series.
-	$playlist.accordion({
-		collapsible: true,
-		header: '.wp101-series h2',
-		heightStyle: 'content',
-		activate: function () {
-			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
-		},
-		active: parseInt(localStorage.getItem('wp101ListState'), 10)
-	});
+		xhr.open('GET', player.dataset.mediaSrc);
+		xhr.onload = renderVideo;
+		xhr.responseType = 'blob';
+		xhr.setRequestHeader('Authorization', 'Bearer ' + wp101.apiKey);
+		xhr.wp101 = {
+			player: player
+		};
+		xhr.send();
+	};
 
-	// Load the default topic.
-	loadTopic();
-}(jQuery));
+	topics.forEach(loadTopic);
+}(window.wp101));

@@ -16,7 +16,7 @@ use WP101\API;
  */
 function enqueue_scripts( $hook ) {
 	wp_register_style(
-		'wp101',
+		'wp101-admin',
 		WP101_URL . '/assets/css/wp101.css',
 		null,
 		WP101_VERSION,
@@ -24,8 +24,8 @@ function enqueue_scripts( $hook ) {
 	);
 
 	wp_register_script(
-		'wp101',
-		WP101_URL . '/assets/js/wp101.js',
+		'wp101-admin',
+		WP101_URL . '/assets/js/wp101-admin.js',
 		array( 'jquery-ui-accordion' ),
 		WP101_VERSION,
 		true
