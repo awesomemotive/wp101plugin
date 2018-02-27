@@ -17,7 +17,7 @@ use WP101\API;
 function enqueue_scripts( $hook ) {
 	wp_register_style(
 		'wp101-admin',
-		WP101_URL . '/assets/css/wp101.css',
+		WP101_URL . '/assets/css/wp101-admin.css',
 		null,
 		WP101_VERSION,
 		'all'
