@@ -145,7 +145,6 @@ class ApiTest extends TestCase {
 		$this->assertEquals(
 			[
 				'addons' => [],
-				'upgrades' => [],
 			],
 			API::get_instance()->get_addons()
 		);

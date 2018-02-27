@@ -140,8 +140,7 @@ class API {
 			// phpcs:enable
 
 			return [
-				'addons'   => [],
-				'upgrades' => [],
+				'addons' => [],
 			];
 		}
 
