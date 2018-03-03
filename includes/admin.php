@@ -7,6 +7,7 @@
 
 namespace WP101\Admin;
 
+use WP101\API;
 use WP101\TemplateTags as TemplateTags;
 
 /**
@@ -127,7 +128,9 @@ function render_addons_page() {
  * Render the WP101 listings page.
  */
 function render_listings_page() {
-	$playlist = TemplateTags\api()->get_playlist();
+	$api        = TemplateTags\api();
+	$playlist   = $api->get_playlist();
+	$public_key = $api->get_public_api_key();
 
 	require_once WP101_VIEWS . '/listings.php';
 }
@@ -138,3 +141,14 @@ function render_listings_page() {
 function render_settings_page() {
 	require_once WP101_VIEWS . '/settings.php';
 }
+
+/**
+ * Flush the public key after saving the private key.
+ */
+function clear_public_api_key() {
+	delete_option( API::PUBLIC_API_KEY_OPTION );
+
+	// Prime the cache with the new key.
+	TemplateTags\api()->get_public_api_key();
+}
+add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );
