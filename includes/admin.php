@@ -152,3 +152,31 @@ function clear_public_api_key() {
 	TemplateTags\api()->get_public_api_key();
 }
 add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );
+
+/**
+ * Scan the active plugins for anything that might have a WP101 add-on series available.
+ */
+function check_plugins() {
+	$plugins   = get_option( 'active_plugins', array() );
+	$addons    = TemplateTags\api()->get_addons();
+	$available = [];
+
+	foreach ( $addons['addons'] as $series ) {
+		if ( empty( $series['restrictions']['plugins'] ) || $series['includedInSubscription'] ) {
+			continue;
+		}
+
+		foreach ( $series['restrictions']['plugins'] as $plugin ) {
+			if ( in_array( $plugin, $plugins, true ) ) {
+				$available[] = [
+					'title'  => $series['title'],
+					'url'    => $series['url'],
+					'plugin' => $plugin,
+				];
+			}
+		}
+	}
+
+	update_option( 'wp101-available-series', $available, false );
+}
+add_action( 'activated_plugin', __NAMESPACE__ . '\check_plugins' );

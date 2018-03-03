@@ -8,6 +8,7 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
+use WP101\API as API;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
@@ -128,6 +129,68 @@ class AdminTest extends TestCase {
 		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
 
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
+	}
+
+	public function test_check_plugins() {
+		update_option( 'active_plugins', [
+			'some-plugin/some-plugin.php',
+			'another-plugin/another-plugin.php',
+		] );
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_addons' )
+			->once()
+			->andReturn([
+				'addons' => [
+					[
+						'title'                  => 'Learning Some Plugin',
+						'url'                    => 'https://wp101plugin.com/series/some-plugin',
+						'includedInSubscription' => false,
+						'restrictions'           => [
+							'plugins' => [
+								'some-plugin/some-plugin.php',
+							],
+						],
+					],
+				],
+			]);
+
+		Admin\check_plugins();
+
+		$this->assertEquals([
+			[
+				'title'  => 'Learning Some Plugin',
+				'url'    => 'https://wp101plugin.com/series/some-plugin',
+				'plugin' => 'some-plugin/some-plugin.php',
+			],
+		], get_option( 'wp101-available-series', [] ) );
+	}
+
+	public function test_check_plugins_excludes_addons_included_in_subscription() {
+		update_option( 'active_plugins', [
+			'some-plugin/some-plugin.php',
+		] );
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_addons' )
+			->andReturn([
+				'addons' => [
+					[
+						'title'                  => 'Learning Some Plugin',
+						'url'                    => 'https://wp101plugin.com/series/some-plugin',
+						'includedInSubscription' => true,
+						'restrictions'           => [
+							'plugins' => [
+								'some-plugin/some-plugin.php',
+							],
+						],
+					],
+				],
+			]);
+
+		Admin\check_plugins();
+
+		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
 	}
 
 	/**
