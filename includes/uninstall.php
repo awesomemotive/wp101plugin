@@ -7,6 +7,8 @@
 
 namespace WP101\Uninstall;
 
+use WP101\Admin as Admin;
+
 /**
  * Clean up WP101 configuration when the plugin is uninstalled.
  */
@@ -18,6 +20,8 @@ function cleanup_plugin() {
 	delete_option( 'wp101_hidden_topics' );
 	delete_option( 'wp101_custom_topics' );
 	delete_option( 'wp101_admin_restriction' );
+
+	Admin\clear_public_api_key();
 
 	// Delete WP101 transients.
 	delete_transient( 'wp101_topics' );
