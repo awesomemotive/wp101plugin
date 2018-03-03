@@ -20,18 +20,6 @@ function register_scripts_styles() {
 		null,
 		WP101_VERSION
 	);
-
-	wp_register_script(
-		'wp101',
-		WP101_URL . '/assets/js/wp101.js',
-		null,
-		WP101_VERSION,
-		true
-	);
-
-	wp_localize_script( 'wp101', 'wp101', [
-		'apiKey' => TemplateTags\api()->get_public_api_key(),
-	] );
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts_styles' );
 
@@ -63,7 +51,6 @@ function render_shortcode( $atts ) {
 
 	// Load the requisite files.
 	wp_enqueue_style( 'wp101' );
-	wp_enqueue_script( 'wp101' );
 
 	if ( $atts['series'] ) {
 		$series = TemplateTags\get_series( $atts['series'] );
@@ -90,12 +77,17 @@ add_shortcode( 'wp101', __NAMESPACE__ . '\render_shortcode' );
  * @return string The rendered shortcode content.
  */
 function render_shortcode_single( $topic ) {
+	$query_args = [
+		'apiKey' => TemplateTags\api()->get_public_api_key(),
+		'host'   => site_url(),
+	];
+
 	ob_start();
 ?>
 
 	<figure class="wp101-video">
 		<div class="wp101-video-wrapper">
-			<iframe id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>" border="0" allowfullscreen></iframe>
+			<iframe src="<?php echo esc_attr( add_query_arg( $query_args, $topic['url'] ) ); ?>" id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" border="0" allowfullscreen></iframe>
 		</div>
 		<figcaption class="wp101-video-details">
 			<h2 class="wp101-video-title"><?php echo esc_html( $topic['title'] ); ?></h2>
@@ -127,6 +119,11 @@ function render_shortcode_single( $topic ) {
  * @return string The rendered shortcode content.
  */
 function render_shortcode_playlist( $series ) {
+	$query_args = [
+		'apiKey' => TemplateTags\api()->get_public_api_key(),
+		'host'   => site_url(),
+	];
+
 	ob_start();
 ?>
 
@@ -139,7 +136,7 @@ function render_shortcode_playlist( $series ) {
 
 				<figure class="wp101-video">
 					<div class="wp101-video-wrapper">
-						<iframe id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>" border="0" allowfullscreen></iframe>
+						<iframe src="<?php echo esc_attr( add_query_arg( $query_args, $topic['url'] ) ); ?>" id="wp101-video-player-<?php echo esc_attr( $topic['slug'] ); ?>" class="wp101-video-player" border="0" allowfullscreen></iframe>
 					</div>
 					<figcaption class="wp101-video-details">
 						<h3 class="wp101-video-title"><?php echo esc_html( $topic['title'] ); ?></h3>

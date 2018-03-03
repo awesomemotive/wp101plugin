@@ -43,7 +43,6 @@ class ShortcodeTest extends TestCase {
 			] )
 		);
 		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
-		$this->assertTrue( wp_script_is( 'wp101', 'enqueued' ), 'Expected the scripts to be enqueued.' );
 	}
 
 	public function test_can_show_topic() {
@@ -73,7 +72,6 @@ class ShortcodeTest extends TestCase {
 			] )
 		);
 		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
-		$this->assertTrue( wp_script_is( 'wp101', 'enqueued' ), 'Expected the scripts to be enqueued.' );
 	}
 
 	public function test_gives_precedence_to_series_over_videos() {
