@@ -45,7 +45,7 @@ function render_shortcode( $atts ) {
 	if ( ! $api->account_can( 'embed-on-front-end' ) ) {
 		return shortcode_debug( __( 'Your WP101 subscription does not permit embedding on the front-end of a site.', 'wp101' ) );
 
-	} elseif ( 'private' !== get_post_status() ) {
+	} elseif ( 'private' !== get_post_status() && empty( get_post()->post_password ) ) {
 		return shortcode_debug( __( 'You may not use WP101 shortcodes on public pages.', 'wp101' ) );
 	}
 

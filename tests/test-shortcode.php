@@ -117,6 +117,34 @@ class ShortcodeTest extends TestCase {
 		);
 	}
 
+	public function test_shows_content_on_password_protected_pages() {
+		wp_set_current_user( $this->factory()->user->create() );
+		Shortcode\register_scripts_styles();
+
+		$post = $this->factory()->post->create( [
+			'post_status'   => 'publish',
+			'post_password' => 'secret',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_topic' )
+			->andReturn( [
+				'title'       => 'Title',
+				'slug'        => 'test-topic',
+				'url'         => 'http://example.com/test-topic',
+				'description' => 'Foo bar baz',
+			] );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertNotEmpty(
+			Shortcode\render_shortcode( [
+				'video' => 'test-topic',
+			] )
+		);
+	}
+
 	public function test_shortcode_debug() {
 		$this->assertEmpty(
 			Shortcode\shortcode_debug( 'Foo bar' ),
