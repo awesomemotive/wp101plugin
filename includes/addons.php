@@ -12,9 +12,11 @@ use WP101\TemplateTags as TemplateTags;
 
 /**
  * Scan the active plugins for anything that might have a WP101 add-on series available.
+ *
+ * @param array $previous The previously-active plugins. This value is not used.
+ * @param array $plugins  An array of active site plugins.
  */
-function check_plugins() {
-	$plugins   = get_option( 'active_plugins', array() );
+function check_plugins( $previous, $plugins ) {
 	$addons    = TemplateTags\api()->get_addons();
 	$available = [];
 
@@ -36,7 +38,7 @@ function check_plugins() {
 
 	update_option( 'wp101-available-series', $available, false );
 }
-add_action( 'activated_plugin', __NAMESPACE__ . '\check_plugins' );
+add_action( 'update_option_active_plugins', __NAMESPACE__ . '\check_plugins', 10, 2 );
 
 /**
  * In the administration area, alert users who are capable of purchasing add-ons to any new series
