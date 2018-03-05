@@ -13,12 +13,20 @@ define( 'WP101_VIEWS', __DIR__ . '/views' );
 define( 'WP101_URL', plugins_url( null, __FILE__ ) );
 define( 'WP101_VERSION', '5.0.0' );
 
-require_once WP101_INC . '/addons.php';
 require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
 require_once WP101_INC . '/shortcode.php';
 require_once WP101_INC . '/template-tags.php';
 require_once WP101_INC . '/uninstall.php';
+
+/**
+ * Forego the add-ons include if the site owner has opted-out of these sorts of notifications.
+ *
+ * @link https://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices#Disable_Nag_Notices
+ */
+if ( ! defined( 'DISABLE_NAG_NOTICES' ) || ! DISABLE_NAG_NOTICES ) {
+	require_once WP101_INC . '/addons.php';
+}
 
 /**
  * Register the uninstall callback.
