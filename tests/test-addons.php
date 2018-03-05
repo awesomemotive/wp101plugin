@@ -28,6 +28,7 @@ class AddonTest extends TestCase {
 				'addons' => [
 					[
 						'title'                  => 'Learning Some Plugin',
+						'slug'                   => 'learning-some-plugin',
 						'url'                    => 'https://wp101plugin.com/series/some-plugin',
 						'includedInSubscription' => false,
 						'restrictions'           => [
@@ -42,7 +43,7 @@ class AddonTest extends TestCase {
 		Addons\check_plugins();
 
 		$this->assertEquals( [
-			[
+			'learning-some-plugin' => [
 				'title'  => 'Learning Some Plugin',
 				'url'    => 'https://wp101plugin.com/series/some-plugin',
 				'plugin' => 'some-plugin/some-plugin.php',
@@ -83,7 +84,7 @@ class AddonTest extends TestCase {
 		] ) );
 
 		update_option( 'wp101-available-series', [
-			[
+			'learning-some-plugin' => [
 				'title'  => 'Learning Some Plugin',
 				'url'    => '#',
 				'plugin' => 'some-plugin/some-plugin.php',
@@ -110,7 +111,7 @@ class AddonTest extends TestCase {
 		] ) );
 
 		update_option( 'wp101-available-series', [
-			[
+			'learning-some-plugin' => [
 				'title'  => 'Learning Some Plugin',
 				'url'    => '#',
 				'plugin' => 'some-plugin/some-plugin.php',
@@ -145,7 +146,7 @@ class AddonTest extends TestCase {
 		] ) );
 
 		update_option( 'wp101-available-series', [
-			[
+			'learning-some-plugin' => [
 				'title'  => 'Learning Some Plugin',
 				'url'    => '#',
 				'plugin' => 'some-plugin/some-plugin.php',
@@ -170,17 +171,17 @@ class AddonTest extends TestCase {
 		] ) );
 
 		update_option( 'wp101-available-series', [
-			[
+			'first-plugin'  => [
 				'title'  => 'First plugin',
 				'url'    => '#',
 				'plugin' => 'first-plugin/first-plugin.php',
 			],
-			[
+			'second-plugin' => [
 				'title'  => 'Second plugin',
 				'url'    => '#',
 				'plugin' => 'second-plugin/second-plugin.php',
 			],
-			[
+			'third-plugin'  => [
 				'title'  => 'Third plugin',
 				'url'    => '#',
 				'plugin' => 'third-plugin/third-plugin.php',

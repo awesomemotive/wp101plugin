@@ -25,7 +25,7 @@ function check_plugins() {
 
 		foreach ( $series['restrictions']['plugins'] as $plugin ) {
 			if ( in_array( $plugin, $plugins, true ) ) {
-				$available[] = [
+				$available[ $series['slug'] ] = [
 					'title'  => $series['title'],
 					'url'    => $series['url'],
 					'plugin' => $plugin,
