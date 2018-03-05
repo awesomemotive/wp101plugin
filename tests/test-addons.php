@@ -16,11 +16,6 @@ use WP101\Addons as Addons;
 class AddonTest extends TestCase {
 
 	public function test_check_plugins() {
-		update_option( 'active_plugins', [
-			'some-plugin/some-plugin.php',
-			'another-plugin/another-plugin.php',
-		] );
-
 		$api = $this->mock_api();
 		$api->shouldReceive( 'get_addons' )
 			->once()
@@ -40,7 +35,10 @@ class AddonTest extends TestCase {
 				],
 			] );
 
-		Addons\check_plugins();
+		Addons\check_plugins( null, array(
+			'some-plugin/some-plugin.php',
+			'another-plugin/another-plugin.php',
+		) );
 
 		$this->assertEquals( [
 			'learning-some-plugin' => [
@@ -52,10 +50,6 @@ class AddonTest extends TestCase {
 	}
 
 	public function test_check_plugins_excludes_addons_included_in_subscription() {
-		update_option( 'active_plugins', [
-			'some-plugin/some-plugin.php',
-		] );
-
 		$api = $this->mock_api();
 		$api->shouldReceive( 'get_addons' )
 			->andReturn( [
@@ -73,12 +67,16 @@ class AddonTest extends TestCase {
 				],
 			] );
 
-		Addons\check_plugins();
+		Addons\check_plugins( null, [
+			'some-plugin/some-plugin.php',
+		] );
 
 		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
 	}
 
 	public function test_show_notifications() {
+		Addons\register_scripts();
+
 		wp_set_current_user( $this->factory()->user->create( [
 			'role' => 'administrator',
 		] ) );
@@ -97,7 +95,8 @@ class AddonTest extends TestCase {
 		$output = ob_get_clean();
 
 		$this->assertContains( 'Learning Some Plugin', $output );
-		$this->assertContains( 'data-wp101-addon-slug="learning-some-plugin"', $output);
+		$this->assertContains( 'data-wp101-addon-slug="learning-some-plugin"', $output );
+		$this->assertTrue( wp_script_is( 'wp101-addons', 'enqueued' ) );
 	}
 
 	/**
@@ -217,5 +216,59 @@ class AddonTest extends TestCase {
 
 		$this->assertContains( 'First plugin, Second plugin, and Third plugin', strip_tags( $output ) );
 		$this->assertContains( 'data-wp101-addon-slug="first-plugin,second-plugin,third-plugin"', $output);
+	}
+
+	public function test_dismiss_notification() {
+		add_filter( 'wp_die_ajax_handler', function () {
+			return '__return_empty_string';
+		} );
+
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+
+		$_POST = [
+			'addons' => [ 'foo', 'bar' ],
+			'nonce'  => wp_create_nonce( 'dismiss-notice' ),
+		];
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+
+		ob_start();
+		Addons\dismiss_notice();
+		ob_end_clean();
+
+		$this->assertEquals(
+			[ 'foo', 'bar' ],
+			get_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', true )
+		);
+	}
+
+	public function test_dismiss_notification_merges_with_existing_settings() {
+		add_filter( 'wp_die_ajax_handler', function () {
+			return '__return_empty_string';
+		} );
+
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+
+		add_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', [ 'foo' ] );
+
+		$_POST = [
+			'addons' => [ 'bar', 'baz' ],
+			'nonce'  => wp_create_nonce( 'dismiss-notice' ),
+		];
+
+		add_filter( 'wp_doing_ajax', '__return_true' );
+
+		ob_start();
+		Addons\dismiss_notice();
+		ob_end_clean();
+
+		$this->assertEquals(
+			[ 'foo', 'bar', 'baz' ],
+			get_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', true )
+		);
 	}
 }

@@ -85,6 +85,8 @@ function show_notifications( $screen ) {
 			$link .= _x( 'and ', 'separator between the last two items in a list', 'wp101' ) . $and;
 		}
 
+		wp_enqueue_script( 'wp101-addons' );
+
 		render_notification( sprintf(
 			/* Translators: %1$s is the add-on title(s). */
 			__( 'Get the most out of your site with %1$s from WP101.', 'wp101' ),
@@ -109,3 +111,41 @@ function render_notification( $message, $slug ) {
 
 <?php
 }
+
+/**
+ * Register the scripts necessary to save dismissed notifications.
+ */
+function register_scripts() {
+	wp_register_script(
+		'wp101-addons',
+		WP101_URL . '/assets/js/wp101-addons.js',
+		array( 'jquery' ),
+		WP101_VERSION,
+		true
+	);
+
+	wp_localize_script( 'wp101-addons', 'wp101Addons', [
+		'nonce' => wp_create_nonce( 'dismiss-notice' ),
+	] );
+}
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
+
+/**
+ * Ajax handler for dismissal of add-on notices.
+ */
+function dismiss_notice() {
+	if ( ! isset( $_POST['addons'], $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'dismiss-notice' ) ) {
+		wp_send_json_error();
+	}
+
+	$user_id   = get_current_user_id();
+	$dismissed = array_filter( array_merge(
+		(array) get_user_meta( $user_id, 'wp101-dismissed-notifications', true ),
+		(array) $_POST['addons']
+	) );
+
+	update_user_meta( $user_id, 'wp101-dismissed-notifications', array_unique( array_values( $dismissed ) ) );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_wp101_dismiss_notice', __NAMESPACE__ . '\dismiss_notice' );
