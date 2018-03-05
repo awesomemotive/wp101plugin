@@ -13,6 +13,7 @@ define( 'WP101_VIEWS', __DIR__ . '/views' );
 define( 'WP101_URL', plugins_url( null, __FILE__ ) );
 define( 'WP101_VERSION', '5.0.0' );
 
+require_once WP101_INC . '/addons.php';
 require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
 require_once WP101_INC . '/shortcode.php';
