@@ -29,6 +29,6 @@ before_script:
   - ./vendor/bin/wp-enforcer
 
 script:
-  - WP_MULTISITE=0 phpunit
-  - WP_MULTISITE=1 phpunit
+  - WP_MULTISITE=0 ./vendor/bin/phpunit
+  - WP_MULTISITE=1 ./vendor/bin/phpunit
   - ./vendor/bin/phpcs --standard=phpcs.xml ./
