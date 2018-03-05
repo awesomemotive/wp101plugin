@@ -97,6 +97,7 @@ class AddonTest extends TestCase {
 		$output = ob_get_clean();
 
 		$this->assertContains( 'Learning Some Plugin', $output );
+		$this->assertContains( 'data-wp101-addon-slug="learning-some-plugin"', $output);
 	}
 
 	/**
@@ -215,5 +216,6 @@ class AddonTest extends TestCase {
 		$output = ob_get_clean();
 
 		$this->assertContains( 'First plugin, Second plugin, and Third plugin', strip_tags( $output ) );
+		$this->assertContains( 'data-wp101-addon-slug="first-plugin,second-plugin,third-plugin"', $output);
 	}
 }

@@ -87,7 +87,7 @@ function show_notifications( $screen ) {
 			/* Translators: %1$s is the add-on title(s). */
 			__( 'Get the most out of your site with %1$s from WP101.', 'wp101' ),
 			$link
-		) );
+		), array_keys( $available ) );
 	} );
 }
 add_action( 'current_screen', __NAMESPACE__ . '\show_notifications' );
@@ -96,11 +96,12 @@ add_action( 'current_screen', __NAMESPACE__ . '\show_notifications' );
  * Render a notification based on the WordPress standards.
  *
  * @param string $message The unescaped message contents.
+ * @param array  $slug    An array of one or more add-on slugs, to be flattened into a data attribute.
  */
-function render_notification( $message ) {
+function render_notification( $message, $slug ) {
 ?>
 
-	<div class="notice notice-info is-dismissible">
+	<div class="notice notice-info is-dismissible" data-wp101-addon-slug="<?php echo esc_attr( implode( ',', (array) $slug ) ); ?>">
 		<p><?php echo wp_kses_post( $message ); ?></p>
 	</div>
 
