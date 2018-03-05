@@ -162,7 +162,28 @@ class AddonTest extends TestCase {
 	}
 
 	public function test_show_notifications_wont_show_dismissed_notifications() {
-		$this->markTestIncomplete();
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+
+		update_option( 'wp101-available-series', [
+			'learning-some-plugin' => [
+				'title'  => 'Learning Some Plugin',
+				'url'    => '#',
+				'plugin' => 'some-plugin/some-plugin.php',
+			],
+		] );
+
+		add_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', [
+			'learning-some-plugin',
+		] );
+
+		ob_start();
+		Addons\show_notifications( WP_Screen::get( 'plugins' ) );
+		do_action( 'admin_notices' );
+		$output = ob_get_clean();
+
+		$this->assertEmpty( $output );
 	}
 
 	public function test_show_notifications_can_flatten_multiple_plugins() {

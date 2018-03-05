@@ -51,8 +51,12 @@ function show_notifications( $screen ) {
 		return;
 	}
 
-	$available = get_option( 'wp101-available-series', [] );
-	$dismissed = (array) get_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', true );
+	// Get the dismissed keys and filter them out of available notifications.
+	$dismissed = array_fill_keys(
+		(array) get_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', true ),
+		''
+	);
+	$available = array_diff_key( get_option( 'wp101-available-series', [] ), $dismissed );
 
 	// Abort if we have nothing to say.
 	if ( empty( $available ) ) {
