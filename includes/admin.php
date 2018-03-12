@@ -121,7 +121,7 @@ function render_addons_page() {
 	$addons    = $api->get_addons();
 	$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug' );
 
-	require_once WP101_VIEWS . '/add-ons.php';
+	include WP101_VIEWS . '/add-ons.php';
 }
 
 /**
@@ -132,14 +132,14 @@ function render_listings_page() {
 	$playlist   = $api->get_playlist();
 	$public_key = $api->get_public_api_key();
 
-	require_once WP101_VIEWS . '/listings.php';
+	include WP101_VIEWS . '/listings.php';
 }
 
 /**
  * Render the WP101 settings page.
  */
 function render_settings_page() {
-	require_once WP101_VIEWS . '/settings.php';
+	include WP101_VIEWS . '/settings.php';
 }
 
 /**

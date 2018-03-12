@@ -32,14 +32,12 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_hides_api_key_form_if_set_via_constant() {
-		$this->markTestSkipped( 'Defining the constant in a test will break other tests.' );
-
 		define( 'WP101_API_KEY', uniqid() );
 
 		ob_start();
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertNotContainsSelector('#wp101-api-key', $output);
+		$this->assertNotContainsSelector( '#wp101-api-key', $output );
 	}
 }

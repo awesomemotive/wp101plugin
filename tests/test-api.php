@@ -37,8 +37,6 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_api_key_reads_constant() {
-		$this->markTestSkipped( 'Defining the constant in a test will break other tests.' );
-
 		define( 'WP101_API_KEY', uniqid() );
 
 		$this->assertEquals( WP101_API_KEY, API::get_instance()->get_api_key() );
