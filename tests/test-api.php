@@ -36,6 +36,15 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
+	public function test_set_api_key() {
+		$api = API::get_instance();
+		$key = uniqid();
+
+		$api->set_api_key( $key );
+
+		$this->assertEquals( $key, $api->get_api_key() );
+	}
+
 	public function test_get_api_key_reads_constant() {
 		define( 'WP101_API_KEY', uniqid() );
 

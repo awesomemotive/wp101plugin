@@ -96,6 +96,15 @@ class API {
 	}
 
 	/**
+	 * Explicitly set the API key.
+	 *
+	 * @param string $key The API key to use.
+	 */
+	public function set_api_key( $key ) {
+		$this->api_key = $key;
+	}
+
+	/**
 	 * Retrieve the public API key from WP101.
 	 *
 	 * Public API keys are generated on a per-domain basis by the WP101 API, and thus are safe for
