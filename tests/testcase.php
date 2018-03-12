@@ -56,6 +56,18 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Clean up the WP101_API_KEY constant.
+	 *
+	 * @after
+	 * @requires extension runkit
+	 */
+	public function remove_constants() {
+		if ( defined( 'WP101_API_KEY' ) ) {
+			runkit_constant_remove( 'WP101_API_KEY' );
+		}
+	}
+
+	/**
 	 * Return a ReflectionMethod with given protected/private $method accessible.
 	 *
 	 * @param  object|string $class  A class name or instance that contains the given method.
