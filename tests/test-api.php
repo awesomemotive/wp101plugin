@@ -325,6 +325,44 @@ class ApiTest extends TestCase {
 		$this->assertFalse( API::get_instance()->account_can( 'some-capability' ) );
 	}
 
+	public function test_exchange_api_key() {
+		$api = API::get_instance();
+		$api->set_api_key( uniqid() );
+		$new = md5( uniqid() ); // Easy way to get a random, 32 character string.
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'apiKey' => $new,
+				],
+			] ),
+		] );
+
+		$this->assertEquals( $new, $api->exchange_api_key()['apiKey'] );
+	}
+
+	public function test_exchange_api_key_surfaces_wp_errors() {
+		$error = new WP_Error( 'msg' );
+
+		$this->set_expected_response( function () use ( $error ) {
+			return $error;
+		} );
+
+		$this->assertSame( $error, API::get_instance()->exchange_api_key() );
+	}
+
+	public function test_exchange_api_key_returns_wp_error_on_api_error() {
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'fail',
+				'data' => 'some message',
+			] ),
+		] );
+
+		$this->assertTrue( is_wp_error( API::get_instance()->exchange_api_key() ) );
+	}
+
 	/**
 	 * @dataProvider build_uri_provider()
 	 */

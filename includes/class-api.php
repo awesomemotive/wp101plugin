@@ -246,6 +246,36 @@ class API {
 	}
 
 	/**
+	 * Exchange a legacy API key for a 5.x API key.
+	 */
+	public function exchange_api_key() {
+		$response = wp_remote_post( $this->build_uri( '/key-exchange' ), [
+			'timeout'    => 10,
+			'user-agent' => self::USER_AGENT,
+			'body'       => [
+				'apiKey' => $this->get_api_key(),
+				'domain' => site_url(),
+			],
+		] );
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 'fail' === $body['status'] ) {
+			return new WP_Error(
+				'wp101-api',
+				__( 'The WP101 API request failed.', 'wp101' ),
+				$body['data']
+			);
+		}
+
+		return $body['data'];
+	}
+
+	/**
 	 * Build an API request URI.
 	 *
 	 * @param string $path Optional. The API endpoint. Default is '/'.
