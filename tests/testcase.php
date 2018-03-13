@@ -105,7 +105,7 @@ class TestCase extends WP_UnitTestCase {
 	 */
 	protected function set_api_key( $api_key = false ) {
 		if ( false === $api_key ) {
-			$api_key = uniqid();
+			$api_key = md5( uniqid() );
 		}
 
 		update_option( 'wp101_api_key', $api_key );

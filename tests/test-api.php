@@ -27,20 +27,11 @@ class ApiTest extends TestCase {
 
 	public function test_get_api_key_returns_from_cache() {
 		$api = API::get_instance();
-		$key = uniqid();
+		$key = md5( uniqid() );
 
 		$prop = new ReflectionProperty( $api, 'api_key' );
 		$prop->setAccessible( true );
 		$prop->setValue( $api, $key );
-
-		$this->assertEquals( $key, $api->get_api_key() );
-	}
-
-	public function test_set_api_key() {
-		$api = API::get_instance();
-		$key = uniqid();
-
-		$api->set_api_key( $key );
 
 		$this->assertEquals( $key, $api->get_api_key() );
 	}
@@ -52,7 +43,7 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_api_key_reads_from_options() {
-		$key = uniqid();
+		$key = md5( uniqid() );
 		$this->set_api_key( $key );
 
 		$this->assertFalse(
@@ -61,6 +52,15 @@ class ApiTest extends TestCase {
 		);
 
 		$this->assertEquals( $key, API::get_instance()->get_api_key() );
+	}
+
+	public function test_set_api_key() {
+		$api = API::get_instance();
+		$key = md5( uniqid() );
+
+		$api->set_api_key( $key );
+
+		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
 	public function test_has_api_key() {

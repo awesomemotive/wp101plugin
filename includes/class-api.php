@@ -250,7 +250,7 @@ class API {
 	 */
 	public function exchange_api_key() {
 		$response = wp_remote_post( $this->build_uri( '/key-exchange' ), [
-			'timeout'    => 10,
+			'timeout'    => 30,
 			'user-agent' => self::USER_AGENT,
 			'body'       => [
 				'apiKey' => $this->get_api_key(),
