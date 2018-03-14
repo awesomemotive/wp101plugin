@@ -21,6 +21,11 @@ require_once WP101_INC . '/template-tags.php';
 require_once WP101_INC . '/uninstall.php';
 
 /**
+ * When the plugin is activated, check to see if it needs migrating from earlier versions.
+ */
+register_activation_hook( __FILE__, 'WP101\Migrate\maybe_migrate' );
+
+/**
  * Register the uninstall callback.
  */
 register_uninstall_hook( __FILE__, 'WP101\Uninstall\cleanup_plugin' );

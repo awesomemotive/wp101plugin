@@ -29,6 +29,8 @@ class SettingsTest extends TestCase {
 			],
 			$output
 		);
+
+		$this->assertEquals( 1, did_action( 'admin_notices' ) );
 	}
 
 	public function test_hides_api_key_form_if_set_via_constant() {
