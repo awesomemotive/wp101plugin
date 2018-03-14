@@ -34,12 +34,23 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_hides_api_key_form_if_set_via_constant() {
-		define( 'WP101_API_KEY', uniqid() );
+		define( 'WP101_API_KEY', md5( uniqid() ) );
 
 		ob_start();
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
 		$this->assertNotContainsSelector( '#wp101-api-key', $output );
+	}
+
+	public function test_notifies_user_if_constant_needs_replaced() {
+		define( 'WP101_API_KEY', 'some-legacy-api-key' );
+
+		ob_start();
+		Admin\render_settings_page();
+		$output = ob_get_clean();
+
+		$this->assertContainsSelector( '#wp101-api-key', $output );
+		$this->assertContainsSelector( 'div.notice.notice-warning', $output );
 	}
 }
