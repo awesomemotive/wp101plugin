@@ -393,6 +393,56 @@ class ApiTest extends TestCase {
 		$this->assertEquals( 'Hidden topics were passed!', $api->exchange_api_key() );
 	}
 
+	public function test_exchange_api_key_passes_custom_topics() {
+		$custom_topics = [
+			'custom-topic' => [
+				'title'   => 'This is a custom topic',
+				'content' => '<iframe src="//player.vimeo.com/video/123456789" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>',
+			],
+		];
+		update_option( 'wp101_custom_topics', $custom_topics );
+
+		$api = API::get_instance();
+		$api->set_api_key( uniqid() );
+
+		$this->set_expected_response( function ( $preempt, $args ) use ( $custom_topics ) {
+			$this->assertEquals( $custom_topics, $args['body']['customTopics'] );
+
+			return $this->mock_http_response( [
+				'body' => wp_json_encode( [
+					'status' => 'success',
+					'data'   => 'Custom topics were passed!',
+				] ),
+			] );
+		} );
+
+		$this->assertEquals( 'Custom topics were passed!', $api->exchange_api_key() );
+	}
+
+	public function test_exchange_api_key_respects_wp101_get_custom_help_topics_filter() {
+		update_option( 'wp101_custom_topics', [ 'custom-topic' => [] ] );
+
+		add_filter( 'wp101_get_custom_help_topics', function () {
+			return [ 'different-topic' => [] ];
+		} );
+
+		$api = API::get_instance();
+		$api->set_api_key( uniqid() );
+
+		$this->set_expected_response( function ( $preempt, $args ) {
+			$this->assertEquals( [ 'different-topic'], array_keys( $args['body']['customTopics'] ) );
+
+			return $this->mock_http_response( [
+				'body' => wp_json_encode( [
+					'status' => 'success',
+					'data'   => 'Custom topics were passed!',
+				] ),
+			] );
+		} );
+
+		$this->assertEquals( 'Custom topics were passed!', $api->exchange_api_key() );
+	}
+
 	public function test_exchange_api_key_surfaces_wp_errors() {
 		$error = new WP_Error( 'msg' );
 

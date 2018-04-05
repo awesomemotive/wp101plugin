@@ -257,6 +257,16 @@ class API {
 				'domain'       => site_url(),
 
 				/**
+				 * Pass along custom topics to the key exchange, enabling these to be created
+				 * within WP101 automatically.
+				 *
+				 * @deprecated 5.0.0
+				 *
+				 * @param array $custom_topics An array of custom WP101 topics.
+				 */
+				'customTopics' => apply_filters( 'wp101_get_custom_help_topics', get_option( 'wp101_custom_topics' ) ),
+
+				/**
 				 * Filter legacy WP101 topic IDs.
 				 *
 				 * This filter was available in WP101 4.x and below, and is only being applied so
