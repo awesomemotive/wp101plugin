@@ -67,7 +67,6 @@ class WP101_Plugin {
 
 		// Actions and filters
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
-		add_action( 'wp_ajax_wp101-showhide-topic', array( $this, 'ajax_handler' ) );
 		add_action( 'wp_ajax_wp101-delete-topic'  , array( $this, 'ajax_delete_topic' ) );
 
 		$this->register_settings_hooks();
@@ -339,30 +338,6 @@ class WP101_Plugin {
 		return apply_filters( 'wp101_get_help_topics', $help_topics, self::$instance );
 	}
 
-	public function ajax_handler() {
-
-		if ( isset( $_REQUEST['topic'] ) ) {
-			do_action( 'wp101_ajax_handler_' . $_REQUEST['topic'], self::$instance, $_REQUEST['direction'] );
-		}
-
-		if ( ! isset( $_REQUEST['topic_id'] ) ) {
-			die( '0' );
-		}
-
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-showhide-' . $_REQUEST['topic_id'] ) ) {
-			die( '-1' );
-		}
-
-		if ( 'hide' == $_REQUEST['direction'] ) {
-			$this->hide_topic( $_REQUEST['topic_id'] );
-			die( '1' );
-		} elseif ( 'show' == $_REQUEST['direction'] ) {
-			$this->show_topic( $_REQUEST['topic_id'] );
-			die( '1' );
-		}
-		die( '-1' );
-	}
-
 	public function ajax_delete_topic() {
 
 		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'wp101-delete-topic-' . $_REQUEST['topic_id'] ) ) {
@@ -378,27 +353,6 @@ class WP101_Plugin {
 		return (array) apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ), self::$instance );
 	}
 
-	public function is_hidden( $topic_id ) {
-		$hidden_topics = $this->get_hidden_topics();
-		return in_array( $topic_id, $hidden_topics );
-	}
-
-	public function hide_topic( $topic_id ) {
-		$hidden_topics = $this->get_hidden_topics();
-		$hidden_topics[] = $topic_id;
-		return update_option( 'wp101_hidden_topics', $hidden_topics );
-	}
-
-	public function show_topic( $topic_id ) {
-		$hidden_topics = $this->get_hidden_topics();
-		if ( $this->is_hidden( $topic_id ) ) {
-			unset( $hidden_topics[array_search( $topic_id, $hidden_topics )] );
-			return update_option( 'wp101_hidden_topics', $hidden_topics );
-		} else {
-			return false;
-		}
-	}
-
 	private function get_help_topics_html( $edit_mode = false ) {
 
 		$topics = $this->get_help_topics();
@@ -412,15 +366,8 @@ class WP101_Plugin {
 		foreach ( $topics as $topic ) {
 			if ( $edit_mode ) {
 				$edit_links = '&nbsp;&nbsp;<small class="wp101-show">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">show</a>]</small><small class="wp101-hide">[<a data-nonce="' . wp_create_nonce( 'wp101-showhide-' . $topic['id'] ) . '" data-topic-id="' . $topic['id'] . '" href="#">hide</a>]</small>';
-				if ( $this->is_hidden( $topic['id'] ) ) {
-					$addl_class = 'wp101-hidden';
-				} else {
-					$addl_class = 'wp101-shown';
-				}
+				$addl_class = 'wp101-shown';
 			} else {
-				if ( $this->is_hidden( $topic['id'] ) ) {
-					continue;
-				}
 				$edit_links = $addl_class = '';
 			}
 			$output .= '<li class="' . $addl_class . ' page-item-' . $topic['id'] . '"><span><a href="' . esc_url( admin_url( 'admin.php?page=wp101-old&document=' . $topic['id'] ) ) . '">' . esc_html( $topic['title'] ) . '</a></span>' . $edit_links . '</li>';
@@ -501,10 +448,6 @@ class WP101_Plugin {
 
 	public function render_listing_page() {
 		$document_id = isset( $_GET['document'] ) ? sanitize_text_field( $_GET['document'] ) : 1;
-
-		while ( $this->is_hidden( $document_id ) ) {
-			$document_id++;
-		}
 
 		if ( $document_id ) : ?>
 			<style>
