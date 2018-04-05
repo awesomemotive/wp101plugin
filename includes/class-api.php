@@ -253,8 +253,20 @@ class API {
 			'timeout'    => 30,
 			'user-agent' => self::USER_AGENT,
 			'body'       => [
-				'apiKey' => $this->get_api_key(),
-				'domain' => site_url(),
+				'apiKey'       => $this->get_api_key(),
+				'domain'       => site_url(),
+
+				/**
+				 * Filter legacy WP101 topic IDs.
+				 *
+				 * This filter was available in WP101 4.x and below, and is only being applied so
+				 * that hidden topics are preserved during the API key exchange process.
+				 *
+				 * @deprecated 5.0.0
+				 *
+				 * @param array $topic_ids An array of WP101 topics that should be hidden.
+				 */
+				'hiddenTopics' => apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ) ),
 			],
 		] );
 
