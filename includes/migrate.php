@@ -34,6 +34,9 @@ function maybe_migrate() {
 	$api->set_api_key( $key['apiKey'] );
 
 	add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_success_notice' );
+
+	// Clean up old data.
+	delete_option( 'wp101_hidden_topics' );
 }
 
 /**
