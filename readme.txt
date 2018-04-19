@@ -2,22 +2,22 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 4.9
-Stable tag: 4.0.2
+Tested up to: 4.9.5
+Stable tag: 4.1
 
-A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
+A complete set of WordPress, Jetpack, WooCommerce, and Yoast SEO tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
 The WP101 Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your client’s dashboard!
 
-Plus, the WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
+The WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, Yoast SEO, and MailPoet, provided those plugins are also installed on the site. Videos for other popular plugins are in the works.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
 You can choose which tutorial videos are shown, and even embed your own custom videos!
 
-Stop wasting time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
+Stop wasting your valuable time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
 
 == Installation ==
 
@@ -42,13 +42,13 @@ Yes! You can selectively hide or show individual tutorial videos. Simply go to t
 
 Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
 
-= Why aren’t the Jetpack, WooCommerce, or Yoast SEO videos showing up? =
+= Where are the Jetpack, WooCommerce, Yoast SEO, or MailPoet videos? =
 
-The tutorial videos for Jetpack, WooCommerce, and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+The tutorial videos for Jetpack, WooCommerce, Yoast SEO, and MailPoet will only appear in the list if the plugin in question is also installed and activated on the same site. No sense showing videos that don’t apply to a particular site, now is there?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
-You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
+No sweat! Just go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
@@ -155,6 +155,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+= 4.1 =
+* We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.
+
 = 4.0.2 =
 * Return the ‘plugin_action_links_’ filter argument in all cases. Previously, it was only returned if the authorization check succeeded, causing errors in some edge-cases.
 
@@ -252,6 +255,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+= 4.1 =
+* We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.
+
 = 4.0.2 =
 * Minor bug fix.
 
