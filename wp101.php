@@ -95,10 +95,6 @@ class WP101_Plugin {
 
 	public function includes() {
 		do_action( 'wp101_pre_includes', self::$instance );
-
-		include_once 'integrations/class.jetpack.php';
-		include_once 'integrations/class.woocommerce.php';
-		include_once 'integrations/class.wpseo.php';
 	}
 
 	public function register_settings_hooks() {
