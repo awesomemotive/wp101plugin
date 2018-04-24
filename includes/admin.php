@@ -12,6 +12,14 @@ use WP101\Migrate as Migrate;
 use WP101\TemplateTags as TemplateTags;
 
 /**
+ * Register the plugin textdomain.
+ */
+function register_textdomain() {
+	load_plugin_textdomain( 'wp101', false, basename( dirname( WP101_BASENAME ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', __NAMESPACE__ . '\register_textdomain' );
+
+/**
  * Register scripts and styles to be used in WP admin.
  *
  * @param string $hook The page being loaded.
