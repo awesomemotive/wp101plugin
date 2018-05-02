@@ -8,6 +8,7 @@
 namespace WP101\Admin;
 
 use WP101\API;
+use WP101\Migrate as Migrate;
 use WP101\TemplateTags as TemplateTags;
 
 /**
@@ -117,29 +118,38 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * Render the WP101 add-ons page.
  */
 function render_addons_page() {
+	Migrate\maybe_migrate();
+
 	$api       = TemplateTags\api();
 	$addons    = $api->get_addons();
 	$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug' );
 
-	require_once WP101_VIEWS . '/add-ons.php';
+	include WP101_VIEWS . '/add-ons.php';
 }
 
 /**
  * Render the WP101 listings page.
  */
 function render_listings_page() {
+	Migrate\maybe_migrate();
+
 	$api        = TemplateTags\api();
 	$playlist   = $api->get_playlist();
 	$public_key = $api->get_public_api_key();
 
-	require_once WP101_VIEWS . '/listings.php';
+	include WP101_VIEWS . '/listings.php';
 }
 
 /**
  * Render the WP101 settings page.
  */
 function render_settings_page() {
-	require_once WP101_VIEWS . '/settings.php';
+	Migrate\maybe_migrate();
+
+	/** This action is documented in wp-admin/admin-header.php. */
+	do_action( 'admin_notices' );
+
+	include WP101_VIEWS . '/settings.php';
 }
 
 /**

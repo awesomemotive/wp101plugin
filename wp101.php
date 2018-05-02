@@ -15,6 +15,7 @@ define( 'WP101_VERSION', '5.0.0' );
 
 require_once WP101_INC . '/admin.php';
 require_once WP101_INC . '/class-api.php';
+require_once WP101_INC . '/migrate.php';
 require_once WP101_INC . '/shortcode.php';
 require_once WP101_INC . '/template-tags.php';
 require_once WP101_INC . '/uninstall.php';
@@ -27,6 +28,11 @@ require_once WP101_INC . '/uninstall.php';
 if ( ! defined( 'DISABLE_NAG_NOTICES' ) || ! DISABLE_NAG_NOTICES ) {
 	require_once WP101_INC . '/addons.php';
 }
+
+/**
+ * When the plugin is activated, check to see if it needs migrating from earlier versions.
+ */
+register_activation_hook( __FILE__, 'WP101\Migrate\maybe_migrate' );
 
 /**
  * Register the uninstall callback.

@@ -56,6 +56,17 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Clean up the WP101_API_KEY constant.
+	 *
+	 * @after
+	 */
+	public function remove_constants() {
+		if ( function_exists( 'runkit_constant_remove' ) && defined( 'WP101_API_KEY' ) ) {
+			runkit_constant_remove( 'WP101_API_KEY' );
+		}
+	}
+
+	/**
 	 * Return a ReflectionMethod with given protected/private $method accessible.
 	 *
 	 * @param  object|string $class  A class name or instance that contains the given method.
@@ -93,7 +104,7 @@ class TestCase extends WP_UnitTestCase {
 	 */
 	protected function set_api_key( $api_key = false ) {
 		if ( false === $api_key ) {
-			$api_key = uniqid();
+			$api_key = md5( uniqid() );
 		}
 
 		update_option( 'wp101_api_key', $api_key );

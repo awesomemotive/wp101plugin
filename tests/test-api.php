@@ -27,7 +27,7 @@ class ApiTest extends TestCase {
 
 	public function test_get_api_key_returns_from_cache() {
 		$api = API::get_instance();
-		$key = uniqid();
+		$key = md5( uniqid() );
 
 		$prop = new ReflectionProperty( $api, 'api_key' );
 		$prop->setAccessible( true );
@@ -36,16 +36,26 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
 	public function test_get_api_key_reads_constant() {
-		$this->markTestSkipped( 'Defining the constant in a test will break other tests.' );
-
-		define( 'WP101_API_KEY', uniqid() );
+		define( 'WP101_API_KEY', md5( uniqid() ) );
 
 		$this->assertEquals( WP101_API_KEY, API::get_instance()->get_api_key() );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
+	public function test_get_api_key_only_considers_valid_constants() {
+		define( 'WP101_API_KEY', uniqid() );
+
+		$this->assertEmpty( API::get_instance()->get_api_key() );
+	}
+
 	public function test_get_api_key_reads_from_options() {
-		$key = uniqid();
+		$key = md5( uniqid() );
 		$this->set_api_key( $key );
 
 		$this->assertFalse(
@@ -54,6 +64,15 @@ class ApiTest extends TestCase {
 		);
 
 		$this->assertEquals( $key, API::get_instance()->get_api_key() );
+	}
+
+	public function test_set_api_key() {
+		$api = API::get_instance();
+		$key = md5( uniqid() );
+
+		$api->set_api_key( $key );
+
+		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
 	public function test_has_api_key() {
@@ -316,6 +335,44 @@ class ApiTest extends TestCase {
 		} );
 
 		$this->assertFalse( API::get_instance()->account_can( 'some-capability' ) );
+	}
+
+	public function test_exchange_api_key() {
+		$api = API::get_instance();
+		$api->set_api_key( uniqid() );
+		$new = md5( uniqid() ); // Easy way to get a random, 32 character string.
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'apiKey' => $new,
+				],
+			] ),
+		] );
+
+		$this->assertEquals( $new, $api->exchange_api_key()['apiKey'] );
+	}
+
+	public function test_exchange_api_key_surfaces_wp_errors() {
+		$error = new WP_Error( 'msg' );
+
+		$this->set_expected_response( function () use ( $error ) {
+			return $error;
+		} );
+
+		$this->assertSame( $error, API::get_instance()->exchange_api_key() );
+	}
+
+	public function test_exchange_api_key_returns_wp_error_on_api_error() {
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'fail',
+				'data' => 'some message',
+			] ),
+		] );
+
+		$this->assertTrue( is_wp_error( API::get_instance()->exchange_api_key() ) );
 	}
 
 	/**
