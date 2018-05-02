@@ -12,6 +12,14 @@ use WP101\Migrate as Migrate;
 use WP101\TemplateTags as TemplateTags;
 
 /**
+ * Register the plugin textdomain.
+ */
+function register_textdomain() {
+	load_plugin_textdomain( 'wp101', false, basename( dirname( WP101_BASENAME ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', __NAMESPACE__ . '\register_textdomain' );
+
+/**
  * Register scripts and styles to be used in WP admin.
  *
  * @param string $hook The page being loaded.
@@ -101,6 +109,24 @@ function register_menu_pages() {
 	);
 }
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
+
+/**
+ * Add a link to the WP101 plugin settings page on the plugin page.
+ *
+ * @param array $links Links currently being displayed for this plugin.
+ *
+ * @return array The filtered $links array.
+ */
+function plugin_settings_link( $links ) {
+	$links['settings'] = sprintf(
+		'<a href="%1$s">%2$s</a>',
+		get_admin_url( null, 'admin.php?page=wp101-settings' ),
+		_x( 'Settings', 'plugin links', 'wp101' )
+	);
+
+	return $links;
+}
+add_action( 'plugin_action_links_' . WP101_BASENAME, __NAMESPACE__ . '\plugin_settings_link' );
 
 /**
  * Register the settings within WordPress.
