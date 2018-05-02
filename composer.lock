@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d879852102befdc701b480d2f03264b",
+    "content-hash": "39fd099b3b60fb466dab180b70f45725",
     "packages": [],
     "packages-dev": [
         {
@@ -1582,6 +1582,46 @@
                 "testing"
             ],
             "time": "2018-01-14T22:00:53+00:00"
+        },
+        {
+            "name": "stevegrunwell/runkit7-installer",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevegrunwell/runkit7-installer.git",
+                "reference": "ee618b7877fb1d6cb5930f48c9b845044c4c684c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevegrunwell/runkit7-installer/zipball/ee618b7877fb1d6cb5930f48c9b845044c4c684c",
+                "reference": "ee618b7877fb1d6cb5930f48c9b845044c4c684c",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": "^7.0",
+                "phpunit/phpunit": ">=6.0"
+            },
+            "bin": [
+                "bin/install-runkit.sh"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Grunwell",
+                    "email": "steve@stevegrunwell.com",
+                    "homepage": "https://stevegrunwell.com"
+                }
+            ],
+            "description": "Installer for PHP Runkit7",
+            "keywords": [
+                "runkit",
+                "testing"
+            ],
+            "time": "2018-03-30T03:00:06+00:00"
         },
         {
             "name": "stevegrunwell/wp-enforcer",
