@@ -36,9 +36,9 @@ use WP101\TemplateTags as TemplateTags;
 
 				<div class="card wp101-addon">
 					<h2><?php echo esc_html( $addon['title'] ); ?></h2>
-					<?php if ( ! empty( $addon['description'] ) ) : ?>
+					<?php if ( ! empty( $addon['excerpt'] ) ) : ?>
 						<div class="wp101-addon-description">
-							<?php echo wp_kses_post( wpautop( $addon['description'] ) ); ?>
+							<?php echo wp_kses_post( wpautop( $addon['excerpt'] ) ); ?>
 						</div>
 					<?php endif; ?>
 
