@@ -143,7 +143,7 @@ class AdminTest extends TestCase {
 
 		return [
 			'parent'   => $menu[0],
-			'children' => $submenu['wp101'],
+			'children' => isset( $submenu['wp101'] ) ? $submenu['wp101'] : [],
 		];
 	}
 }
