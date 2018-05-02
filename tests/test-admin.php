@@ -8,6 +8,7 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
+use WP101\API as API;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
