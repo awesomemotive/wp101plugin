@@ -11,8 +11,11 @@ module.exports = function(grunt) {
 			},
 			target: {
 				files: {
-					'assets/admin.min.css': [
+					'assets/css/admin.min.css': [
 						'assets/admin.css'
+					],
+					'assets/css/wp101-admin.min.css': [
+						'assets/wp101-admin.css'
 					]
 				}
 			}
@@ -35,6 +38,9 @@ module.exports = function(grunt) {
 			main: {
 				files: {
 					'assets/js/wp101.min.js': [
+						'assets/js/wp101.js'
+					],
+					'assets/js/wp101-admin.min.js': [
 						'assets/js/wp101.js'
 					]
 				}

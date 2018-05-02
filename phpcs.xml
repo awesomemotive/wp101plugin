@@ -18,10 +18,19 @@
 	<exclude-pattern>integrations/*</exclude-pattern>
 	<exclude-pattern>wp101.php</exclude-pattern>
 
+	<!-- Long conditionals. -->
+	<rule ref="Squiz.Commenting.LongConditionClosingComment.Missing">
+		<exclude-pattern>*</exclude-pattern>
+	</rule>
+
 	<!-- Don't worry about missing class comments on tests. -->
 	<rule ref="Squiz.Commenting.ClassComment.Missing">
 		<exclude-pattern>includes/class-*</exclude-pattern>
 		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.Commenting">
+		<exclude-pattern>includes/class-wp101-plugin.php</exclude-pattern>
 	</rule>
 
 	<!--

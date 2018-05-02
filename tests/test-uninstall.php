@@ -7,6 +7,7 @@
 
 namespace WP101\Tests;
 
+use WP101\API as API;
 use WP101\Uninstall as Uninstall;
 
 /**
@@ -21,6 +22,7 @@ class UninstallTest extends TestCase {
 			'wp101_hidden_topics',
 			'wp101_custom_topics',
 			'wp101_admin_restriction',
+			API::PUBLIC_API_KEY_OPTION,
 		);
 
 		foreach ( $options as $option ) {

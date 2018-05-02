@@ -9,8 +9,10 @@ namespace WP101\Tests;
 
 use Mockery;
 use ReflectionMethod;
+use ReflectionProperty;
 use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 use WP_UnitTestCase;
+use WP101\API;
 
 /**
  * Base test case, with a bit of extra logic.
@@ -23,6 +25,10 @@ class TestCase extends WP_UnitTestCase {
 
 		delete_option( 'wp101_api_key' );
 
+		$instance = new ReflectionProperty( API::get_instance(), 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( null );
+
 		Mockery::close();
 	}
 
@@ -34,8 +40,7 @@ class TestCase extends WP_UnitTestCase {
 	public function dequeue_assets() {
 		global $wp_styles, $wp_scripts;
 
-		$wp_styles->queue  = [];
-		$wp_scripts->queue = [];
+		unset( $wp_styles, $wp_scripts );
 	}
 
 	/**
@@ -48,6 +53,17 @@ class TestCase extends WP_UnitTestCase {
 
 		$menu    = null;
 		$submenu = null;
+	}
+
+	/**
+	 * Clean up the WP101_API_KEY constant.
+	 *
+	 * @after
+	 */
+	public function remove_constants() {
+		if ( function_exists( 'runkit_constant_remove' ) && defined( 'WP101_API_KEY' ) ) {
+			runkit_constant_remove( 'WP101_API_KEY' );
+		}
 	}
 
 	/**
@@ -65,6 +81,21 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Retrieve a Mockery version of the API class.
+	 *
+	 * @return Mockery\Mock A Mockery version of the API class.
+	 */
+	protected function mock_api() {
+		$api      = API::get_instance();
+		$mock     = Mockery::mock( $api )->shouldAllowMockingProtectedMethods()->makePartial();
+		$instance = new ReflectionProperty( $api, 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( $mock );
+
+		return API::get_instance();
+	}
+
+	/**
 	 * Set the environment's API key.
 	 *
 	 * @param string $api_key|bool Optional. The API key value to set. If equal to FALSE, a random
@@ -73,7 +104,7 @@ class TestCase extends WP_UnitTestCase {
 	 */
 	protected function set_api_key( $api_key = false ) {
 		if ( false === $api_key ) {
-			$api_key = uniqid();
+			$api_key = md5( uniqid() );
 		}
 
 		update_option( 'wp101_api_key', $api_key );

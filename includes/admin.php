@@ -8,6 +8,16 @@
 namespace WP101\Admin;
 
 use WP101\API;
+use WP101\Migrate as Migrate;
+use WP101\TemplateTags as TemplateTags;
+
+/**
+ * Register the plugin textdomain.
+ */
+function register_textdomain() {
+	load_plugin_textdomain( 'wp101', false, basename( dirname( WP101_BASENAME ) ) . '/languages' );
+}
+add_action( 'plugins_loaded', __NAMESPACE__ . '\register_textdomain' );
 
 /**
  * Register scripts and styles to be used in WP admin.
@@ -16,16 +26,16 @@ use WP101\API;
  */
 function enqueue_scripts( $hook ) {
 	wp_register_style(
-		'wp101',
-		WP101_URL . '/assets/css/wp101.css',
+		'wp101-admin',
+		WP101_URL . '/assets/css/wp101-admin.css',
 		null,
 		WP101_VERSION,
 		'all'
 	);
 
 	wp_register_script(
-		'wp101',
-		WP101_URL . '/assets/js/wp101.js',
+		'wp101-admin',
+		WP101_URL . '/assets/js/wp101-admin.js',
 		array( 'jquery-ui-accordion' ),
 		WP101_VERSION,
 		true
@@ -33,8 +43,8 @@ function enqueue_scripts( $hook ) {
 
 	// Only enqueue on WP101 pages.
 	if ( 'toplevel_page_wp101' === $hook || preg_match( '/^video-tutorials_page_wp101/', $hook ) ) {
-		wp_enqueue_style( 'wp101' );
-		wp_enqueue_script( 'wp101' );
+		wp_enqueue_style( 'wp101-admin' );
+		wp_enqueue_script( 'wp101-admin' );
 	}
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
@@ -58,10 +68,9 @@ function get_addon_capability() {
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
-	$api = new API();
 
 	// If the API key hasn't been configured, *only* show the settings page.
-	if ( ! $api->has_api_key() ) {
+	if ( ! TemplateTags\api()->has_api_key() ) {
 		return add_menu_page(
 			_x( 'WP101', 'page title', 'wp101' ),
 			_x( 'Video Tutorials', 'menu title', 'wp101' ),
@@ -102,6 +111,24 @@ function register_menu_pages() {
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
 /**
+ * Add a link to the WP101 plugin settings page on the plugin page.
+ *
+ * @param array $links Links currently being displayed for this plugin.
+ *
+ * @return array The filtered $links array.
+ */
+function plugin_settings_link( $links ) {
+	$links['settings'] = sprintf(
+		'<a href="%1$s">%2$s</a>',
+		get_admin_url( null, 'admin.php?page=wp101-settings' ),
+		_x( 'Settings', 'plugin links', 'wp101' )
+	);
+
+	return $links;
+}
+add_action( 'plugin_action_links_' . WP101_BASENAME, __NAMESPACE__ . '\plugin_settings_link' );
+
+/**
  * Register the settings within WordPress.
  */
 function register_settings() {
@@ -117,26 +144,47 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * Render the WP101 add-ons page.
  */
 function render_addons_page() {
-	$api       = new API();
+	Migrate\maybe_migrate();
+
+	$api       = TemplateTags\api();
 	$addons    = $api->get_addons();
 	$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug' );
 
-	require_once WP101_VIEWS . '/add-ons.php';
+	include WP101_VIEWS . '/add-ons.php';
 }
 
 /**
  * Render the WP101 listings page.
  */
 function render_listings_page() {
-	$api      = new API();
-	$playlist = $api->get_playlist();
+	Migrate\maybe_migrate();
 
-	require_once WP101_VIEWS . '/listings.php';
+	$api        = TemplateTags\api();
+	$playlist   = $api->get_playlist();
+	$public_key = $api->get_public_api_key();
+
+	include WP101_VIEWS . '/listings.php';
 }
 
 /**
  * Render the WP101 settings page.
  */
 function render_settings_page() {
-	require_once WP101_VIEWS . '/settings.php';
+	Migrate\maybe_migrate();
+
+	/** This action is documented in wp-admin/admin-header.php. */
+	do_action( 'admin_notices' );
+
+	include WP101_VIEWS . '/settings.php';
 }
+
+/**
+ * Flush the public key after saving the private key.
+ */
+function clear_public_api_key() {
+	delete_option( API::PUBLIC_API_KEY_OPTION );
+
+	// Prime the cache with the new key.
+	TemplateTags\api()->get_public_api_key();
+}
+add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );

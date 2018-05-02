@@ -8,7 +8,7 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
-use WP101\API;
+use WP101\API as API;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
@@ -16,18 +16,18 @@ use WP101\API;
 class AdminTest extends TestCase {
 
 	public function test_enqueue_scripts_registers_scripts() {
-		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
-		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'wp101-admin', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'wp101-admin', 'registered' ) );
 
 		Admin\enqueue_scripts( 'some-hook' );
 
 		$this->assertTrue(
-			wp_style_is( 'wp101', 'registered' ),
-			'Calling register_scripts() should register the "wp101" style.'
+			wp_style_is( 'wp101-admin', 'registered' ),
+			'Calling register_scripts() should register the "wp101-admin" style.'
 		);
 		$this->assertTrue(
-			wp_script_is( 'wp101', 'registered' ),
-			'Calling register_scripts() should register the "wp101" script.'
+			wp_script_is( 'wp101-admin', 'registered' ),
+			'Calling register_scripts() should register the "wp101-admin" script.'
 		);
 	}
 
@@ -42,8 +42,8 @@ class AdminTest extends TestCase {
 	public function test_enqueue_scripts_enqueues_on_wp101_pages( $hook, bool $enqueued ) {
 		Admin\enqueue_scripts( $hook );
 
-		$this->assertEquals( $enqueued, wp_style_is( 'wp101', 'enqueued' ) );
-		$this->assertEquals( $enqueued, wp_script_is( 'wp101', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_style_is( 'wp101-admin', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_script_is( 'wp101-admin', 'enqueued' ) );
 	}
 
 	/**
@@ -124,11 +124,9 @@ class AdminTest extends TestCase {
 	}
 
 	public function test_settings_link_is_injected_into_plugin_action_links() {
-		$this->markTestSkipped( 'Plugin action links filter is not behaving correctly' );
+		$actions = apply_filters( 'plugin_action_links_' . WP101_BASENAME, array() );
 
-		$actions = apply_filters( 'plugin_action_links_wp101/wp101.php', array() );
-
-		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101&configure=1' ), $actions[0] );
+		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101' ), $actions['settings'] );
 	}
 
 	/**
@@ -143,7 +141,7 @@ class AdminTest extends TestCase {
 
 		return [
 			'parent'   => $menu[0],
-			'children' => $submenu['wp101'],
+			'children' => isset( $submenu['wp101'] ) ? $submenu['wp101'] : [],
 		];
 	}
 }

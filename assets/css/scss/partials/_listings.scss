@@ -4,21 +4,6 @@
  * @package WP101
  */
 
-.wp101-player-wrap {
-	position: relative;
-	height: 0;
-	overflow: hidden;
-	padding-bottom: 9/16 * 100%;
-
-	iframe {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-	}
-}
-
 .wp101-playlist {
 	box-sizing: border-box;
 

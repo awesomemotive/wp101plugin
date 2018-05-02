@@ -29,17 +29,34 @@ class SettingsTest extends TestCase {
 			],
 			$output
 		);
+
+		$this->assertEquals( 1, did_action( 'admin_notices' ) );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
 	public function test_hides_api_key_form_if_set_via_constant() {
-		$this->markTestSkipped( 'Defining the constant in a test will break other tests.' );
-
-		define( 'WP101_API_KEY', uniqid() );
+		define( 'WP101_API_KEY', md5( uniqid() ) );
 
 		ob_start();
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertNotContainsSelector('#wp101-api-key', $output);
+		$this->assertNotContainsSelector( '#wp101-api-key', $output );
+	}
+
+	/**
+	 * @requires extension runkit
+	 */
+	public function test_notifies_user_if_constant_needs_replaced() {
+		define( 'WP101_API_KEY', 'some-legacy-api-key' );
+
+		ob_start();
+		Admin\render_settings_page();
+		$output = ob_get_clean();
+
+		$this->assertContainsSelector( '#wp101-api-key', $output );
+		$this->assertContainsSelector( 'div.notice.notice-warning', $output );
 	}
 }

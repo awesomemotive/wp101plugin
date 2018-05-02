@@ -11,6 +11,41 @@ use WP101\Admin as Admin;
 use WP101\API;
 
 /**
+ * Enqueue scripts used for front-end display.
+ */
+function enqueue_scripts_styles() {
+	wp_register_style(
+		'wp101',
+		WP101_URL . '/assets/css/wp101.css',
+		null,
+		WP101_VERSION
+	);
+
+	wp_register_script(
+		'wp101',
+		WP101_URL . '/assets/js/wp101.js',
+		null,
+		WP101_VERSION,
+		true
+	);
+
+	wp_localize_script( 'wp101', 'wp101', [
+		'apiKey' => api()->get_public_api_key(),
+	] );
+}
+add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
+
+/**
+ * Grant access to the API Singleton.
+ *
+ * @return API The API Singleton instance.
+ */
+function api() {
+	return API::get_instance();
+}
+
+/**
  * Shortcut for retrieving the current API key.
  *
  * @see WP101\API::get_api_key()
@@ -18,7 +53,7 @@ use WP101\API;
  * @return string The current API key, or an empty string if one is not set.
  */
 function get_api_key() {
-	return ( new API() )->get_api_key();
+	return api()->get_api_key();
 }
 
 /**
@@ -28,6 +63,30 @@ function get_api_key() {
  */
 function current_user_can_purchase_addons() {
 	return current_user_can( Admin\get_addon_capability() );
+}
+
+/**
+ * Retrieve a series by its slug.
+ *
+ * @param string $slug The series slug.
+ *
+ * @return array|bool Either the corresponding series array or a boolean false if either the API
+ *                    key doesn't have access to the series or the series doesn't exist.
+ */
+function get_series( $slug ) {
+	return api()->get_series( $slug );
+}
+
+/**
+ * Retrieve a topic by its slug.
+ *
+ * @param string $slug The topic slug.
+ *
+ * @return array|bool Either the corresponding topic array or a boolean false if either the API key
+ *                    doesn't have access to the topic or the topic doesn't exist.
+ */
+function get_topic( $slug ) {
+	return api()->get_topic( $slug );
 }
 
 /**

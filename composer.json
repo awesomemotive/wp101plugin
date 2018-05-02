@@ -1,55 +1,64 @@
 {
-    "name": "leftlane/wp101plugin",
-    "description": "A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!",
-    "type": "wordpress-plugin",
-    "homepage": "https://wp101plugin.com",
-    "authors": [
-        {
-            "name": "Shawn Hesketh",
-            "homepage": "https://www.wp101.com"
-        },
-        {
-            "name": "Liquid Web",
-            "homepage": "https://www.liquidweb.com"
-        },
-        {
-            "name": "Mark Jaquith",
-            "homepage": "https://coveredwebservices.com"
-        },
-        {
-            "name": "Pippin Williamson",
-            "homepage": "https://pippinsplugins.com"
-        },
-        {
-            "name": "Justin Sainton",
-            "homepage": "https://zao.is"
-        },
-        {
-            "name": "Travis Smith",
-            "homepage": "https://wpsmith.net"
-        },
-        {
-            "name": "John Sundberg",
-            "homepage": "http://blackhillswebworks.com"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/leftlane/wp101plugin/issues",
-        "forum": "https://wordpress.org/support/plugin/wp101",
-        "source": "https://github.com/leftlane/wp101plugin",
-        "docs": "https://wp101plugin.com"
+  "name": "leftlane/wp101plugin",
+  "description": "A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!",
+  "type": "wordpress-plugin",
+  "homepage": "https://wp101plugin.com",
+  "authors": [
+    {
+      "name": "Shawn Hesketh",
+      "homepage": "https://www.wp101.com"
     },
-    "require": {},
-    "require-dev": {
-        "mockery/mockery": "^0.9.9",
-        "php": "^7.0",
-        "phpunit/phpunit": "^6.5",
-        "stevegrunwell/wp-enforcer": "^0.5.0",
-        "stevegrunwell/phpunit-markup-assertions": "^1.0"
+    {
+      "name": "Liquid Web",
+      "homepage": "https://www.liquidweb.com"
     },
-    "scripts": {
-      "post-install-cmd": [
-        "wp-enforcer"
-      ]
+    {
+      "name": "Mark Jaquith",
+      "homepage": "https://coveredwebservices.com"
+    },
+    {
+      "name": "Pippin Williamson",
+      "homepage": "https://pippinsplugins.com"
+    },
+    {
+      "name": "Justin Sainton",
+      "homepage": "https://zao.is"
+    },
+    {
+      "name": "Travis Smith",
+      "homepage": "https://wpsmith.net"
+    },
+    {
+      "name": "John Sundberg",
+      "homepage": "http://blackhillswebworks.com"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/leftlane/wp101plugin/issues",
+    "forum": "https://wordpress.org/support/plugin/wp101",
+    "source": "https://github.com/leftlane/wp101plugin",
+    "docs": "https://wp101plugin.com"
+  },
+  "require": {},
+  "require-dev": {
+    "php": "^7.0",
+    "mockery/mockery": "^1.0",
+    "phpunit/phpunit": "^6.5",
+    "stevegrunwell/phpunit-markup-assertions": "^1.0",
+    "stevegrunwell/runkit7-installer": "^1.0",
+    "stevegrunwell/wp-enforcer": "^0.5.0"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "wp-enforcer"
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.0"
+    }
+  }
 }
