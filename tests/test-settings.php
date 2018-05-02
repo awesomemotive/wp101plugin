@@ -33,6 +33,9 @@ class SettingsTest extends TestCase {
 		$this->assertEquals( 1, did_action( 'admin_notices' ) );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
 	public function test_hides_api_key_form_if_set_via_constant() {
 		define( 'WP101_API_KEY', md5( uniqid() ) );
 
@@ -43,6 +46,9 @@ class SettingsTest extends TestCase {
 		$this->assertNotContainsSelector( '#wp101-api-key', $output );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
 	public function test_notifies_user_if_constant_needs_replaced() {
 		define( 'WP101_API_KEY', 'some-legacy-api-key' );
 
