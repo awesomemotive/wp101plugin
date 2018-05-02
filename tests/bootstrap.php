@@ -12,6 +12,12 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
+if ( ! function_exists( 'runkit_constant_remove' ) ) {
+	echo "\033[0;33mWARNING: Runkit is not active in the current environment, so not all tests can be run.\033[0;0m" . PHP_EOL;
+	echo 'You may install Runkit easily by running:' . PHP_EOL;
+	echo "  ./vendor/bin/install-runkit.sh" . PHP_EOL . PHP_EOL;
+}
+
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 
