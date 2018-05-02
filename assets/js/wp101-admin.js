@@ -2,6 +2,7 @@
 	'use strict';
 
 	var $playlist = $('.wp101-playlist'),
+		$series = $playlist.find('.wp101-series'),
 		title = document.getElementById('wp101-player-title'),
 		player = document.getElementById('wp101-player');
 
@@ -30,6 +31,9 @@
 			return;
 		}
 
+		// Set the accordion position.
+		$playlist.accordion('option', 'active', $series.index(el.parentElement.parentElement.parentElement));
+
 		$playlist.find('a.active').removeClass('active');
 		el.classList.add('active');
 
@@ -48,9 +52,9 @@
 		header: '.wp101-series h2',
 		heightStyle: 'content',
 		activate: function () {
-			localStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
+			sessionStorage.setItem('wp101ListState', $playlist.accordion('option', 'active'));
 		},
-		active: parseInt(localStorage.getItem('wp101ListState'), 10)
+		active: parseInt(sessionStorage.getItem('wp101ListState'), 10)
 	});
 
 	// Load the default topic.

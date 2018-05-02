@@ -9,8 +9,10 @@ namespace WP101\Tests;
 
 use Mockery;
 use ReflectionMethod;
+use ReflectionProperty;
 use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 use WP_UnitTestCase;
+use WP101\API;
 
 /**
  * Base test case, with a bit of extra logic.
@@ -23,6 +25,10 @@ class TestCase extends WP_UnitTestCase {
 
 		delete_option( 'wp101_api_key' );
 
+		$instance = new ReflectionProperty( API::get_instance(), 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( null );
+
 		Mockery::close();
 	}
 
@@ -34,8 +40,7 @@ class TestCase extends WP_UnitTestCase {
 	public function dequeue_assets() {
 		global $wp_styles, $wp_scripts;
 
-		$wp_styles->queue  = [];
-		$wp_scripts->queue = [];
+		unset( $wp_styles, $wp_scripts );
 	}
 
 	/**
@@ -62,6 +67,21 @@ class TestCase extends WP_UnitTestCase {
 		$reflection->setAccessible( true );
 
 		return $reflection;
+	}
+
+	/**
+	 * Retrieve a Mockery version of the API class.
+	 *
+	 * @return Mockery\Mock A Mockery version of the API class.
+	 */
+	protected function mock_api() {
+		$api      = API::get_instance();
+		$mock     = Mockery::mock( $api )->shouldAllowMockingProtectedMethods()->makePartial();
+		$instance = new ReflectionProperty( $api, 'instance' );
+		$instance->setAccessible( true );
+		$instance->setValue( $mock );
+
+		return API::get_instance();
 	}
 
 	/**

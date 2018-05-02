@@ -8,7 +8,6 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
-use WP101\API;
 
 /**
  * Tests for the plugin settings UI, defined in includes/settings.php.
@@ -16,18 +15,18 @@ use WP101\API;
 class AdminTest extends TestCase {
 
 	public function test_enqueue_scripts_registers_scripts() {
-		$this->assertFalse( wp_style_is( 'wp101', 'registered' ) );
-		$this->assertFalse( wp_script_is( 'wp101', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'wp101-admin', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'wp101-admin', 'registered' ) );
 
 		Admin\enqueue_scripts( 'some-hook' );
 
 		$this->assertTrue(
-			wp_style_is( 'wp101', 'registered' ),
-			'Calling register_scripts() should register the "wp101" style.'
+			wp_style_is( 'wp101-admin', 'registered' ),
+			'Calling register_scripts() should register the "wp101-admin" style.'
 		);
 		$this->assertTrue(
-			wp_script_is( 'wp101', 'registered' ),
-			'Calling register_scripts() should register the "wp101" script.'
+			wp_script_is( 'wp101-admin', 'registered' ),
+			'Calling register_scripts() should register the "wp101-admin" script.'
 		);
 	}
 
@@ -42,8 +41,8 @@ class AdminTest extends TestCase {
 	public function test_enqueue_scripts_enqueues_on_wp101_pages( $hook, bool $enqueued ) {
 		Admin\enqueue_scripts( $hook );
 
-		$this->assertEquals( $enqueued, wp_style_is( 'wp101', 'enqueued' ) );
-		$this->assertEquals( $enqueued, wp_script_is( 'wp101', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_style_is( 'wp101-admin', 'enqueued' ) );
+		$this->assertEquals( $enqueued, wp_script_is( 'wp101-admin', 'enqueued' ) );
 	}
 
 	/**

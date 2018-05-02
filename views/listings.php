@@ -10,6 +10,11 @@
 
 use WP101\TemplateTags as TemplateTags;
 
+$query_args = array(
+	'apiKey' => $public_key,
+	'host'   => site_url(),
+);
+
 ?>
 
 <div class="wrap wp101-settings">
@@ -48,7 +53,7 @@ use WP101\TemplateTags as TemplateTags;
 						<?php foreach ( $series['topics'] as $topic ) : ?>
 
 							<li>
-								<a href="#<?php echo esc_attr( $topic['slug'] ); ?>" data-media-title="<?php echo esc_attr( $topic['title'] ); ?>" data-media-slug="<?php echo esc_attr( $topic['slug'] ); ?>" data-media-src="<?php echo esc_attr( $topic['url'] ); ?>"><?php echo esc_html( $topic['title'] ); ?></a>
+								<a href="#<?php echo esc_attr( $topic['slug'] ); ?>" data-media-title="<?php echo esc_attr( $topic['title'] ); ?>" data-media-slug="<?php echo esc_attr( $topic['slug'] ); ?>" data-media-src="<?php echo esc_attr( add_query_arg( $query_args, $topic['url'] ) ); ?>"><?php echo esc_html( $topic['title'] ); ?></a>
 							</li>
 
 						<?php endforeach; ?>
