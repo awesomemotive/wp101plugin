@@ -24,6 +24,15 @@ require_once WP101_INC . '/template-tags.php';
 require_once WP101_INC . '/uninstall.php';
 
 /**
+ * Forego the add-ons include if the site owner has opted-out of these sorts of notifications.
+ *
+ * @link https://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices#Disable_Nag_Notices
+ */
+if ( ! defined( 'DISABLE_NAG_NOTICES' ) || ! DISABLE_NAG_NOTICES ) {
+	require_once WP101_INC . '/addons.php';
+}
+
+/**
  * When the plugin is activated, check to see if it needs migrating from earlier versions.
  */
 register_activation_hook( __FILE__, 'WP101\Migrate\maybe_migrate' );

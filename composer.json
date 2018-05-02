@@ -41,11 +41,12 @@
   },
   "require": {},
   "require-dev": {
-    "mockery/mockery": "^1.0",
     "php": "^7.0",
+    "mockery/mockery": "^1.0",
     "phpunit/phpunit": "^6.5",
-    "stevegrunwell/wp-enforcer": "^0.5.0",
-    "stevegrunwell/phpunit-markup-assertions": "^1.0"
+    "stevegrunwell/phpunit-markup-assertions": "^1.0",
+    "stevegrunwell/runkit7-installer": "^1.0",
+    "stevegrunwell/wp-enforcer": "^0.5.0"
   },
   "scripts": {
     "post-install-cmd": [
