@@ -36,10 +36,17 @@ class MigrateTest extends TestCase {
 			] );
 		$this->set_api_key( self::LEGACY_API_KEY );
 
+		// Populate some other legacy options.
+		update_option( 'wp101_hidden_topics', [ 1, 2, 3 ] );
+
 		Migrate\maybe_migrate();
 
 		$this->assertEquals( self::CURRENT_API_KEY, get_option( 'wp101_api_key' ) );
 		$this->assertEquals( 10, has_action( 'admin_notices', 'WP101\Migrate\render_migration_success_notice' ) );
+		$this->assertFalse(
+			get_option( 'wp101_hidden_topics', false ),
+			'Expected the wp101_hidden_topics option to be deleted.'
+		);
 	}
 
 	public function test_maybe_migrate_returns_early_if_keys_do_not_require_migration() {
