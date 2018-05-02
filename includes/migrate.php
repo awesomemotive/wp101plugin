@@ -36,6 +36,7 @@ function maybe_migrate() {
 	add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_success_notice' );
 
 	// Clean up old data.
+	delete_option( 'wp101_custom_topics' );
 	delete_option( 'wp101_hidden_topics' );
 }
 
