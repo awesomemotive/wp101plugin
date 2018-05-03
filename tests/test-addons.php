@@ -17,6 +17,9 @@ class AddonTest extends TestCase {
 
 	public function test_check_plugins() {
 		$api = $this->mock_api();
+		$api->shouldReceive( 'has_api_key' )
+			->once()
+			->andReturn( true );
 		$api->shouldReceive( 'get_addons' )
 			->once()
 			->andReturn( [
@@ -47,6 +50,22 @@ class AddonTest extends TestCase {
 				'plugin' => 'some-plugin/some-plugin.php',
 			],
 		], get_option( 'wp101-available-series', [] ) );
+	}
+
+	public function test_check_plugins_does_not_fire_if_no_api_key_is_set() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'has_api_key' )
+			->once()
+			->andReturn( false );
+		$api->shouldReceive( 'get_addons' )
+			->never();
+
+		Addons\check_plugins( null, array(
+			'some-plugin/some-plugin.php',
+			'another-plugin/another-plugin.php',
+		) );
+
+		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
 	}
 
 	public function test_check_plugins_excludes_addons_included_in_subscription() {

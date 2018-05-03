@@ -17,6 +17,10 @@ use WP101\TemplateTags as TemplateTags;
  * @param array $plugins  An array of active site plugins.
  */
 function check_plugins( $previous, $plugins ) {
+	if ( ! TemplateTags\api()->has_api_key() ) {
+		return;
+	}
+
 	$addons    = TemplateTags\api()->get_addons();
 	$available = [];
 
