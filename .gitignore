@@ -1,6 +1,6 @@
 assets/css/*.css
 assets/css/*.map
-assets/js/*.min.js
+assets/js/*.js
 assets/js/*.map
 node_modules
 tests/coverage

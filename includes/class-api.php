@@ -32,7 +32,7 @@ class API {
 	 *
 	 * @var string
 	 */
-	const API_URL = 'https://wp101plugin.com/api';
+	const API_URL = 'https://app.wp101plugin.com/api';
 
 	/**
 	 * Option key for the site's public API key.
@@ -358,7 +358,8 @@ class API {
 		if ( 'fail' === $body['status'] ) {
 			return new WP_Error(
 				'wp101-api',
-				__( 'The WP101 API request failed.', 'wp101' ),
+				/* Translators: %1$s is the first error message from the API response. */
+				sprintf( __( 'The WP101 API request failed: %1$s', 'wp101' ), current( (array) $body['data'] ) ),
 				$body['data']
 			);
 		}

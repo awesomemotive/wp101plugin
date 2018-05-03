@@ -35,7 +35,7 @@ function enqueue_scripts( $hook ) {
 
 	wp_register_script(
 		'wp101-admin',
-		WP101_URL . '/assets/js/wp101-admin.js',
+		WP101_URL . '/assets/js/wp101-admin.min.js',
 		array( 'jquery-ui-accordion' ),
 		WP101_VERSION,
 		true

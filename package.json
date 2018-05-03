@@ -19,9 +19,9 @@
   "private": true,
   "devDependencies": {
     "eslint-config-wordpress": "^2.0.0",
-    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-uglify": "^3.3.0",
     "grunt-eslint": "^20.0.0",
-    "grunt-sass": "^2.0.0",
-    "grunt-wp-i18n": "^1.0.0"
+    "grunt-sass": "^2.1.0",
+    "grunt-wp-i18n": "^1.0.2"
   }
 }

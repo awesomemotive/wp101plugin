@@ -52,7 +52,7 @@ function api_key_needs_migration( $api_key = null ) {
 		$api_key = TemplateTags\api()->get_api_key();
 	}
 
-	return 32 !== strlen( $api_key );
+	return $api_key && 32 !== strlen( $api_key );
 }
 
 /**

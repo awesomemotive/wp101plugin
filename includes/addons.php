@@ -17,6 +17,10 @@ use WP101\TemplateTags as TemplateTags;
  * @param array $plugins  An array of active site plugins.
  */
 function check_plugins( $previous, $plugins ) {
+	if ( ! TemplateTags\api()->has_api_key() ) {
+		return;
+	}
+
 	$addons    = TemplateTags\api()->get_addons();
 	$available = [];
 
@@ -118,7 +122,7 @@ function render_notification( $message, $slug ) {
 function register_scripts() {
 	wp_register_script(
 		'wp101-addons',
-		WP101_URL . '/assets/js/wp101-addons.js',
+		WP101_URL . '/assets/js/wp101-addons.min.js',
 		array( 'jquery' ),
 		WP101_VERSION,
 		true
