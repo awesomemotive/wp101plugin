@@ -1,3 +1,10 @@
+/**
+ * Scripts for the WP101 playlist functionality within WP Admin.
+ *
+ * @package WP101
+ */
+/* globals jQuery */
+
 (function ($) {
 	'use strict';
 

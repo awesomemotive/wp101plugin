@@ -1,7 +1,7 @@
 {
 	"extends": "wordpress",
-
 	"rules": {
+		"no-undef": 2,
 		"space-before-function-paren": "off",
 		"space-in-parens": "off"
 	}

@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				configFile: '.eslintrc'
 			},
 			target: [
-				'assets/js/wp101.js'
+				'assets/js/src/**.js'
 			]
 		},
 
@@ -37,11 +37,11 @@ module.exports = function(grunt) {
 			},
 			main: {
 				files: {
-					'assets/js/wp101.min.js': [
-						'assets/js/wp101.js'
+					'assets/js/wp101-addons.min.js': [
+						'assets/js/src/addons.js'
 					],
 					'assets/js/wp101-admin.min.js': [
-						'assets/js/wp101.js'
+						'assets/js/src/playlist.js'
 					]
 				}
 			}

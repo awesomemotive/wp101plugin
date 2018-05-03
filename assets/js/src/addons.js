@@ -1,6 +1,9 @@
 /**
  * Scripting to save dismissed WP101 add-on notifications.
+ *
+ * @package WP101
  */
+/* global ajaxurl, wp101Addons */
 
 (function ($) {
 	'use strict';
@@ -10,13 +13,10 @@
 			return;
 		}
 
-		var notice = e.target.parentElement,
-			data = {
-				action: 'wp101_dismiss_notice',
-				addons: notice.dataset.wp101AddonSlug.split(','),
-				nonce: wp101Addons.nonce
-			};
-
-		$.post(ajaxurl, data);
+		$.post(ajaxurl, {
+			action: 'wp101_dismiss_notice',
+			addons: e.target.parentElement.dataset.wp101AddonSlug.split(','),
+			nonce: wp101Addons.nonce
+		});
 	});
 }(jQuery));

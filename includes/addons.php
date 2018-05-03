@@ -122,7 +122,7 @@ function render_notification( $message, $slug ) {
 function register_scripts() {
 	wp_register_script(
 		'wp101-addons',
-		WP101_URL . '/assets/js/wp101-addons.js',
+		WP101_URL . '/assets/js/wp101-addons.min.js',
 		array( 'jquery' ),
 		WP101_VERSION,
 		true
