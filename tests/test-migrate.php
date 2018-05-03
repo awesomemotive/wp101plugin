@@ -104,6 +104,7 @@ class MigrateTest extends TestCase {
 		return [
 			'Legacy API key'  => [ self::LEGACY_API_KEY, true ],
 			'Current API key' => [ self::CURRENT_API_KEY, false ],
+			'Empty API key'   => [ '', false ],
 		];
 	}
 
