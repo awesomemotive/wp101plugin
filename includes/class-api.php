@@ -153,6 +153,20 @@ class API {
 			];
 		}
 
+		// Catch responses that don't contain an array of add-ons.
+		if ( ! isset( $response['addons'] ) ) {
+			return [
+				'addons' => [],
+			];
+		}
+
+		// Append the public API key to add-on URLs.
+		$api_key = $this->get_public_api_key();
+
+		array_walk( $response['addons'], function ( &$addon ) use ( $api_key ) {
+			$addon['url'] = add_query_arg( 'apiKey', $api_key, $addon['url'] );
+		} );
+
 		return $response;
 	}
 
