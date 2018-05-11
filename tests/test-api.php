@@ -144,7 +144,9 @@ class ApiTest extends TestCase {
 	public function test_get_addons() {
 		$json = [
 			'status' => 'success',
-			'data'   => [],
+			'data'   => [
+				'addons' => [],
+			],
 		];
 
 		$this->set_expected_response([
@@ -166,6 +168,47 @@ class ApiTest extends TestCase {
 				'addons' => [],
 			],
 			API::get_instance()->get_addons()
+		);
+	}
+
+	public function test_get_addons_handles_malformed_responses() {
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'some data that has nothing to do with add-ons.',
+			],
+		];
+
+		$this->set_expected_response([
+			'body' => wp_json_encode( $json ),
+		]);
+
+		$this->assertEquals( [
+			'addons' => [],
+		], API::get_instance()->get_addons() );
+	}
+
+	public function test_get_addons_updates_add_on_urls() {
+		$api_key = uniqid();
+
+		update_option( API::PUBLIC_API_KEY_OPTION, $api_key );
+		$this->set_expected_response([
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'addons' => [
+						[
+							'url' => 'http://example.com',
+						],
+					],
+				],
+			] ),
+		]);
+
+		$this->assertEquals(
+			'http://example.com?apiKey=' . $api_key,
+			API::get_instance()->get_addons()['addons'][0]['url'],
+			'The public API key should be appended to all add-on URLs.'
 		);
 	}
 
