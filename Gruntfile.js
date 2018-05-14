@@ -5,6 +5,25 @@ module.exports = function(grunt) {
 
 		pkg: grunt.file.readJSON('package.json'),
 
+		copy: {
+			main: {
+				src: [
+					'assets/**',
+					'!assets/*/scss/**',
+					'!assets/*/scss',
+					'!assets/*/src/**',
+					'!assets/*/src',
+					'includes/**',
+					'languages/**',
+					'views/**',
+					'composer.json',
+					'readme.txt',
+					'wp101.php'
+				],
+				dest: 'dist/'
+			},
+		},
+
 		cssmin: {
 			options: {
 				sourceMap: true
@@ -87,11 +106,12 @@ module.exports = function(grunt) {
 	});
 
 	grunt.loadNpmTasks( 'grunt-sass' );
+	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-eslint' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
 
-	grunt.registerTask( 'build', [ 'eslint', 'i18n', 'sass', 'uglify' ] );
+	grunt.registerTask( 'build', [ 'eslint', 'i18n', 'sass', 'uglify', 'copy' ] );
 	grunt.registerTask( 'i18n', [ 'makepot' ] );
 	grunt.registerTask( 'default', [ 'eslint', 'sass', 'uglify' ] );
 
