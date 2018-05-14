@@ -106,7 +106,7 @@ module.exports = function(grunt) {
 	});
 
 	grunt.loadNpmTasks( 'grunt-sass' );
-	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-eslint' );
 	grunt.loadNpmTasks( 'grunt-wp-i18n' );
