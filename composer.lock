@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb2c5f352625fe6de0568cd285c16a4a",
+    "content-hash": "6d98c8863415ec82e040faa7b0b5aa81",
     "packages": [],
     "packages-dev": [
         {
@@ -1691,47 +1691,6 @@
                 "testing"
             ],
             "time": "2018-03-30T03:00:06+00:00"
-        },
-        {
-            "name": "stevegrunwell/wp-enforcer",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stevegrunwell/wp-enforcer.git",
-                "reference": "6d583588d06346982b5819066f14675ddc8004d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stevegrunwell/wp-enforcer/zipball/6d583588d06346982b5819066f14675ddc8004d7",
-                "reference": "6d583588d06346982b5819066f14675ddc8004d7",
-                "shasum": ""
-            },
-            "require": {
-                "wp-coding-standards/wpcs": "*"
-            },
-            "bin": [
-                "bin/wp-enforcer"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Steve Grunwell",
-                    "email": "steve@stevegrunwell.com",
-                    "homepage": "https://stevegrunwell.com"
-                }
-            ],
-            "description": "Git hooks to encourage well-written WordPress.",
-            "keywords": [
-                "PHP_CodeSniffer",
-                "coding standards",
-                "git hooks",
-                "wordpress"
-            ],
-            "time": "2017-05-28T18:44:13+00:00"
         },
         {
             "name": "theseer/tokenizer",
