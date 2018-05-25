@@ -21,11 +21,12 @@ function check_plugins( $previous, $plugins ) {
 		return;
 	}
 
-	$addons    = TemplateTags\api()->get_addons();
+	$api       = TemplateTags\api();
+	$addons    = $api->get_addons();
 	$available = [];
 
 	foreach ( $addons['addons'] as $series ) {
-		if ( empty( $series['restrictions']['plugins'] ) || $series['includedInSubscription'] ) {
+		if ( empty( $series['restrictions']['plugins'] ) ) {
 			continue;
 		}
 
@@ -38,6 +39,12 @@ function check_plugins( $previous, $plugins ) {
 				];
 			}
 		}
+	}
+
+	// Filter out any purchased add-ons.
+	if ( ! empty( $available ) ) {
+		$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug', 'slug' );
+		$available = array_diff_key( $available, $purchased );
 	}
 
 	update_option( 'wp101-available-series', $available, false );
@@ -84,16 +91,16 @@ function show_notifications( $screen ) {
 			$and  = array_pop( $links );
 			$link = implode( _x( ', ', 'separator for multiple series in a sentence', 'wp101' ), $links );
 			if ( 2 <= count( $links ) ) {
-				$link .= _x( ', ', 'Oxford comma', 'wp101' );
+				$link .= _x( ',', 'Oxford comma', 'wp101' );
 			}
-			$link .= _x( 'and ', 'separator between the last two items in a list', 'wp101' ) . $and;
+			$link .= _x( ' and ', 'separator between the last two items in a list', 'wp101' ) . $and;
 		}
 
 		wp_enqueue_script( 'wp101-addons' );
 
 		render_notification( sprintf(
 			/* Translators: %1$s is the add-on title(s). */
-			__( 'Get the most out of your site with %1$s from WP101.', 'wp101' ),
+			__( 'Would you like to add the tutorial videos for %1$s from WP101?', 'wp101' ),
 			$link
 		), array_keys( $available ) );
 	} );
