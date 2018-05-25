@@ -8,6 +8,7 @@
 namespace WP101\Tests;
 
 use WP101\Admin as Admin;
+use WP101\API;
 
 /**
  * Tests for the plugin template tags, contained in includes/template-tags.php.
@@ -58,5 +59,15 @@ class SettingsTest extends TestCase {
 
 		$this->assertContainsSelector( '#wp101-api-key', $output );
 		$this->assertContainsSelector( 'div.notice.notice-warning', $output );
+	}
+
+	public function test_public_key_is_cleared_when_private_key_changes() {
+		update_option( 'wp101_api_key', md5( uniqid() ) );
+		update_option( API::PUBLIC_API_KEY_OPTION, uniqid() );
+
+		// Change the private key.
+		update_option( 'wp101_api_key', md5( uniqid() ) );
+
+		$this->assertEmpty( get_option( API::PUBLIC_API_KEY_OPTION ) );
 	}
 }
