@@ -298,6 +298,15 @@ class API {
 			return $response;
 		}
 
+		$response_code = wp_remote_retrieve_response_code( $response );
+		if ( ! in_array( $response_code, [ 200, 201 ], true ) ) {
+			return new WP_Error(
+				'wp101-api',
+				__( 'The WP101 API request failed.', 'wp101' ),
+				$response
+			);
+		}
+
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( 'fail' === $body['status'] ) {

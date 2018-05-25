@@ -502,6 +502,17 @@ class ApiTest extends TestCase {
 		$this->assertSame( $error, API::get_instance()->exchange_api_key() );
 	}
 
+	public function test_exchange_api_key_returns_wp_error_on_api_connection_error() {
+		$this->set_expected_response( [
+			'response' => [
+				'code'    => 403,
+				'message' => 'Forbidden',
+			],
+		] );
+
+		$this->assertTrue( is_wp_error( API::get_instance()->exchange_api_key() ) );
+	}
+
 	public function test_exchange_api_key_returns_wp_error_on_api_error() {
 		$this->set_expected_response( [
 			'body' => wp_json_encode( [
@@ -645,8 +656,8 @@ class ApiTest extends TestCase {
 			'headers'  => [],
 			'body'     => '',
 			'response' => [
-				'code'    => false,
-				'message' => false,
+				'code'    => 200,
+				'message' => 'OK',
 			],
 			'cookies'  => [],
 			'filename' => '',
