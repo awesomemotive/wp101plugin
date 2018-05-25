@@ -25,9 +25,7 @@ Stop wasting your valuable time teaching WordPress to your clients. Let the WP10
 1. Go to [WP101Plugin.com](https://wp101plugin.com/) to get your API key.
 2. Copy your API key from your [WP101Plugin.com](https://wp101plugin.com/) account page.
 3. Install and activate the WP101 Plugin in the 'Plugins' panel.
-5. Go to the Video Tutorials menu item and click the Settings button to enter your API key.
-6. Selectively hide/show individual videos from the list.
-7. Add your own custom videos to the list using simple embed fields.
+4. Go to the Video Tutorials menu item and click the Settings button to enter your API key.
 
 == Frequently Asked Questions ==
 
