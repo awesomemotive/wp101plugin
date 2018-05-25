@@ -21,7 +21,8 @@ function check_plugins( $previous, $plugins ) {
 		return;
 	}
 
-	$addons    = TemplateTags\api()->get_addons();
+	$api       = TemplateTags\api();
+	$addons    = $api->get_addons();
 	$available = [];
 
 	foreach ( $addons['addons'] as $series ) {
@@ -38,6 +39,12 @@ function check_plugins( $previous, $plugins ) {
 				];
 			}
 		}
+	}
+
+	// Filter out any purchased add-ons.
+	if ( ! empty( $available ) ) {
+		$purchased = wp_list_pluck( $api->get_playlist()['series'], 'slug', 'slug' );
+		$available = array_diff_key( $available, $purchased );
 	}
 
 	update_option( 'wp101-available-series', $available, false );

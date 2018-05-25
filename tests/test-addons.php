@@ -38,6 +38,11 @@ class AddonTest extends TestCase {
 					],
 				],
 			] );
+		$api->shouldReceive( 'get_playlist' )
+			->once()
+			->andReturn( [
+				'series' => [],
+			] );
 
 		Addons\check_plugins( null, array(
 			'some-plugin/some-plugin.php',
@@ -64,6 +69,44 @@ class AddonTest extends TestCase {
 		Addons\check_plugins( null, array(
 			'some-plugin/some-plugin.php',
 			'another-plugin/another-plugin.php',
+		) );
+
+		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
+	}
+
+	public function test_check_plugins_filters_out_purchased_addons() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'has_api_key' )
+			->andReturn( true );
+		$api->shouldReceive( 'get_addons' )
+			->andReturn( [
+				'addons' => [
+					[
+						'title'        => 'Learning Some Plugin',
+						'slug'         => 'learning-some-plugin',
+						'excerpt'      => 'An excerpt',
+						'description'  => 'The full description',
+						'url'          => 'https://wp101plugin.com/series/some-plugin',
+						'restrictions' => [
+							'plugins' => [
+								'some-plugin/some-plugin.php',
+							],
+						],
+					],
+				],
+			] );
+		$api->shouldReceive( 'get_playlist' )
+			->once()
+			->andReturn( [
+				'series' => [
+					[
+						'slug' => 'learning-some-plugin',
+					],
+				],
+			] );
+
+		Addons\check_plugins( null, array(
+			'some-plugin/some-plugin.php',
 		) );
 
 		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
