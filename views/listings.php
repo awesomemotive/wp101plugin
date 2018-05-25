@@ -40,7 +40,9 @@ $query_args = array(
 				 * does not meet (e.g. "don't show Jetpack videos on a site not running Jetpack.").
 				 */
 				if ( ! empty( $series['restrictions'] ) && ! empty( $series['restrictions']['plugins'] ) ) {
-					if ( empty( array_filter( $series['restrictions']['plugins'], 'is_plugin_active' ) ) ) {
+					$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
+
+					if ( empty( $restrictions ) ) {
 						continue;
 					}
 				} elseif ( empty( $series['topics'] ) ) {

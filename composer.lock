@@ -4,9 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "39fd099b3b60fb466dab180b70f45725",
+    "content-hash": "6d98c8863415ec82e040faa7b0b5aa81",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "dealerdirect/phpcodesniffer-composer-installer",
+            "version": "v0.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Dealerdirect/phpcodesniffer-composer-installer.git",
+                "reference": "2e41850d5f7797cbb1af7b030d245b3b24e63a08"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Dealerdirect/phpcodesniffer-composer-installer/zipball/2e41850d5f7797cbb1af7b030d245b3b24e63a08",
+                "reference": "2e41850d5f7797cbb1af7b030d245b3b24e63a08",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": "^5.3|^7",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "require-dev": {
+                "composer/composer": "*",
+                "wimg/php-compatibility": "^8.0"
+            },
+            "suggest": {
+                "dealerdirect/qa-tools": "All the PHP QA tools you'll need"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Franck Nijhof",
+                    "email": "f.nijhof@dealerdirect.nl",
+                    "homepage": "http://workingatdealerdirect.eu",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP_CodeSniffer Standards Composer Installer Plugin",
+            "homepage": "http://workingatdealerdirect.eu",
+            "keywords": [
+                "PHPCodeSniffer",
+                "PHP_CodeSniffer",
+                "code quality",
+                "codesniffer",
+                "composer",
+                "installer",
+                "phpcs",
+                "plugin",
+                "qa",
+                "quality",
+                "standard",
+                "standards",
+                "style guide",
+                "stylecheck",
+                "tests"
+            ],
+            "time": "2017-12-06T16:27:17+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -111,16 +179,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "1bac8c362b12f522fdd1f1fa3556284c91affa38"
+                "reference": "99e29d3596b16dabe4982548527d5ddf90232e99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/1bac8c362b12f522fdd1f1fa3556284c91affa38",
-                "reference": "1bac8c362b12f522fdd1f1fa3556284c91affa38",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/99e29d3596b16dabe4982548527d5ddf90232e99",
+                "reference": "99e29d3596b16dabe4982548527d5ddf90232e99",
                 "shasum": ""
             },
             "require": {
@@ -129,7 +197,8 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~5.7|~6.1"
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "~5.7.10|~6.5"
             },
             "type": "library",
             "extra": {
@@ -158,8 +227,8 @@
                     "homepage": "http://davedevelopment.co.uk"
                 }
             ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
-            "homepage": "http://github.com/mockery/mockery",
+            "description": "Mockery is a simple yet flexible PHP mock object framework",
+            "homepage": "https://github.com/mockery/mockery",
             "keywords": [
                 "BDD",
                 "TDD",
@@ -172,7 +241,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-10-06T16:20:43+00:00"
+            "time": "2018-05-08T08:54:48+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1624,47 +1693,6 @@
             "time": "2018-03-30T03:00:06+00:00"
         },
         {
-            "name": "stevegrunwell/wp-enforcer",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stevegrunwell/wp-enforcer.git",
-                "reference": "6d583588d06346982b5819066f14675ddc8004d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stevegrunwell/wp-enforcer/zipball/6d583588d06346982b5819066f14675ddc8004d7",
-                "reference": "6d583588d06346982b5819066f14675ddc8004d7",
-                "shasum": ""
-            },
-            "require": {
-                "wp-coding-standards/wpcs": "*"
-            },
-            "bin": [
-                "bin/wp-enforcer"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Steve Grunwell",
-                    "email": "steve@stevegrunwell.com",
-                    "homepage": "https://stevegrunwell.com"
-                }
-            ],
-            "description": "Git hooks to encourage well-written WordPress.",
-            "keywords": [
-                "PHP_CodeSniffer",
-                "coding standards",
-                "git hooks",
-                "wordpress"
-            ],
-            "time": "2017-05-28T18:44:13+00:00"
-        },
-        {
             "name": "theseer/tokenizer",
             "version": "1.1.0",
             "source": {
@@ -1753,6 +1781,58 @@
                 "validate"
             ],
             "time": "2018-01-29T19:49:41+00:00"
+        },
+        {
+            "name": "wimg/php-compatibility",
+            "version": "8.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wimg/PHPCompatibility.git",
+                "reference": "4ac01e4fe8faaa4f8d3b3cd06ea92e5418ce472e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wimg/PHPCompatibility/zipball/4ac01e4fe8faaa4f8d3b3cd06ea92e5418ce472e",
+                "reference": "4ac01e4fe8faaa4f8d3b3cd06ea92e5418ce472e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "squizlabs/php_codesniffer": "^2.2 || ^3.0.2"
+            },
+            "conflict": {
+                "squizlabs/php_codesniffer": "2.6.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0"
+            },
+            "suggest": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+            },
+            "type": "phpcodesniffer-standard",
+            "autoload": {
+                "psr-4": {
+                    "PHPCompatibility\\": "PHPCompatibility/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Wim Godden",
+                    "role": "lead"
+                }
+            ],
+            "description": "A set of sniffs for PHP_CodeSniffer that checks for PHP version compatibility.",
+            "homepage": "http://techblog.wimgodden.be/tag/codesniffer/",
+            "keywords": [
+                "compatibility",
+                "phpcs",
+                "standards"
+            ],
+            "time": "2017-12-27T21:58:38+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
