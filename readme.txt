@@ -151,9 +151,12 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 == Screenshots ==
 
 1. The video tutorial selection and viewing interface.
-2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+= 5.0.0 =
+* Complete rewrite of the plugin and backing APIs to bring even more content to the WP101 plugin.
+* Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
+
 = 4.1 =
 * We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.
 
