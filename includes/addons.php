@@ -25,7 +25,7 @@ function check_plugins( $previous, $plugins ) {
 	$available = [];
 
 	foreach ( $addons['addons'] as $series ) {
-		if ( empty( $series['restrictions']['plugins'] ) || $series['includedInSubscription'] ) {
+		if ( empty( $series['restrictions']['plugins'] ) ) {
 			continue;
 		}
 
