@@ -2,6 +2,7 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
+Requires PHP: 5.4
 Tested up to: 4.9.5
 Stable tag: 4.1
 
