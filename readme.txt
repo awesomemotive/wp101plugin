@@ -1,7 +1,8 @@
 === WP101 ===
-Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
+Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
+Requires PHP: 5.4
 Tested up to: 4.9.5
 Stable tag: 4.1
 
@@ -22,11 +23,9 @@ Stop wasting your valuable time teaching WordPress to your clients. Let the WP10
 == Installation ==
 
 1. Go to [WP101Plugin.com](https://wp101plugin.com/) to get your API key.
-2. Copy your API key from your [WP101Plugin.com](https://wp101plugin.com/) account page.
+2. Copy your API key from your [WP101Plugin.com](https://app.wp101plugin.com/) dashboard.
 3. Install and activate the WP101 Plugin in the 'Plugins' panel.
-5. Go to the Video Tutorials menu item and click the Settings button to enter your API key.
-6. Selectively hide/show individual videos from the list.
-7. Add your own custom videos to the list using simple embed fields.
+4. Go to the Video Tutorials menu item and click the Settings button to enter your API key.
 
 == Frequently Asked Questions ==
 
@@ -36,11 +35,11 @@ Simply go to: [WP101Plugin.com](https://wp101plugin.com/) and follow the instruc
 
 = Can I choose which video topics are displayed? =
 
-Yes! You can selectively hide or show individual tutorial videos. Simply go to the Video Tutorials menu item and click the Settings button to choose which videos you'd like to include.
+Yes! You can selectively hide or show individual tutorial videos (or entire courses) through the app at [WP101Plugin.com](https://app.wp101plugin.com).
 
 = Can I add my own custom videos? =
 
-Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the Settings panel to add new videos by simply pasting the video embed code from your video hosting provider.
+Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the ["Custom Videos" page in the [WP101Plugin.com app](https://app.wp101plugin.com/custom-topics).
 
 = Where are the Jetpack, WooCommerce, Yoast SEO, or MailPoet videos? =
 
@@ -52,109 +51,32 @@ No sweat! Just go to [WP101Plugin.com](https://wp101plugin.com/) to start your o
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
-Yes! Simply enter your API key into the `wp101.php` file and then install your customized version of the plugin across your clients' sites.
+Yes! Simply define the `WP101_API_KEY` constant within your `wp-config` file:
 
-Or, if you prefer, define the `$_wp101_api_key` variable within your `wp-config` file:
+	/**
+	 * API key for the WP101 plugin.
+	 *
+	 * @link https://wp101plugin.com
+	 */
+	define( 'WP101_API_KEY', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
 
-`define('WP101_API_KEY', 'XXXXXXXXXXXX');`
+= I've been using the WP101 Plugin for some time now — will upgrading to 5.x break my site? =
 
-Either way you choose, your API key will be preserved when you upgrade to future versions of the plugin.
+We've made every effort to ensure a smooth transition to version 5.x of the WP101 plugin from earlier versions:
 
-= Can I limit access to the settings panel? =
-
-Yes! By default, all administrators have access to the settings panel. Optionally, you may choose a specific administrator who alone will have access to the settings panel.
-
-We've also added a series of filters to allow for a couple helpful scenarios:
-
-* `wp101_is_user_authorized` - allows a developer to override the authorization routine. A great use case would be if someone's client has their user set to be the only admin, but the developer also needs to access the settings. Filtering this conditionally would allow for a whitelist of sorts.
-* `wp101_default_settings_role` - When counting admins, we default to counting the administrators. This filter can be used in conjunction with the `wp101_settings_management_user_args` filter to change the actual role that we're allowing for. A good example might be a site that actually has no administrator roles, but a custom role, like a store manager or something.
-* `wp101_too_many_admins` - This provides a sane default for what we consider to be too many admins for this UX. Drop-downs are pretty crappy when you're dealing with a bunch of options, so we have a super high limit of 100. This can be changed to whatever one desires.
-* `wp101_settings_management_user_args` - Used in conjunction with `wp101_default_settings_role`, this filters the array of arguments passed to `get_users()` to populate the drop-down.
-
-= Can I filter the list of videos, or add my own programmatically? =
-
-Absolutely! The WP101 Plugin comes with a number of helpful filters for adding, removing, or modifying existing videos from a number of functions.  We'll walk through some of them, showing what you can do with them…
-
-= wp101_get_help_topics =
-
-The `wp101_get_help_topics` filter is applied to the output of the `get_help_topics()` method.  This supplies all of the default videos for the WP101 Plugin.  This filter, and indeed all of the filters, is passed an array of videos that looks something very much like the following:
-
-    php
-    array(
-	1 => array(
-		'id'      => 1,
-		'title'   => 'The Dashboard',
-		'content' => '<iframe src="//player.vimeo.com/video/104639801" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
-	),
-	2 => array(
-		'id'      => 2,
-		'title'   => 'Posts vs. Pages',
-		'content' => '<iframe src="//player.vimeo.com/video/81744178" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
-	),
-	3 => array(
-		'id'      => 3,
-		'title'   => 'The Editor',
-		'content' => '<iframe src="//player.vimeo.com/video/81743148" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
-	)
-    );
-
-Suppose you have a site where you aren't using any posts or pages.  Not inconceivable, as you might be entirely dependent upon custom post types for a specific build.  It would make great sense in this situation to remove the _Posts vs. Pages_ video, as it would be irrelevant.  Here's how you might do that:
-
-    php
-    add_filter( 'wp101_get_help_topics', function( $videos ) {
-
-	unset( $videos[2] );
-	return $videos;
-
-    } );
-
-And voila!  No more _Posts vs. Pages_ video in the core help topics.  Cool, right?
-
-= wp101_get_custom_help_topics =
-
-Maybe you have a really great plugin that you've made some instructional videos for, or someone else has made some tutorials that you'd like to include in the WP101 interface.  That's awesome! The `wp101_get_custom_help_topics` filter is applied to the output of the `get_custom_help_topics()` method, which outputs custom videos directly after the core videos, if any exist. Here's an example of how you might add a custom help topic.
-
-    php
-    add_filter( 'wp101_get_custom_help_topics', function( $custom_videos ) {
-
-	$custom_videos['myplugin.1'] => array(
-		'id'      => 'myplugin.1',
-		'title'   => 'General Helpful Stuff',
-		'content' => '<iframe src="//player.vimeo.com/video/12345678" width="1280" height="720" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>'
-	);
-
-	return $custom_videos;
-    } );
-
-And just like that, you have your own custom video inside WP101.
-
-= wp101_get_hidden_topics =
-
-Say you want to hide a video - not necessarily remove it completely from WP101, but have it hidden by default, rather than shown.  There's a filter for that:
-
-    php
-    add_filter( 'wp101_get_hidden_topics', function( $hidden_videos ) {
-	// As in the first example, we might want to hide the Posts vs. Pages video.  Instead of the whole array, we add the topic ID.
-	$topic_id = 2;
-
-	if ( ! in_array( $topic_id, $hidden_videos ) ) {
-		$hidden_videos[] = $topic_id;
-	}
-
-	return $hidden_videos;
-    } );
-
-And there we go, we've added a video to the hidden topics. Pretty sweet, right?
-
-_Note: All code examples are using anonymous functions, which work in PHP 5.3+.  If you're using anything less than PHP 5.3, you have our condolences.  Change the examples to use declared functions instead, unless you have a penchant for white._
-
+* Upon upgrading, your existing API key will be exchanged for a new API key automatically.
+	- If you've defined the API key via the `WP101_API_KEY` constant, you'll be given instructions for updating the value.
+* Hidden courses and videos will automatically be passed to the WP101 Plugin app as part of the exchange, and will be reflected automatically. No more having to filter out videos!
 
 == Screenshots ==
 
 1. The video tutorial selection and viewing interface.
-2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+= 5.0.0 =
+* Complete rewrite of the plugin and backing APIs to bring even more content to the WP101 plugin.
+* Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
+
 = 4.1 =
 * We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.
 
