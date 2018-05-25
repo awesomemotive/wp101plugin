@@ -66,10 +66,10 @@ class AddonTest extends TestCase {
 		$api->shouldReceive( 'get_addons' )
 			->never();
 
-		Addons\check_plugins( null, array(
+		Addons\check_plugins( null, [
 			'some-plugin/some-plugin.php',
 			'another-plugin/another-plugin.php',
-		) );
+		] );
 
 		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
 	}
@@ -105,9 +105,9 @@ class AddonTest extends TestCase {
 				],
 			] );
 
-		Addons\check_plugins( null, array(
+		Addons\check_plugins( null, [
 			'some-plugin/some-plugin.php',
-		) );
+		] );
 
 		$this->assertEmpty( get_option( 'wp101-available-series', [] ) );
 	}
