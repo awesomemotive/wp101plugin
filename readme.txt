@@ -1,5 +1,5 @@
 === WP101 ===
-Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
+Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Tested up to: 4.9.5
