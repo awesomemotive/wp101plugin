@@ -84,9 +84,9 @@ function show_notifications( $screen ) {
 			$and  = array_pop( $links );
 			$link = implode( _x( ', ', 'separator for multiple series in a sentence', 'wp101' ), $links );
 			if ( 2 <= count( $links ) ) {
-				$link .= _x( ', ', 'Oxford comma', 'wp101' );
+				$link .= _x( ',', 'Oxford comma', 'wp101' );
 			}
-			$link .= _x( 'and ', 'separator between the last two items in a list', 'wp101' ) . $and;
+			$link .= _x( ' and ', 'separator between the last two items in a list', 'wp101' ) . $and;
 		}
 
 		wp_enqueue_script( 'wp101-addons' );
