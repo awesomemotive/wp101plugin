@@ -93,7 +93,7 @@ function show_notifications( $screen ) {
 
 		render_notification( sprintf(
 			/* Translators: %1$s is the add-on title(s). */
-			__( 'Get the most out of your site with %1$s from WP101.', 'wp101' ),
+			__( 'Would you like to add the tutorial videos for %1$s from WP101?', 'wp101' ),
 			$link
 		), array_keys( $available ) );
 	} );
