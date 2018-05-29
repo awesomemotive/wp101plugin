@@ -26,7 +26,7 @@ use WP101\TemplateTags as TemplateTags;
 
 			<?php else : ?>
 				<?php if ( Migrate\wp_config_requires_updating() ) : ?>
-					<div class="notice notice-warning">
+					<div id="wp101-api-key-constant-upgrade-notice" class="notice notice-warning">
 						<p><?php esc_html_e( 'Your API key has been updated to work with the latest version of WP101, but your wp-config.php requires updating:', 'wp101' ); ?></p>
 						<ol>
 							<li><?php esc_html_e( 'Open your site\'s wp-config.php file in a text editor.', 'wp101' ); ?></li>

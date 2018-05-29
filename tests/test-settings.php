@@ -58,7 +58,7 @@ class SettingsTest extends TestCase {
 		$output = ob_get_clean();
 
 		$this->assertContainsSelector( '#wp101-api-key', $output );
-		$this->assertContainsSelector( 'div.notice.notice-warning', $output );
+		$this->assertContainsSelector( '#wp101-api-key-constant-upgrade-notice', $output );
 	}
 
 	public function test_public_key_is_cleared_when_private_key_changes() {
