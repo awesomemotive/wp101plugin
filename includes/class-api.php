@@ -86,10 +86,10 @@ class API {
 			return $this->api_key;
 		}
 
-		if ( defined( 'WP101_API_KEY' ) && ! Migrate\wp_config_requires_updating( WP101_API_KEY ) ) {
+		if ( defined( 'WP101_API_KEY' ) ) {
 			$this->api_key = WP101_API_KEY;
 		} else {
-			$this->api_key = get_option( 'wp101_api_key', '' );
+			$this->api_key = get_option( 'wp101_api_key', null );
 		}
 
 		return $this->api_key;
@@ -263,11 +263,17 @@ class API {
 	 * Exchange a legacy API key for a 5.x API key.
 	 */
 	public function exchange_api_key() {
+		$api_key = $this->get_api_key();
+
+		if ( empty( $api_key ) ) {
+			return new WP_Error( 'wp101-api', __( 'Cannot exchange an empty API key.', 'wp101' ) );
+		}
+
 		$response = wp_remote_post( $this->build_uri( '/key-exchange' ), [
 			'timeout'    => 30,
 			'user-agent' => self::USER_AGENT,
 			'body'       => [
-				'apiKey'       => $this->get_api_key(),
+				'apiKey'       => $api_key,
 				'domain'       => site_url(),
 
 				/**
@@ -299,6 +305,7 @@ class API {
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response );
+
 		if ( ! in_array( $response_code, [ 200, 201 ], true ) ) {
 			return new WP_Error(
 				'wp101-api',
