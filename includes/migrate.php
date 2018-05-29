@@ -67,7 +67,7 @@ function wp_config_requires_updating() {
 		return false;
 	}
 
-	return api_key_needs_migration( WP101_API_KEY );
+	return ! WP101_API_KEY || api_key_needs_migration( WP101_API_KEY );
 }
 
 /**

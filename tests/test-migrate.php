@@ -131,6 +131,24 @@ class MigrateTest extends TestCase {
 		$this->assertFalse( Migrate\wp_config_requires_updating() );
 	}
 
+	/**
+	 * @requires extension runkit
+	 */
+	public function test_wp_config_requires_updating_with_bad_constant() {
+		define( 'WP101_API_KEY', 'wrong-key' );
+
+		$this->assertTrue( Migrate\wp_config_requires_updating() );
+	}
+
+	/**
+	 * @requires extension runkit
+	 */
+	public function test_wp_config_requires_updating_with_empty_constant() {
+		define( 'WP101_API_KEY', '' );
+
+		$this->assertTrue( Migrate\wp_config_requires_updating() );
+	}
+
 	public function test_render_migration_success_notice() {
 		ob_start();
 		Migrate\render_migration_success_notice();
