@@ -44,7 +44,7 @@ class SettingsTest extends TestCase {
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
-		$this->assertNotContainsSelector( '#wp101-api-key-set-via-constant-notice', $output );
+		$this->assertContainsSelector( '#wp101-api-key-set-via-constant-notice', $output );
 		$this->assertNotContainsSelector( '#wp101-api-key', $output );
 	}
 
