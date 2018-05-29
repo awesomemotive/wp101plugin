@@ -2,6 +2,9 @@
 /**
  * Assist subscribers in finding add-ons relevant to their sites.
  *
+ * Note that this file will not be loaded if the user has defined DISABLE_NAG_NOTICES,
+ * so the functionality contained here should be limited to notices about add-ons.
+ *
  * @package WP101
  */
 
