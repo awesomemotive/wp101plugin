@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the plugin template tags.
+ * Tests for the plugin settings.
  *
  * @package WP101
  */
@@ -44,21 +44,8 @@ class SettingsTest extends TestCase {
 		Admin\render_settings_page();
 		$output = ob_get_clean();
 
+		$this->assertNotContainsSelector( '#wp101-api-key-set-via-constant-notice', $output );
 		$this->assertNotContainsSelector( '#wp101-api-key', $output );
-	}
-
-	/**
-	 * @requires extension runkit
-	 */
-	public function test_notifies_user_if_constant_needs_replaced() {
-		define( 'WP101_API_KEY', 'some-legacy-api-key' );
-
-		ob_start();
-		Admin\render_settings_page();
-		$output = ob_get_clean();
-
-		$this->assertContainsSelector( '#wp101-api-key', $output );
-		$this->assertContainsSelector( '#wp101-api-key-constant-upgrade-notice', $output );
 	}
 
 	public function test_public_key_is_cleared_when_private_key_changes() {

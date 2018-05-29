@@ -45,15 +45,6 @@ class ApiTest extends TestCase {
 		$this->assertEquals( WP101_API_KEY, API::get_instance()->get_api_key() );
 	}
 
-	/**
-	 * @requires extension runkit
-	 */
-	public function test_get_api_key_only_considers_valid_constants() {
-		define( 'WP101_API_KEY', uniqid() );
-
-		$this->assertEmpty( API::get_instance()->get_api_key() );
-	}
-
 	public function test_get_api_key_reads_from_options() {
 		$key = md5( uniqid() );
 		$this->set_api_key( $key );
@@ -397,6 +388,13 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $new, $api->exchange_api_key()['apiKey'] );
 	}
 
+	public function test_exchange_api_key_returns_early_for_empty_key() {
+		$api = API::get_instance();
+		$api->set_api_key( '' );
+
+		$this->assertTrue( is_wp_error( $api->exchange_api_key() ) );
+	}
+
 	public function test_exchange_api_key_passes_hidden_topic_ids() {
 		$hidden = [ 4, 8, 15, 16, 23, 42 ];
 		update_option( 'wp101_hidden_topics', $hidden );
@@ -495,11 +493,14 @@ class ApiTest extends TestCase {
 	public function test_exchange_api_key_surfaces_wp_errors() {
 		$error = new WP_Error( 'msg' );
 
+		$api = API::get_instance();
+		$api->set_api_key( uniqid() );
+
 		$this->set_expected_response( function () use ( $error ) {
 			return $error;
 		} );
 
-		$this->assertSame( $error, API::get_instance()->exchange_api_key() );
+		$this->assertSame( $error, $api->exchange_api_key() );
 	}
 
 	public function test_exchange_api_key_returns_wp_error_on_api_connection_error() {

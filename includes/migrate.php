@@ -13,17 +13,29 @@ use WP101\TemplateTags as TemplateTags;
  * Apply any necessary migrations.
  */
 function maybe_migrate() {
-	if ( ! api_key_needs_migration() ) {
+	$api = TemplateTags\api();
+	$key = $api->get_api_key();
+
+	// Empty key is set via constant.
+	if ( defined( 'WP101_API_KEY' ) && ! WP101_API_KEY ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\render_constant_empty_notice' );
+
 		return;
 	}
 
-	$api = TemplateTags\api();
+	// Key is either empty or already good to go.
+	if ( ! api_key_needs_migration( $key ) ) {
+		return;
+	}
+
 	$key = $api->exchange_api_key();
 
 	if ( is_wp_error( $key ) ) {
 		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 		trigger_error( esc_html( $key->get_error_message() ), E_USER_WARNING );
 		// phpcs:enable
+
+		$api->set_api_key( null );
 
 		add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_failure_notice' );
 
@@ -33,7 +45,12 @@ function maybe_migrate() {
 	update_option( 'wp101_api_key', $key['apiKey'], false );
 	$api->set_api_key( $key['apiKey'] );
 
-	add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_success_notice' );
+	// Display a notice if the wp-config.php file needs updating.
+	if ( defined( 'WP101_API_KEY' ) ) {
+		add_action( 'admin_notices', __NAMESPACE__ . '\render_constant_upgrade_notice' );
+	} else {
+		add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_success_notice' );
+	}
 
 	// Clean up old data.
 	delete_option( 'wp101_custom_topics' );
@@ -47,11 +64,7 @@ function maybe_migrate() {
  *
  * @return bool Whether or not the API key needs exchanged.
  */
-function api_key_needs_migration( $api_key = null ) {
-	if ( ! $api_key ) {
-		$api_key = TemplateTags\api()->get_api_key();
-	}
-
+function api_key_needs_migration( $api_key ) {
 	return $api_key && 32 !== strlen( $api_key );
 }
 
@@ -76,7 +89,7 @@ function wp_config_requires_updating() {
 function render_migration_success_notice() {
 ?>
 
-	<div class="notice notice-success">
+	<div id="wp101-api-key-upgraded" class="notice notice-success">
 		<p><?php esc_html_e( 'WP101 has automatically upgraded your API key to work with the latest version!', 'wp101' ); ?></p>
 	</div>
 
@@ -89,8 +102,59 @@ function render_migration_success_notice() {
 function render_migration_failure_notice() {
 ?>
 
-	<div class="notice notice-error">
+	<div id="wp101-api-key-upgrade-failed" class="notice notice-error">
 		<p><?php esc_html_e( 'WP101 was unable to automatically migrate your API key for the latest version.', 'wp101' ); ?></p>
+	</div>
+
+<?php
+}
+
+/**
+ * Display a notification when the WP101_API_KEY constant in wp-config.php needs updating.
+ */
+function render_constant_upgrade_notice() {
+?>
+
+	<div id="wp101-api-key-constant-upgrade-notice" class="notice notice-warning">
+		<p><?php esc_html_e( 'Your API key has been updated to work with the latest version of WP101, but your wp-config.php requires updating:', 'wp101' ); ?></p>
+		<ol>
+			<li><?php esc_html_e( 'Open your site\'s wp-config.php file in a text editor.', 'wp101' ); ?></li>
+			<li>
+				<?php
+					echo wp_kses_post( sprintf(
+						/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
+						__( 'Find the line that reads %1$s and either remove it completely or replace it with the following:', 'wp101' ),
+						sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
+					) );
+				?>
+				<pre><code>define( 'WP101_API_KEY', '<?php echo esc_html( TemplateTags\get_api_key() ); ?>' );</code></pre>
+			</li>
+			<li><?php esc_html_e( 'Save the wp-config.php file on your web server.', 'wp101' ); ?></li>
+	</div>
+
+<?php
+}
+
+/**
+ * Display a notification when the WP101_API_KEY constant in wp-config.php is blocking progress.
+ */
+function render_constant_empty_notice() {
+?>
+
+	<div id="wp101-api-key-constant-empty-notice" class="notice notice-warning">
+		<p><?php echo wp_kses_post( __( 'An empty <code>WP101_API_KEY</code> constant has been defined in wp-config.php and should be removed:', 'wp101' ) ); ?></p>
+		<ol>
+			<li><?php esc_html_e( 'Open your site\'s wp-config.php file in a text editor.', 'wp101' ); ?></li>
+			<li>
+				<?php
+					echo wp_kses_post( sprintf(
+						/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
+						__( 'Find the line that reads %1$s and either remove it completely or set the value to your WP101 Plugin API key.', 'wp101' ),
+						sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
+					) );
+				?>
+			</li>
+			<li><?php esc_html_e( 'Save the wp-config.php file on your web server.', 'wp101' ); ?></li>
 	</div>
 
 <?php
