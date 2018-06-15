@@ -130,6 +130,69 @@ class AdminTest extends TestCase {
 	}
 
 	/**
+	 * @link https://github.com/liquidweb/wp101plugin/issues/40
+	 */
+	public function test_render_addons_page_indicates_when_available_series_are_visible() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_playlist' )
+			->andReturn( [
+				'series' => [
+					[
+						'slug' => 'example-series',
+					],
+				],
+			] );
+		$api->shouldReceive( 'get_addons' )
+			->andReturn( [
+				'addons' => [
+					[
+						'title'              => 'Example Series',
+						'slug'               => 'example-series',
+						'meets_requirements' => true,
+					],
+				]
+			] );
+
+		ob_start();
+		Admin\render_addons_page();
+		$output = ob_get_clean();
+
+		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101' ), $output );
+	}
+
+	/**
+	 * @link https://github.com/liquidweb/wp101plugin/issues/40
+	 */
+	public function test_render_addons_page_indicates_when_available_series_are_hidden() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_playlist' )
+			->andReturn( [
+				'series' => [
+					[
+						'slug' => 'example-series',
+					],
+				],
+			] );
+		$api->shouldReceive( 'get_addons' )
+			->andReturn( [
+				'addons' => [
+					[
+						'title'              => 'Example Series',
+						'slug'               => 'example-series',
+						'meets_requirements' => false,
+					],
+				]
+			] );
+
+		ob_start();
+		Admin\render_addons_page();
+		$output = ob_get_clean();
+
+		$this->assertNotContains( get_admin_url( null, 'admin.php?page=wp101' ), $output );
+		$this->assertContains( 'notice-info', $output );
+	}
+
+	/**
 	 * Retrieve the WP101 menu node(s) visible for the current user.
 	 *
 	 * @return array
