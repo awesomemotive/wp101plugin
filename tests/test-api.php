@@ -203,6 +203,53 @@ class ApiTest extends TestCase {
 		);
 	}
 
+	public function test_get_addons_updates_adds_meets_requirements() {
+		update_option( 'active_plugins', [
+			'some-plugin/some-plugin.php',
+		] );
+
+		$this->set_expected_response([
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'addons' => [
+						[
+							'url'          => 'http://example.com',
+							'restrictions' => [
+								'plugins' => [
+									'some-plugin/some-plugin.php',
+								],
+							],
+						],
+						[
+							'url'          => 'http://example.com',
+							'restrictions' => [
+								'plugins' => [
+									'some-other-plugin/some-other-plugin.php',
+								],
+							],
+						],
+						[
+							'url'          => 'http://example.com',
+							'restrictions' => [
+								'plugins' => [
+									'some-plugin/some-plugin.php',
+									'some-other-plugin/some-other-plugin.php',
+								],
+							],
+						],
+					],
+				],
+			] ),
+		]);
+
+		$this->assertTrue( API::get_instance()->get_addons()['addons'][0]['meets_requirements'] );
+		$this->assertFalse( API::get_instance()->get_addons()['addons'][1]['meets_requirements'] );
+
+		// If multiple requirements are listed, only one must be met.
+		$this->assertTrue( API::get_instance()->get_addons()['addons'][2]['meets_requirements'] );
+	}
+
 	public function test_get_playlist() {
 		$json = [
 			'status' => 'success',
