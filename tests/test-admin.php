@@ -129,6 +129,75 @@ class AdminTest extends TestCase {
 		$this->assertContains( get_admin_url( null, 'admin.php?page=wp101' ), $actions['settings'] );
 	}
 
+	public function test_is_relevant_series_without_restrictions() {
+		$series = [
+			'restrictions' => [
+				'plugins' => [],
+			],
+		];
+
+		$this->assertTrue(
+			Admin\is_relevant_series( $series ),
+			'Series without restrictions are always relevant.'
+		);
+	}
+
+	public function test_is_relevant_series_with_unmet_restrictions() {
+		$series = [
+			'restrictions' => [
+				'plugins' => [
+					'some-plugin/some-plugin.php',
+					'some-other-plugin/some-other-plugin.php',
+				],
+			],
+		];
+
+		update_option( 'active_plugins', [] );
+
+		$this->assertFalse(
+			Admin\is_relevant_series( $series ),
+			'If requirements aren\'t met, the series is not relevant.'
+		);
+	}
+
+	public function test_is_relevant_series_with_some_met_restrictions() {
+		$series = [
+			'restrictions' => [
+				'plugins' => [
+					'some-plugin/some-plugin.php',
+					'some-other-plugin/some-other-plugin.php',
+				],
+			],
+		];
+
+		update_option( 'active_plugins', [
+			'some-plugin/some-plugin.php',
+		] );
+
+		$this->assertTrue(
+			Admin\is_relevant_series( $series ),
+			'Only meeting a single requirement is necessary for relevancy.'
+		);
+	}
+
+	public function test_is_relevant_series_with_all_met_restrictions() {
+		$series = [
+			'restrictions' => [
+				'plugins' => [
+					'some-plugin/some-plugin.php',
+					'some-other-plugin/some-other-plugin.php',
+				],
+			],
+		];
+
+		update_option( 'active_plugins', [
+			'some-plugin/some-plugin.php',
+			'some-other-plugin/some-other-plugin.php',
+		] );
+
+		$this->assertTrue( Admin\is_relevant_series( $series ) );
+	}
+
 	/**
 	 * Retrieve the WP101 menu node(s) visible for the current user.
 	 *
