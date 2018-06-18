@@ -33,23 +33,6 @@ $query_args = array(
 
 		<nav class="wp101-playlist card">
 			<?php foreach ( $playlist['series'] as $series ) : ?>
-
-				<?php
-
-				/*
-				 * Potentially skip over a series if there are restrictions which the current site
-				 * does not meet (e.g. "don't show Jetpack videos on a site not running Jetpack.").
-				 */
-				if ( ! empty( $series['restrictions'] ) && ! empty( $series['restrictions']['plugins'] ) ) {
-					$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
-
-					if ( empty( $restrictions ) ) {
-						continue;
-					}
-				} elseif ( empty( $series['topics'] ) ) {
-					continue;
-				}
-				?>
 				<div class="wp101-series">
 					<h2><?php echo esc_html( $series['title'] ); ?></h2>
 					<ol class="wp101-topics-list">

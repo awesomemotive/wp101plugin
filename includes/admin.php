@@ -163,6 +163,9 @@ function render_listings_page() {
 	$playlist   = $api->get_playlist();
 	$public_key = $api->get_public_api_key();
 
+	// Filter out irrelevant series.
+	$playlist['series'] = array_filter( $playlist['series'], __NAMESPACE__ . '\is_relevant_series' );
+
 	include WP101_VIEWS . '/listings.php';
 }
 
