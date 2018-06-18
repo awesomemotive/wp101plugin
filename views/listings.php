@@ -22,14 +22,15 @@ $query_args = array(
 		<?php echo esc_html_x( 'WordPress Video Tutorials', 'listings page title', 'wp101' ); ?>
 	</h1>
 
-	<main class="wp101-media">
-		<h2 id="wp101-player-title"></h2>
-		<div class="wp101-player-wrap">
-			<iframe id="wp101-player" allowfullscreen></iframe>
-		</div>
-	</main>
-
 	<?php if ( ! empty( $playlist['series'] ) ) : ?>
+
+		<main class="wp101-media">
+			<h2 id="wp101-player-title"></h2>
+			<div class="wp101-player-wrap">
+				<iframe id="wp101-player" allowfullscreen></iframe>
+			</div>
+		</main>
+
 		<nav class="wp101-playlist card">
 			<?php foreach ( $playlist['series'] as $series ) : ?>
 
@@ -72,5 +73,10 @@ $query_args = array(
 				</div>
 			<?php endif; ?>
 		</nav>
+
+	<?php else : ?>
+
+		<p><?php esc_html_e( 'There was a problem retrieving content from WP101plugin.com.', 'wp101' ); ?></p>
+
 	<?php endif; ?>
 </div>
