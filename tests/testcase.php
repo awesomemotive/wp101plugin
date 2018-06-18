@@ -49,10 +49,11 @@ class TestCase extends WP_UnitTestCase {
 	 * @after
 	 */
 	public function reset_menus() {
-		global $menu, $submenu;
+		global $menu, $submenu, $_parent_pages;
 
-		$menu    = null;
-		$submenu = null;
+		$menu          = null;
+		$submenu       = null;
+		$_parent_pages = [];
 	}
 
 	/**

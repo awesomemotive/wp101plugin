@@ -81,7 +81,17 @@ class AdminTest extends TestCase {
 			'role' => 'administrator',
 		] ) );
 
-		$this->set_api_key();
+		$api = $this->mock_api();
+		$api->set_api_key( md5( uniqid() ) );
+		$api->shouldReceive( 'get_addons' )
+			->once()
+			->andReturn( [
+				'addons' => [
+					[
+						'slug' => 'some-add-on',
+					],
+				],
+			] );
 
 		$menu = $this->get_menu_items();
 
@@ -110,6 +120,25 @@ class AdminTest extends TestCase {
 		$menu = $this->get_menu_items();
 
 		$this->assertEquals( 'wp101-settings', $menu['parent'][2], 'Expected "wp101-settings" as the menu slug.' );
+	}
+
+	public function test_register_menu_pages_hides_empty_addon_pages() {
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+
+		$api = $this->mock_api();
+		$api->set_api_key( md5( uniqid() ) );
+		$api->shouldReceive( 'get_addons' )
+			->once()
+			->andReturn( [
+				'addons' => [],
+			] );
+
+		$menu = $this->get_menu_items();
+
+		$this->assertCount( 2, $menu['children'] );
+		$this->assertEmpty( menu_page_url( 'wp101-addons', false ) );
 	}
 
 	public function test_register_settings() {
