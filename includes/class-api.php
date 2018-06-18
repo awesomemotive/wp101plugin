@@ -141,7 +141,7 @@ class API {
 	 * @return array An array of all available add-ons.
 	 */
 	public function get_addons() {
-		$response = $this->send_request( 'GET', '/add-ons' );
+		$response = $this->send_request( 'GET', '/add-ons', [], [], 12 * HOUR_IN_SECONDS );
 
 		if ( is_wp_error( $response ) ) {
 			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
