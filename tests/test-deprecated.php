@@ -28,4 +28,39 @@ class DeprecatedTest extends TestCase {
 
 		WP101_Plugin::get_instance();
 	}
+
+	/**
+	 * @testWith ["wp101_after_edit_help_topics"]
+     *           ["wp101_after_edit_custom_help_topics"]
+     *           ["wp101_after_help_topics"]
+     *           ["wp101_after_custom_help_topics"]
+     *           ["wp101_admin_action_add-video"]
+     *           ["wp101_admin_action_update-video"]
+     *           ["wp101_admin_action_restrict-admin"]
+     *           ["wp101_pre_includes"]
+     */
+	public function test_discover_deprecated_actions( $action ) {
+		add_action( $action, '__return_false' );
+
+		$this->setExpectedIncorrectUsage( 'Action ' . $action );
+
+		do_action( 'init' );
+	}
+
+	/**
+	 * @testWith ["wp101_default_settings_role"]
+     *           ["wp101_too_many_admins"]
+     *           ["wp101_settings_management_user_args"]
+     *           ["wp101_get_document"]
+     *           ["wp101_get_help_topics"]
+     *           ["wp101_get_custom_help_topics"]
+     *           ["wp101_get_hidden_topics"]
+     */
+    public function test_discover_deprecated_filters( $filter ) {
+		add_filter( $filter, '__return_false' );
+
+		$this->setExpectedIncorrectUsage( 'Filter ' . $filter );
+
+		do_action( 'init' );
+	}
 }

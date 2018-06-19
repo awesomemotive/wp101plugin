@@ -33,23 +33,6 @@ $query_args = array(
 
 		<nav class="wp101-playlist card">
 			<?php foreach ( $playlist['series'] as $series ) : ?>
-
-				<?php
-
-				/*
-				 * Potentially skip over a series if there are restrictions which the current site
-				 * does not meet (e.g. "don't show Jetpack videos on a site not running Jetpack.").
-				 */
-				if ( ! empty( $series['restrictions'] ) && ! empty( $series['restrictions']['plugins'] ) ) {
-					$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
-
-					if ( empty( $restrictions ) ) {
-						continue;
-					}
-				} elseif ( empty( $series['topics'] ) ) {
-					continue;
-				}
-				?>
 				<div class="wp101-series">
 					<h2><?php echo esc_html( $series['title'] ); ?></h2>
 					<ol class="wp101-topics-list">
@@ -76,7 +59,22 @@ $query_args = array(
 
 	<?php else : ?>
 
-		<p><?php esc_html_e( 'There was a problem retrieving content from WP101plugin.com.', 'wp101' ); ?></p>
+		<div class="notice notice-error">
+			<p><strong><?php esc_html_e( 'There was a problem retrieving content from WP101plugin.com.', 'wp101' ); ?></strong></p>
+			<p>
+				<?php
+				if ( current_user_can( 'manage_options' ) ) {
+					echo wp_kses_post( sprintf(
+						/* Translators: %1$s is the "WP101 Settings" admin page. */
+						__( '<a href="%1$s">Please verify your API key</a> and ensure your WP101plugin.com account has access to the desired content.', 'wp101' ),
+						esc_url( menu_page_url( 'wp101-settings', false ) )
+					) );
+				} else {
+					esc_html_e( 'Please contact a site administrator for further assistance.', 'wp101' );
+				}
+				?>
+			</p>
+		</div>
 
 	<?php endif; ?>
 </div>

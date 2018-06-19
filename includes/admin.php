@@ -163,6 +163,9 @@ function render_listings_page() {
 	$playlist   = $api->get_playlist();
 	$public_key = $api->get_public_api_key();
 
+	// Filter out irrelevant series.
+	$playlist['series'] = array_filter( $playlist['series'], __NAMESPACE__ . '\is_relevant_series' );
+
 	include WP101_VIEWS . '/listings.php';
 }
 
@@ -188,3 +191,29 @@ function clear_public_api_key() {
 	TemplateTags\api()->get_public_api_key();
 }
 add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );
+
+/**
+ * Determine whether or not a series is relevant to the current site.
+ *
+ * Relevancy is determined based on two factors:
+ *
+ * 1. Does the series define any specific requirements?
+ * 2. If so, does this site meet those requirements?
+ *
+ * For example, a series about Jetpack might specify that it should only be displayed on sites
+ * running Jetpack — if a site doesn't have Jetpack installed and activated, don't bother
+ * displaying the series.
+ *
+ * @param array $series The series object, as returned from the API.
+ *
+ * @return bool Whether or not the series should be displayed.
+ */
+function is_relevant_series( $series ) {
+	if ( ! isset( $series['restrictions']['plugins'] ) || empty( $series['restrictions']['plugins'] ) ) {
+		return true;
+	}
+
+	$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
+
+	return ! empty( $restrictions );
+}
