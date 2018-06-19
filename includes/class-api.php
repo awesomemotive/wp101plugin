@@ -164,7 +164,15 @@ class API {
 		$api_key = $this->get_public_api_key();
 
 		array_walk( $response['addons'], function ( &$addon ) use ( $api_key ) {
-			$addon['url'] = add_query_arg( 'apiKey', $api_key, $addon['url'] );
+			$addon['url']                = add_query_arg( 'apiKey', $api_key, $addon['url'] );
+			$addon['meets_requirements'] = true;
+
+			// Does the current site configuration meet requirements?
+			if ( ! empty( $addon['restrictions']['plugins'] ) ) {
+				$requirements = array_filter( $addon['restrictions']['plugins'], 'is_plugin_active' );
+
+				$addon['meets_requirements'] = ! empty( $requirements );
+			}
 		} );
 
 		return $response;

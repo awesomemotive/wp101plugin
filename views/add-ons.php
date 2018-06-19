@@ -47,14 +47,21 @@ use WP101\TemplateTags as TemplateTags;
 						<?php TemplateTags\list_topics( $addon['topics'], 3, $addon['url'] ); ?>
 					<?php endif; ?>
 
-					<p class="wp101-addon-button">
-						<?php if ( $has_addon ) : ?>
+					<?php if ( $has_addon && ! empty( $addon['meets_requirements'] ) ) : ?>
+						<p class="wp101-addon-button">
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary"><?php echo esc_html_e( 'Watch Videos', 'wp101' ); ?></a>
+						</p>
 
-						<?php elseif ( ! empty( $addon['url'] ) ) : ?>
+					<?php elseif ( $has_addon ) : ?>
+						<div class="notice notice-info inline">
+							<p><?php esc_html_e( 'Your WP101 Plugin subscription includes access to this course, but it looks like it might not be useful on this site.', 'wp101' ); ?></p>
+						</div>
+
+					<?php elseif ( ! empty( $addon['url'] ) ) : ?>
+						<p class="wp101-addon-button">
 							<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
-						<?php endif; ?>
-					</p>
+						</p>
+					<?php endif; ?>
 				</div>
 
 			<?php endforeach; ?>
