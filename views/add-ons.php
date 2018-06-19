@@ -47,7 +47,7 @@ use WP101\TemplateTags as TemplateTags;
 						<?php TemplateTags\list_topics( $addon['topics'], 3, $addon['url'] ); ?>
 					<?php endif; ?>
 
-					<?php if ( $has_addon && $addon['meets_requirements'] ) : ?>
+					<?php if ( $has_addon && isset( $addon['meets_requirements'] ) && (bool) $addon['meets_requirements'] ) : ?>
 						<p class="wp101-addon-button">
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary"><?php echo esc_html_e( 'Watch Videos', 'wp101' ); ?></a>
 						</p>
