@@ -25,14 +25,14 @@ function mark_deprecated( $feature, $message, $version ) {
  */
 function discover_deprecated_actions() {
 	$deprecated = [
-		'wp101_after_edit_help_topics',
-		'wp101_after_edit_custom_help_topics',
-		'wp101_after_help_topics',
-		'wp101_after_custom_help_topics',
-		'wp101_admin_action_add-video',
-		'wp101_admin_action_update-video',
-		'wp101_admin_action_restrict-admin',
-		'wp101_pre_includes',
+		'wp101_after_edit_help_topics'        => '5.0.0',
+		'wp101_after_edit_custom_help_topics' => '5.0.0',
+		'wp101_after_help_topics'             => '5.0.0',
+		'wp101_after_custom_help_topics'      => '5.0.0',
+		'wp101_admin_action_add-video'        => '5.0.0',
+		'wp101_admin_action_update-video'     => '5.0.0',
+		'wp101_admin_action_restrict-admin'   => '5.0.0',
+		'wp101_pre_includes'                  => '5.0.0',
 	];
 
 	foreach ( $deprecated as $hook => $version ) {
@@ -48,13 +48,13 @@ add_action( 'init', __NAMESPACE__ . '\discover_deprecated_actions' );
  */
 function discover_deprecated_filters() {
 	$deprecated = [
-		'wp101_default_settings_role',
-		'wp101_too_many_admins',
-		'wp101_settings_management_user_args',
-		'wp101_get_document',
-		'wp101_get_help_topics',
-		'wp101_get_custom_help_topics',
-		'wp101_get_hidden_topics',
+		'wp101_default_settings_role'         => '5.0.0',
+		'wp101_too_many_admins'               => '5.0.0',
+		'wp101_settings_management_user_args' => '5.0.0',
+		'wp101_get_document'                  => '5.0.0',
+		'wp101_get_help_topics'               => '5.0.0',
+		'wp101_get_custom_help_topics'        => '5.0.0',
+		'wp101_get_hidden_topics'             => '5.0.0',
 	];
 
 	foreach ( $deprecated as $hook => $version ) {
