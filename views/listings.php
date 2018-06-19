@@ -14,6 +14,7 @@ $query_args = array(
 	'apiKey' => $public_key,
 	'host'   => site_url(),
 );
+$addons     = $api->get_addons();
 
 ?>
 
@@ -48,7 +49,7 @@ $query_args = array(
 
 			<?php endforeach; ?>
 
-			<?php if ( TemplateTags\current_user_can_purchase_addons() ) : ?>
+			<?php if ( TemplateTags\current_user_can_purchase_addons() && ! empty( $addons['addons'] ) ) : ?>
 				<div class="wp101-addon-notice">
 					<h2><?php echo esc_html_e( 'More from WP101', 'wp101' ); ?></h2>
 					<p><?php esc_html_e( 'Get the most out of WP101 with even more content!', 'wp101' ); ?></p>
