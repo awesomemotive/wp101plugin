@@ -55,10 +55,26 @@ function render_shortcode( $atts ) {
 	if ( $atts['series'] ) {
 		$series = TemplateTags\get_series( $atts['series'] );
 
+		if ( false === $series ) {
+			return shortcode_debug( sprintf(
+				/* Translators: %1$s is the series slug. */
+				__( 'Series "%1$s" was not found.', 'wp101' ),
+				$atts['series']
+			) );
+		}
+
 		return render_shortcode_playlist( $series );
 
 	} elseif ( $atts['video'] ) {
 		$topic = TemplateTags\get_topic( $atts['video'] );
+
+		if ( false === $topic ) {
+			return shortcode_debug( sprintf(
+				/* Translators: %1$s is the video slug. */
+				__( 'Video "%1$s" was not found.', 'wp101' ),
+				$atts['video']
+			) );
+		}
 
 		return render_shortcode_single( $topic );
 	}
