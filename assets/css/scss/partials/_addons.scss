@@ -15,11 +15,10 @@
 		flex-wrap: nowrap;
 		flex-direction: column;
 		justify-content: flex-start;
-		flex: 1;
 		margin-right: 20px;
 	}
 
-	.wp101-addon-button {
+	.wp101-addon-button, .notice {
 		align-self: flex-end;
 		margin-top: auto;
 	}
