@@ -45,6 +45,26 @@ class ShortcodeTest extends TestCase {
 		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
 	}
 
+	public function test_handles_missing_series() {
+		wp_set_current_user( $this->factory()->user->create() );
+
+		$post = $this->factory()->post->create( [
+			'post_status' => 'private',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_series' )->andReturn( false );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertEmpty(
+			Shortcode\render_shortcode( [
+				'series' => 'test-series',
+			] )
+		);
+	}
+
 	public function test_can_show_topic() {
 		wp_set_current_user( $this->factory()->user->create() );
 		Shortcode\register_scripts_styles();
@@ -72,6 +92,26 @@ class ShortcodeTest extends TestCase {
 			] )
 		);
 		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
+	}
+
+	public function test_handles_missing_topic() {
+		wp_set_current_user( $this->factory()->user->create() );
+
+		$post = $this->factory()->post->create( [
+			'post_status' => 'private',
+		] );
+		$api  = $this->mock_api();
+
+		$api->shouldReceive( 'account_can' )->andReturn( true );
+		$api->shouldReceive( 'get_topic' )->andReturn( false );
+
+		$this->go_to( get_permalink( $post ) );
+
+		$this->assertEmpty(
+			Shortcode\render_shortcode( [
+				'video' => 'test-topic',
+			] )
+		);
 	}
 
 	public function test_gives_precedence_to_series_over_videos() {
