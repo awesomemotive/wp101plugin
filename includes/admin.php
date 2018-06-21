@@ -191,8 +191,10 @@ function render_settings_page() {
 function clear_public_api_key() {
 	delete_option( API::PUBLIC_API_KEY_OPTION );
 
-	// Prime the cache with the new key.
-	TemplateTags\api()->get_public_api_key();
+	// Prime the cache with the new public + private keys.
+	$api = TemplateTags\api();
+	$api->clear_api_key();
+	$api->get_public_api_key();
 }
 add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );
 
