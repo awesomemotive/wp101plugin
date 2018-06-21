@@ -66,6 +66,15 @@ class ApiTest extends TestCase {
 		$this->assertEquals( $key, $api->get_api_key() );
 	}
 
+	public function test_clear_api_key() {
+		$api = API::get_instance();
+
+		$api->set_api_key( md5( uniqid() ) );
+		$api->clear_api_key();
+
+		$this->assertNull( $api->get_api_key() );
+	}
+
 	public function test_has_api_key() {
 		$api = API::get_instance();
 

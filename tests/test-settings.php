@@ -52,6 +52,10 @@ class SettingsTest extends TestCase {
 		update_option( 'wp101_api_key', md5( uniqid() ) );
 		update_option( API::PUBLIC_API_KEY_OPTION, uniqid() );
 
+		$api = $this->mock_api();
+		$api->shouldReceive( 'clear_api_key' )->once();
+		$api->shouldReceive( 'get_public_api_key' )->once();
+
 		// Change the private key.
 		update_option( 'wp101_api_key', md5( uniqid() ) );
 

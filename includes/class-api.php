@@ -105,6 +105,13 @@ class API {
 	}
 
 	/**
+	 * Clear the current value for $this->api_key.
+	 */
+	public function clear_api_key() {
+		$this->api_key = null;
+	}
+
+	/**
 	 * Retrieve the public API key from WP101.
 	 *
 	 * Public API keys are generated on a per-domain basis by the WP101 API, and thus are safe for
