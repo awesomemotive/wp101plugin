@@ -32,6 +32,7 @@
 
 			settingsDisplay.setAttribute('hidden', '');
 			settingsForm.removeAttribute('hidden');
+			document.getElementById('wp101-api-key').focus();
 		});
 	}
 }());
