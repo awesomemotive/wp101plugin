@@ -148,7 +148,7 @@ class AdminTest extends TestCase {
 
 		$this->assertArrayHasKey( 'wp101_api_key', $settings );
 		$this->assertEquals( 'wp101', $settings['wp101_api_key']['group'] );
-		$this->assertEquals( 'sanitize_text_field', $settings['wp101_api_key']['sanitize_callback'] );
+		$this->assertEquals( 'WP101\Admin\sanitize_api_key', $settings['wp101_api_key']['sanitize_callback'] );
 		$this->assertFalse( $settings['wp101_api_key']['show_in_rest'], 'The API key should never be exposed via the WP REST API.' );
 	}
 
