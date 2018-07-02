@@ -36,7 +36,8 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_hides_api_key_form_if_already_set() {
-		$key = $this->set_api_key();
+		$key    = $this->set_api_key();
+		$masked = substr( $key, 0, 4 );
 
 		ob_start();
 		Admin\render_settings_page();
@@ -54,6 +55,11 @@ class SettingsTest extends TestCase {
 			[
 				'id'    => 'wp101-settings-api-key-display',
 			],
+			$output
+		);
+
+		$this->assertRegExp(
+			'/\<code\>' . preg_quote( substr( $key, 0, 4 ) ) . '(&#9679;)+\<\/code\>/',
 			$output
 		);
 

@@ -10,6 +10,20 @@ use WP101\TemplateTags as TemplateTags;
 
 $api_key = TemplateTags\get_api_key();
 
+/*
+ * Mask the API key, showing only the first four characters.
+ *
+ * The rest should be replaced with "&#9679;", a Unicode black circle.
+ *
+ * Masked keys will look something like: "ABCD●●●●●●●●●●●●●●●●●●●●●●●●●●●●".
+ */
+$masked = str_pad(
+	substr( $api_key, 0, 4 ),
+	4 + 7 * ( strlen( $api_key ) - 4 ),
+	'&#9679;',
+	STR_PAD_RIGHT
+);
+
 ?>
 
 <div class="wrap wp101-settings">
@@ -59,7 +73,7 @@ $api_key = TemplateTags\get_api_key();
 					<label for="wp101-api-key"><?php esc_html_e( 'API key', 'wp101' ); ?></label>
 				</th>
 				<td>
-					<code><?php echo esc_html( $api_key ); ?></code>
+					<code><?php echo esc_html( $masked ); ?></code>
 					<?php if ( ! defined( 'WP101_API_KEY' ) ) : ?>
 						<button id="wp101-settings-replace-api-key" class="button" style="vertical-align: baseline;"><?php esc_html_e( 'Replace my API Key', 'wp101' ); ?></button>
 					<?php endif; ?>
