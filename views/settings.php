@@ -46,7 +46,7 @@ $masked = str_pad(
 
 	<?php else : ?>
 
-		<div id="wp101-settings-api-key-form" <?php echo ( $api_key ) ? 'class="hide-if-js"' : ''; ?>>
+		<div id="wp101-settings-api-key-form" <?php echo ! empty( $api_key ) ? 'class="hide-if-js"' : ''; ?>>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'wp101' ); ?>
 
@@ -65,7 +65,7 @@ $masked = str_pad(
 
 	<?php endif; ?>
 
-	<?php if ( $api_key ) : ?>
+	<?php if ( ! empty( $api_key ) ) : ?>
 
 		<div id="wp101-settings-api-key-display">
 			<table class="form-table">
