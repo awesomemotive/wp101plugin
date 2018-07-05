@@ -85,6 +85,36 @@ class ApiTest extends TestCase {
 		$this->assertTrue( $api->has_api_key() );
 	}
 
+	public function test_get_account() {
+		$json = [
+			'status' => 'success',
+			'data'   => [
+				'publicKey' => uniqid(),
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( $json ),
+		] );
+
+		$this->assertEquals(
+			$json['data'],
+			API::get_instance()->get_account(),
+			'The account node should be returned.'
+		);
+	}
+
+	public function test_get_account_suppresses_wp_errors() {
+		$this->set_expected_response( function () {
+			return new WP_Error( 'msg' );
+		} );
+
+		$this->assertEmpty(
+			API::get_instance()->get_account(),
+			'If an error occurs, get_account() should return an empty array.'
+		);
+	}
+
 	public function test_get_public_api_key() {
 		$this->assertFalse( get_option( API::PUBLIC_API_KEY_OPTION ) );
 

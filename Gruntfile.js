@@ -60,7 +60,8 @@ module.exports = function(grunt) {
 						'assets/js/src/addons.js'
 					],
 					'assets/js/wp101-admin.min.js': [
-						'assets/js/src/playlist.js'
+						'assets/js/src/playlist.js',
+						'assets/js/src/settings.js'
 					]
 				}
 			}

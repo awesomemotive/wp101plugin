@@ -112,12 +112,27 @@ class API {
 	}
 
 	/**
+	 * Retrieve an *uncached* response from the /account endpoint.
+	 *
+	 * @return array An array of all account attributes or an empty array if no account was found.
+	 */
+	public function get_account() {
+		$response = $this->send_request( 'GET', '/account' );
+
+		if ( is_wp_error( $response ) ) {
+			return [];
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Retrieve the public API key from WP101.
 	 *
 	 * Public API keys are generated on a per-domain basis by the WP101 API, and thus are safe for
 	 * using client-side without fear of compromising the private key.
 	 *
-	 * @return string The public API key.
+	 * @return string|WP_Error The public API key or any WP_Error that occurred.
 	 */
 	public function get_public_api_key() {
 		$public_key = get_option( self::PUBLIC_API_KEY_OPTION );

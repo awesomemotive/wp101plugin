@@ -16,7 +16,28 @@ use WP101\API;
 class SettingsTest extends TestCase {
 
 	public function test_shows_api_key_form() {
-		$key = $this->set_api_key();
+		$this->set_api_key( '' );
+
+		ob_start();
+		Admin\render_settings_page();
+		$output = ob_get_clean();
+
+		$this->assertContainsSelector( '#wp101-settings-api-key-form', $output );
+		$this->assertNotContainsSelector( '#wp101-settings-api-key-display', $output );
+		$this->assertHasElementWithAttributes(
+			[
+				'name'  => 'wp101_api_key',
+				'id'    => 'wp101-api-key',
+			],
+			$output
+		);
+
+		$this->assertEquals( 1, did_action( 'admin_notices' ) );
+	}
+
+	public function test_hides_api_key_form_if_already_set() {
+		$key    = $this->set_api_key();
+		$masked = substr( $key, 0, 4 );
 
 		ob_start();
 		Admin\render_settings_page();
@@ -24,10 +45,21 @@ class SettingsTest extends TestCase {
 
 		$this->assertHasElementWithAttributes(
 			[
-				'name'  => 'wp101_api_key',
-				'id'    => 'wp101-api-key',
-				'value' => $key,
+				'id'    => 'wp101-settings-api-key-form',
+				'class' => 'hide-if-js',
 			],
+			$output
+		);
+
+		$this->assertHasElementWithAttributes(
+			[
+				'id'    => 'wp101-settings-api-key-display',
+			],
+			$output
+		);
+
+		$this->assertRegExp(
+			'/\<code\>' . preg_quote( substr( $key, 0, 4 ) ) . '(&#9679;)+\<\/code\>/',
 			$output
 		);
 
@@ -46,6 +78,7 @@ class SettingsTest extends TestCase {
 
 		$this->assertContainsSelector( '#wp101-api-key-set-via-constant-notice', $output );
 		$this->assertNotContainsSelector( '#wp101-api-key', $output );
+		$this->assertNotContainsSelector(' #wp101-settings-replace-api-key', $output );
 	}
 
 	public function test_public_key_is_cleared_when_private_key_changes() {
