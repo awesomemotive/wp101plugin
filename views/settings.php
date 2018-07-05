@@ -31,7 +31,7 @@ $masked = str_pad(
 
 	<?php settings_errors(); ?>
 
-	<h2 id="api-key"><?php echo esc_html( _x( 'WP101Plugin.com API Key', 'settings section heading', 'wp101' ) ); ?></h2>
+	<h2 id="api-key"><?php echo esc_html_x( 'WP101Plugin.com API Key', 'settings section heading', 'wp101' ); ?></h2>
 	<p><?php esc_html_e( 'Your API key enables your WordPress site to connect to WP101 and retrieve all of your videos.', 'wp101' ); ?></p>
 	<p><strong><?php esc_html_e( 'Don\'t have an API key?', 'wp101' ); ?></strong></p>
 	<p><a href="https://wp101plugin.com" class="button" target="_blank"><?php esc_html_e( 'Get your key now!', 'wp101' ); ?></a></p>
