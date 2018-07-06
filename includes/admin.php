@@ -212,9 +212,6 @@ function render_listings_page() {
 function render_settings_page() {
 	Migrate\maybe_migrate();
 
-	/** This action is documented in wp-admin/admin-header.php. */
-	do_action( 'admin_notices' );
-
 	include WP101_VIEWS . '/settings.php';
 }
 
