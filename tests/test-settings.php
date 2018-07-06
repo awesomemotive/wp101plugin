@@ -31,8 +31,6 @@ class SettingsTest extends TestCase {
 			],
 			$output
 		);
-
-		$this->assertEquals( 1, did_action( 'admin_notices' ) );
 	}
 
 	public function test_hides_api_key_form_if_already_set() {
@@ -62,8 +60,6 @@ class SettingsTest extends TestCase {
 			'/\<code\>' . preg_quote( substr( $key, 0, 4 ) ) . '(&#9679;)+\<\/code\>/',
 			$output
 		);
-
-		$this->assertEquals( 1, did_action( 'admin_notices' ) );
 	}
 
 	/**
