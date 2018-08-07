@@ -15,9 +15,9 @@ namespace WP101\Deprecated;
  * @param string $version The plugin version in which the feature was deprecated.
  */
 function mark_deprecated( $feature, $message, $version ) {
-	// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped
+	// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
 	return _doing_it_wrong( $feature, $message, $version );
-	// phpcs:enable
+	// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**

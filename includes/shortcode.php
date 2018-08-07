@@ -99,6 +99,7 @@ function render_shortcode_single( $topic ) {
 	];
 
 	ob_start();
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<figure class="wp101-video">
@@ -113,7 +114,7 @@ function render_shortcode_single( $topic ) {
 		</figcaption>
 	</figure>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 	$output = ob_get_clean();
 
 	/**
@@ -141,6 +142,7 @@ function render_shortcode_playlist( $series ) {
 	];
 
 	ob_start();
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<section class="wp101-video-grid">
@@ -163,7 +165,7 @@ function render_shortcode_playlist( $series ) {
 		</div>
 	</section>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 	$output = ob_get_clean();
 
 	/**

@@ -117,13 +117,14 @@ add_action( 'current_screen', __NAMESPACE__ . '\show_notifications' );
  * @param array  $slug    An array of one or more add-on slugs, to be flattened into a data attribute.
  */
 function render_notification( $message, $slug ) {
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<div class="notice notice-info is-dismissible" data-wp101-addon-slug="<?php echo esc_attr( implode( ',', (array) $slug ) ); ?>">
 		<p><?php echo wp_kses_post( $message ); ?></p>
 	</div>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
 
 /**
