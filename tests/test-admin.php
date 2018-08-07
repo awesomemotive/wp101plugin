@@ -82,7 +82,13 @@ class AdminTest extends TestCase {
 		] ) );
 
 		$api = $this->mock_api();
-		$api->set_api_key( md5( uniqid() ) );
+		$api->shouldReceive( 'get_playlist' )
+			->once()
+			->andReturn( [
+				'series' => [
+					'some series',
+				],
+			] );
 		$api->shouldReceive( 'get_addons' )
 			->once()
 			->andReturn( [
@@ -110,12 +116,17 @@ class AdminTest extends TestCase {
 	/**
 	 * If an API key hasn't been set, only the WP101 Settings page should be shown.
 	 */
-	public function test_register_menu_pages_hides_listings_if_no_api_key_is_set() {
+	public function test_register_menu_pages_hides_listings_if_listings_are_available() {
 		wp_set_current_user( $this->factory()->user->create( [
 			'role' => 'administrator',
 		] ) );
 
-		$this->set_api_key( '' );
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_playlist' )
+			->once()
+			->andReturn( [
+				'series' => [],
+			] );
 
 		$menu = $this->get_menu_items();
 
@@ -128,7 +139,12 @@ class AdminTest extends TestCase {
 		] ) );
 
 		$api = $this->mock_api();
-		$api->set_api_key( md5( uniqid() ) );
+		$api->shouldReceive( 'get_playlist' )
+			->andReturn( [
+				'series' => [
+					'some series',
+				],
+			] );
 		$api->shouldReceive( 'get_addons' )
 			->once()
 			->andReturn( [

@@ -69,8 +69,10 @@ function get_addon_capability() {
  */
 function register_menu_pages() {
 
-	// If the API key hasn't been configured, *only* show the settings page.
-	if ( ! TemplateTags\api()->has_api_key() ) {
+	// If we can't retrieve a playlist, *only* show the settings page.
+	$playlist = TemplateTags\api()->get_playlist();
+
+	if ( empty( $playlist['series'] ) ) {
 		return add_menu_page(
 			_x( 'WP101', 'page title', 'wp101' ),
 			_x( 'Video Tutorials', 'menu title', 'wp101' ),
