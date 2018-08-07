@@ -166,9 +166,7 @@ class API {
 		$response = $this->send_request( 'GET', '/add-ons', [], [], 12 * HOUR_IN_SECONDS );
 
 		if ( is_wp_error( $response ) ) {
-			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
-			// phpcs:enable
+			$this->handle_error( $response, E_USER_WARNING );
 
 			return [
 				'addons' => [],
@@ -209,9 +207,7 @@ class API {
 		$response = $this->send_request( 'GET', '/playlist' );
 
 		if ( is_wp_error( $response ) ) {
-			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
-			// phpcs:enable
+			$this->handle_error( $response, E_USER_WARNING );
 
 			return [
 				'series' => [],
@@ -430,6 +426,18 @@ class API {
 		}
 
 		return $body['data'];
+	}
+
+	/**
+	 * Trigger an error and optionally block subsequent API requests.
+	 *
+	 * @param WP_Error $error The WP_Error object.
+	 * @param string   $level Optional. The PHP E_USER_* error level. Default is E_USER_WARNING.
+	 */
+	protected function handle_error( $error, $level = E_USER_WARNING ) {
+		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+		trigger_error( esc_html( $error->get_error_message() ), $level );
+		// phpcs:enable
 	}
 
 	/**

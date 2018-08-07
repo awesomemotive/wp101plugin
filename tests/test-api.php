@@ -7,6 +7,7 @@
 
 namespace WP101\Tests;
 
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\Error\Warning;
 use ReflectionProperty;
 use WP_Error;
@@ -691,6 +692,28 @@ class ApiTest extends TestCase {
 			$method->invoke( $api, 'GET', '/test-endpoint' ),
 			'Did not receive expected response from send_request().'
 		);
+	}
+
+	/**
+	 * @testWith ["some message", "warning"]
+	 *           ["some other message", "warning"]
+	 *           ["some message", "error"]
+	 */
+	public function test_handle_error( $message, $level ) {
+		$error  = new WP_Error( 'test', $message );
+		$api    = Api::get_instance();
+		$method = $this->get_accessible_method( $api, 'handle_error' );
+
+		try {
+			$method->invoke($api, $error, constant( 'E_USER_' . strtoupper( $level ) ) );
+		} catch ( Error $e ) {
+			$this->assertInstanceOf( '\PHPUnit\Framework\Error\\' . ucwords( $level ), $e );
+			$this->assertContains( $message, $e->getMessage() );
+
+			return;
+		}
+
+		$this->fail( 'Did not receive expected exception' );
 	}
 
 	public function test_send_request_checks_response_status() {
