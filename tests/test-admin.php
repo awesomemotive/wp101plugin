@@ -34,7 +34,12 @@ class AdminTest extends TestCase {
 	/**
 	 * Ensure that WP101 assets are only enqueued on WP101 pages.
 	 *
-	 * @dataProvider enqueue_hook_provider()
+	 * @testWith ["some-hook", false]
+	 *           ["wp101", true]
+	 *           ["toplevel_page_wp101", true]
+	 *           ["video-tutorials_page_wp101-settings", true]
+	 *           ["video-tutorials_page_wp101-addons", true]
+	 *           ["random-wp101", true]
 	 *
 	 * @param string $hook     The hook to be executed.
 	 * @param bool   $enqueued Whether or not the assets should be enqueued for this hook.
@@ -42,20 +47,12 @@ class AdminTest extends TestCase {
 	public function test_enqueue_scripts_enqueues_on_wp101_pages( $hook, bool $enqueued ) {
 		Admin\enqueue_scripts( $hook );
 
-		$this->assertEquals( $enqueued, wp_style_is( 'wp101-admin', 'enqueued' ) );
-		$this->assertEquals( $enqueued, wp_script_is( 'wp101-admin', 'enqueued' ) );
-	}
+		$this->assertSame( $enqueued, wp_style_is( 'wp101-admin', 'enqueued' ) );
+		$this->assertSame( $enqueued, wp_script_is( 'wp101-admin', 'enqueued' ) );
 
-	/**
-	 * Data provider for test_enqueue_scripts_enqueues_on_wp101_pages().
-	 */
-	public function enqueue_hook_provider() {
-		return [
-			'Generic page'   => [ 'some-hook', false ],
-			'WP101 listings' => [ 'toplevel_page_wp101', true ],
-			'WP101 settings' => [ 'video-tutorials_page_wp101-settings', true ],
-			'WP101 add-ons'  => [ 'video-tutorials_page_wp101-addons', true ],
-		];
+		if ( $enqueued ) {
+			$this->assertSame( 10, has_action( 'admin_notices', 'WP101\Admin\display_api_errors' ) );
+		}
 	}
 
 	public function test_get_addon_capability() {
