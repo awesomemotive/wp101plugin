@@ -21,7 +21,18 @@
 	 */
 	function getCurrentTopic() {
 		var hash = window.location.hash.substring(1),
-			topic = document.querySelector('a[data-media-slug="' + hash + '"]');
+			topic;
+
+		if (! hash && window.sessionStorage.wp101CurrentVideo) {
+			hash = window.sessionStorage.wp101CurrentVideo;
+
+			// Attempt to update the hash via the history API.
+			if (window.history) {
+				window.history.replaceState(history.state, '', '#' + hash);
+			}
+		}
+
+		topic = document.querySelector('a[data-media-slug="' + hash + '"]');
 
 		return topic || document.querySelector('.wp101-topics-list a');
 	}
@@ -46,6 +57,9 @@
 
 		player.src = el.dataset.mediaSrc;
 		title.innerText = el.dataset.mediaTitle;
+
+		// Store the latest video in sessionStorage.
+		window.sessionStorage.wp101CurrentVideo = el.dataset.mediaSlug;
 	}
 
 	// Detect changes to window.location.hash.
