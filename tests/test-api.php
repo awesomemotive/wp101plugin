@@ -9,7 +9,6 @@ namespace WP101\Tests;
 
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\Error\Warning;
-use ReflectionProperty;
 use WP_Error;
 use WP101\API;
 use WP101_Plugin;
@@ -30,7 +29,7 @@ class ApiTest extends TestCase {
 		$api = API::get_instance();
 		$key = md5( uniqid() );
 
-		$prop = new ReflectionProperty( $api, 'api_key' );
+		$prop = new \ReflectionProperty( $api, 'api_key' );
 		$prop->setAccessible( true );
 		$prop->setValue( $api, $key );
 
@@ -694,6 +693,22 @@ class ApiTest extends TestCase {
 		);
 	}
 
+	public function test_send_request_checks_response_status() {
+		$api    = API::get_instance();
+		$method = $this->get_accessible_method( $api, 'send_request' );
+
+		$response = $this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status'  => 'fail',
+				'data'    => [
+					'apiKey' => 'Invalid API key.',
+				],
+			] ),
+		] );
+
+		$this->assertTrue( is_wp_error( $method->invoke( $api, 'GET', '/test-endpoint' ) ) );
+	}
+
 	/**
 	 * @testWith ["some message", "warning"]
 	 *           ["some other message", "warning"]
@@ -714,22 +729,6 @@ class ApiTest extends TestCase {
 		}
 
 		$this->fail( 'Did not receive expected exception' );
-	}
-
-	public function test_send_request_checks_response_status() {
-		$api    = API::get_instance();
-		$method = $this->get_accessible_method( $api, 'send_request' );
-
-		$response = $this->set_expected_response( [
-			'body' => wp_json_encode( [
-				'status'  => 'fail',
-				'data'    => [
-					'apiKey' => 'Invalid API key.',
-				],
-			] ),
-		] );
-
-		$this->assertTrue( is_wp_error( $method->invoke( $api, 'GET', '/test-endpoint' ) ) );
 	}
 
 	/**
