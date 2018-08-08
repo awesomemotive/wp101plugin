@@ -87,32 +87,35 @@ function wp_config_requires_updating() {
  * Display a notification when an automatic migration has succeeded.
  */
 function render_migration_success_notice() {
+	// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<div id="wp101-api-key-upgraded" class="notice notice-success">
 		<p><?php esc_html_e( 'WP101 has automatically upgraded your API key to work with the latest version!', 'wp101' ); ?></p>
 	</div>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
 
 /**
  * Display a notification when an automatic migration has failed.
  */
 function render_migration_failure_notice() {
+	// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<div id="wp101-api-key-upgrade-failed" class="notice notice-error">
 		<p><?php esc_html_e( 'WP101 was unable to automatically migrate your API key for the latest version.', 'wp101' ); ?></p>
 	</div>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
 
 /**
  * Display a notification when the WP101_API_KEY constant in wp-config.php needs updating.
  */
 function render_constant_upgrade_notice() {
+	// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<div id="wp101-api-key-constant-upgrade-notice" class="notice notice-warning">
@@ -132,13 +135,14 @@ function render_constant_upgrade_notice() {
 			<li><?php esc_html_e( 'Save the wp-config.php file on your web server.', 'wp101' ); ?></li>
 	</div>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
 
 /**
  * Display a notification when the WP101_API_KEY constant in wp-config.php is blocking progress.
  */
 function render_constant_empty_notice() {
+	// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 
 	<div id="wp101-api-key-constant-empty-notice" class="notice notice-warning">
@@ -157,5 +161,5 @@ function render_constant_empty_notice() {
 			<li><?php esc_html_e( 'Save the wp-config.php file on your web server.', 'wp101' ); ?></li>
 	</div>
 
-<?php
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }

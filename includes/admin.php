@@ -42,9 +42,11 @@ function enqueue_scripts( $hook ) {
 	);
 
 	// Only enqueue on WP101 pages.
-	if ( 'toplevel_page_wp101' === $hook || preg_match( '/^video-tutorials_page_wp101/', $hook ) ) {
+	if ( false !== strpos( $hook, 'wp101' ) ) {
 		wp_enqueue_style( 'wp101-admin' );
 		wp_enqueue_script( 'wp101-admin' );
+
+		add_action( 'admin_notices', __NAMESPACE__ . '\display_api_errors' );
 	}
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
@@ -69,8 +71,10 @@ function get_addon_capability() {
  */
 function register_menu_pages() {
 
-	// If the API key hasn't been configured, *only* show the settings page.
-	if ( ! TemplateTags\api()->has_api_key() ) {
+	// If we can't retrieve a playlist, *only* show the settings page.
+	$playlist = TemplateTags\api()->get_playlist();
+
+	if ( empty( $playlist['series'] ) ) {
 		return add_menu_page(
 			_x( 'WP101', 'page title', 'wp101' ),
 			_x( 'Video Tutorials', 'menu title', 'wp101' ),
@@ -252,4 +256,22 @@ function is_relevant_series( $series ) {
 	$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
 
 	return ! empty( $restrictions );
+}
+
+/**
+ * Inject admin notices from the API into WP Admin, but only on WP101 pages.
+ */
+function display_api_errors() {
+	$api = TemplateTags\api();
+
+	foreach ( $api->get_errors() as $error ) {
+		// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+?>
+
+	<div class="notice notice-error">
+		<p><?php echo wp_kses_post( $error->get_error_message() ); ?></p>
+	</div>
+
+<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+	}
 }

@@ -7,8 +7,6 @@
 
 namespace WP101\Tests;
 
-use PHPUnit\Framework\Error\Warning;
-use ReflectionProperty;
 use WP_Error;
 use WP101\API;
 use WP101_Plugin;
@@ -29,7 +27,7 @@ class ApiTest extends TestCase {
 		$api = API::get_instance();
 		$key = md5( uniqid() );
 
-		$prop = new ReflectionProperty( $api, 'api_key' );
+		$prop = new \ReflectionProperty( $api, 'api_key' );
 		$prop->setAccessible( true );
 		$prop->setValue( $api, $key );
 
@@ -83,6 +81,16 @@ class ApiTest extends TestCase {
 		$this->set_api_key();
 
 		$this->assertTrue( $api->has_api_key() );
+	}
+
+	public function test_get_errors() {
+		$errors = [ 'foo' => new WP_Error( 'foo', uniqid() ) ];
+		$api    = API::get_instance();
+		$prop   = new \ReflectionProperty( $api, 'errors' );
+		$prop->setAccessible( true );
+		$prop->setValue( $api, $errors );
+
+		$this->assertSame( $errors, $api->get_errors() );
 	}
 
 	public function test_get_account() {
@@ -190,8 +198,6 @@ class ApiTest extends TestCase {
 		$this->set_expected_response( function () {
 			return new WP_Error( 'code', 'some message' );
 		} );
-
-		$this->expectException( Warning::class );
 
 		$this->assertEquals(
 			[
@@ -306,8 +312,6 @@ class ApiTest extends TestCase {
 		$this->set_expected_response( function () {
 			return new WP_Error( 'code', 'some message' );
 		} );
-
-		$this->expectException( Warning::class );
 
 		$this->assertEquals( [ 'series' => [] ], API::get_instance()->get_playlist() );
 	}
@@ -707,6 +711,40 @@ class ApiTest extends TestCase {
 		] );
 
 		$this->assertTrue( is_wp_error( $method->invoke( $api, 'GET', '/test-endpoint' ) ) );
+	}
+
+	public function test_handle_error() {
+		$api    = Api::get_instance();
+		$method = $this->get_accessible_method( $api, 'handle_error' );
+		$prop   = new \ReflectionProperty( $api, 'errors' );
+		$prop->setAccessible( true );
+		$error1 = new WP_Error( 'test1', 'Foo' );
+		$error2 = new WP_Error( 'test2', 'Bar' );
+
+		$this->assertEmpty( $prop->getValue( $api ) );
+
+		$method->invoke( $api, $error1 );
+		$method->invoke( $api, $error2 );
+
+		$this->assertContains( $error1, $prop->getValue( $api ) );
+		$this->assertContains( $error2, $prop->getValue( $api ) );
+	}
+
+	public function test_handle_error_overwrites_for_duplicates() {
+		$api    = Api::get_instance();
+		$method = $this->get_accessible_method( $api, 'handle_error' );
+		$prop   = new \ReflectionProperty( $api, 'errors' );
+		$prop->setAccessible( true );
+		$error1 = new WP_Error( 'test', 'Foo' );
+		$error2 = new WP_Error( 'test', 'Bar' );
+
+		$this->assertEmpty( $prop->getValue( $api ) );
+
+		$method->invoke( $api, $error1 );
+		$method->invoke( $api, $error2 );
+
+		$this->assertNotContains( $error1, $prop->getValue( $api ) );
+		$this->assertContains( $error2, $prop->getValue( $api ) );
 	}
 
 	/**

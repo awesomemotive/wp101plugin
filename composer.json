@@ -48,7 +48,7 @@
     "stevegrunwell/phpunit-markup-assertions": "^1.0",
     "stevegrunwell/runkit7-installer": "^1.0",
     "wimg/php-compatibility": "^8.1",
-    "wp-coding-standards/wpcs": "^0.14.1"
+    "wp-coding-standards/wpcs": "^1.0.0"
   },
   "config": {
     "preferred-install": "dist",

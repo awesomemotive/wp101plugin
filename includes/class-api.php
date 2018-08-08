@@ -19,6 +19,13 @@ class API {
 	protected $api_key;
 
 	/**
+	 * A roll-up of any and all API errors that have occurred.
+	 *
+	 * @var array
+	 */
+	protected $errors = [];
+
+	/**
 	 * The Singleton instance.
 	 *
 	 * @var API
@@ -112,6 +119,15 @@ class API {
 	}
 
 	/**
+	 * Retrieve any API errors that have occurred.
+	 *
+	 * @return array An array of WP_Error objects.
+	 */
+	public function get_errors() {
+		return $this->errors;
+	}
+
+	/**
 	 * Retrieve an *uncached* response from the /account endpoint.
 	 *
 	 * @return array An array of all account attributes or an empty array if no account was found.
@@ -166,9 +182,7 @@ class API {
 		$response = $this->send_request( 'GET', '/add-ons', [], [], 12 * HOUR_IN_SECONDS );
 
 		if ( is_wp_error( $response ) ) {
-			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
-			// phpcs:enable
+			$this->handle_error( $response );
 
 			return [
 				'addons' => [],
@@ -209,9 +223,7 @@ class API {
 		$response = $this->send_request( 'GET', '/playlist' );
 
 		if ( is_wp_error( $response ) ) {
-			// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( esc_html( $response->get_error_message() ), E_USER_WARNING );
-			// phpcs:enable
+			$this->handle_error( $response );
 
 			return [
 				'series' => [],
@@ -430,6 +442,15 @@ class API {
 		}
 
 		return $body['data'];
+	}
+
+	/**
+	 * Trigger an error and optionally block subsequent API requests.
+	 *
+	 * @param WP_Error $error The WP_Error object.
+	 */
+	protected function handle_error( $error ) {
+		$this->errors[ $error->get_error_code() ] = $error;
 	}
 
 	/**
