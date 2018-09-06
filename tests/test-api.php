@@ -124,7 +124,7 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_public_api_key() {
-		$this->assertFalse( get_option( API::PUBLIC_API_KEY_OPTION ) );
+		$this->assertFalse( get_transient( API::PUBLIC_API_KEY_OPTION ) );
 
 		$json = [
 			'status' => 'success',
@@ -144,13 +144,13 @@ class ApiTest extends TestCase {
 			$key,
 			'The public API should be determined by the WP101 API.'
 		);
-		$this->assertEquals( $key, get_option( API::PUBLIC_API_KEY_OPTION ) );
+		$this->assertEquals( $key, get_transient( API::PUBLIC_API_KEY_OPTION ) );
 	}
 
-	public function test_get_public_api_key_returns_from_options_table_if_populated() {
+	public function test_get_public_api_key_returns_from_transients_if_populated() {
 		$key = uniqid();
 
-		update_option( API::PUBLIC_API_KEY_OPTION, $key );
+		set_transient( API::PUBLIC_API_KEY_OPTION, $key, 0 );
 
 		$this->assertEquals( $key, API::get_instance()->get_public_api_key() );
 	}
@@ -227,7 +227,7 @@ class ApiTest extends TestCase {
 	public function test_get_addons_updates_add_on_urls() {
 		$api_key = uniqid();
 
-		update_option( API::PUBLIC_API_KEY_OPTION, $api_key );
+		set_transient( API::PUBLIC_API_KEY_OPTION, $api_key );
 		$this->set_expected_response([
 			'body' => wp_json_encode( [
 				'status' => 'success',

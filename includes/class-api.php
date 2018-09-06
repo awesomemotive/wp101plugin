@@ -42,7 +42,14 @@ class API {
 	const API_URL = 'https://app.wp101plugin.com/api';
 
 	/**
-	 * Option key for the site's public API key.
+	 * Option key for the site's (private) API key.
+	 *
+	 * @var string
+	 */
+	const API_KEY_OPTION = 'wp101_api_key';
+
+	/**
+	 * Transient key for the site's public API key.
 	 *
 	 * @var string
 	 */
@@ -96,7 +103,7 @@ class API {
 		if ( defined( 'WP101_API_KEY' ) ) {
 			$this->api_key = WP101_API_KEY;
 		} else {
-			$this->api_key = get_option( 'wp101_api_key', null );
+			$this->api_key = get_option( self::API_KEY_OPTION, null );
 		}
 
 		return $this->api_key;
@@ -151,7 +158,7 @@ class API {
 	 * @return string|WP_Error The public API key or any WP_Error that occurred.
 	 */
 	public function get_public_api_key() {
-		$public_key = get_option( self::PUBLIC_API_KEY_OPTION );
+		$public_key = get_transient( self::PUBLIC_API_KEY_OPTION );
 
 		if ( $public_key ) {
 			return $public_key;
@@ -168,7 +175,7 @@ class API {
 
 		$public_key = $response['publicKey'];
 
-		update_option( self::PUBLIC_API_KEY_OPTION, $public_key, false );
+		set_transient( self::PUBLIC_API_KEY_OPTION, $public_key, 0 );
 
 		return $public_key;
 	}

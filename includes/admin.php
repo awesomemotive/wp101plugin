@@ -223,7 +223,7 @@ function render_settings_page() {
  * Flush the public key after saving the private key.
  */
 function clear_public_api_key() {
-	delete_option( API::PUBLIC_API_KEY_OPTION );
+	delete_transient( API::PUBLIC_API_KEY_OPTION );
 
 	// Prime the cache with the new public + private keys.
 	$api = TemplateTags\api();
