@@ -17,12 +17,11 @@ class UninstallTest extends TestCase {
 
 	public function test_uninstall_script_clears_known_options() {
 		$options = array(
-			'wp101_api_key',
+			API::API_KEY_OPTION,
 			'wp101_db_version',
 			'wp101_hidden_topics',
 			'wp101_custom_topics',
 			'wp101_admin_restriction',
-			API::PUBLIC_API_KEY_OPTION,
 		);
 
 		foreach ( $options as $option ) {
@@ -41,6 +40,7 @@ class UninstallTest extends TestCase {
 
 	public function test_uninstall_script_clears_known_transients() {
 		$transients = array(
+			API::PUBLIC_API_KEY_OPTION,
 			'wp101_topics',
 			'wp101_jetpack_topics',
 			'wp101_woocommerce_topics',
