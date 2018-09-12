@@ -15,7 +15,14 @@ use WP101\Uninstall as Uninstall;
  */
 class UninstallTest extends TestCase {
 
-	public function test_uninstall_script_clears_known_options() {
+	public function test_deactivation_hook_registered() {
+		$this->assertEquals( 10, has_action(
+			'deactivate_' . substr( dirname( __DIR__ ) . '/wp101.php', 1 ),
+			'WP101\\Uninstall\\clear_caches'
+		), 'Expected to see clear_caches called on plugin deactivation.' );
+	}
+
+	public function test_uninstall_plugin() {
 		$options = array(
 			API::API_KEY_OPTION,
 			'wp101_db_version',
@@ -28,17 +35,17 @@ class UninstallTest extends TestCase {
 			add_option( $option, uniqid() );
 		}
 
-		Uninstall\cleanup_plugin();
+		Uninstall\uninstall_plugin();
 
 		foreach ( $options as $option ) {
 			$this->assertEmpty(
 				get_option( $option ),
-				"Option '$option' was not removed along with the plugin"
+				"Option '$option' was not removed along with the plugin."
 			);
 		}
 	}
 
-	public function test_uninstall_script_clears_known_transients() {
+	public function test_clear_caches() {
 		$transients = array(
 			API::PUBLIC_API_KEY_OPTION,
 			'wp101_topics',
@@ -54,12 +61,12 @@ class UninstallTest extends TestCase {
 			set_transient( $transient, uniqid() );
 		}
 
-		Uninstall\cleanup_plugin();
+		Uninstall\clear_caches();
 
 		foreach ( $transients as $transient ) {
 			$this->assertEmpty(
 				get_transient( $transient ),
-				"Transient '$transient' was not cleared along with the plugin"
+				"Transient '$transient' was not cleared."
 			);
 		}
 	}

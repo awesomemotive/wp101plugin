@@ -41,6 +41,11 @@ if ( ! defined( 'DISABLE_NAG_NOTICES' ) || ! DISABLE_NAG_NOTICES ) {
 register_activation_hook( __FILE__, 'WP101\Migrate\maybe_migrate' );
 
 /**
+ * When the plugin is deactivated, flush caches.
+ */
+register_deactivation_hook( __FILE__, 'WP101\Uninstall\clear_caches' );
+
+/**
  * Register the uninstall callback.
  */
-register_uninstall_hook( __FILE__, 'WP101\Uninstall\cleanup_plugin' );
+register_uninstall_hook( __FILE__, 'WP101\Uninstall\uninstall_plugin' );
