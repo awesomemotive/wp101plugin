@@ -46,7 +46,7 @@
     "mockery/mockery": "^1.0",
     "phpunit/phpunit": "^6.5",
     "stevegrunwell/phpunit-markup-assertions": "^1.0",
-    "stevegrunwell/runkit7-installer": "^1.0",
+    "stevegrunwell/runkit7-installer": "^1.1.0",
     "wimg/php-compatibility": "^8.1",
     "wp-coding-standards/wpcs": "^1.0.0"
   },
@@ -55,7 +55,7 @@
     "sort-packages": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.0"
+      "php": "7.1"
     }
   }
 }
