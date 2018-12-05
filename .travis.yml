@@ -10,14 +10,20 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
+php:
+  - 7.3
+  - 7.2
+  - 7.1
+  - 7.0
+
+env:
+  - WP_VERSION=latest
+
 matrix:
   include:
-    - php: 7.1
+    - php: nightly
       env: WP_VERSION=trunk
-    - php: 7.1
-      env: WP_VERSION=latest
-    - php: 7.0
-      env: WP_VERSION=latest
+      name: Nightly builds
 
 install:
   - |
