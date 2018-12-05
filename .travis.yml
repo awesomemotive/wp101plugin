@@ -20,10 +20,11 @@ env:
   - WP_VERSION=latest
 
 matrix:
+  fast_finish: true
   include:
     - php: nightly
       env: WP_VERSION=trunk
-      name: Nightly builds
+      name: Nightly builds (PHP & WordPress)
 
 install:
   - |
