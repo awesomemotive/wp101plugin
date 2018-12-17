@@ -206,17 +206,20 @@ class API {
 		// Append the public API key to add-on URLs.
 		$api_key = $this->get_public_api_key();
 
-		array_walk( $response['addons'], function ( &$addon ) use ( $api_key ) {
-			$addon['url']                = add_query_arg( 'apiKey', $api_key, $addon['url'] );
-			$addon['meets_requirements'] = true;
+		array_walk(
+			$response['addons'],
+			function ( &$addon ) use ( $api_key ) {
+				$addon['url']                = add_query_arg( 'apiKey', $api_key, $addon['url'] );
+				$addon['meets_requirements'] = true;
 
-			// Does the current site configuration meet requirements?
-			if ( ! empty( $addon['restrictions']['plugins'] ) ) {
-				$requirements = array_filter( $addon['restrictions']['plugins'], 'is_plugin_active' );
+				// Does the current site configuration meet requirements?
+				if ( ! empty( $addon['restrictions']['plugins'] ) ) {
+					$requirements = array_filter( $addon['restrictions']['plugins'], 'is_plugin_active' );
 
-				$addon['meets_requirements'] = ! empty( $requirements );
+					$addon['meets_requirements'] = ! empty( $requirements );
+				}
 			}
-		} );
+		);
 
 		return $response;
 	}
@@ -318,36 +321,39 @@ class API {
 			return new WP_Error( 'wp101-api', __( 'Cannot exchange an empty API key.', 'wp101' ) );
 		}
 
-		$response = wp_remote_post( $this->build_uri( '/key-exchange' ), [
-			'timeout'    => 30,
-			'user-agent' => self::USER_AGENT,
-			'body'       => [
-				'apiKey'       => $api_key,
-				'domain'       => site_url(),
+		$response = wp_remote_post(
+			$this->build_uri( '/key-exchange' ),
+			[
+				'timeout'    => 30,
+				'user-agent' => self::USER_AGENT,
+				'body'       => [
+					'apiKey'       => $api_key,
+					'domain'       => site_url(),
 
-				/**
-				 * Pass along custom topics to the key exchange, enabling these to be created
-				 * within WP101 automatically.
-				 *
-				 * @deprecated 5.0.0
-				 *
-				 * @param array $custom_topics An array of custom WP101 topics.
-				 */
-				'customTopics' => apply_filters( 'wp101_get_custom_help_topics', get_option( 'wp101_custom_topics' ) ),
+					/**
+					 * Pass along custom topics to the key exchange, enabling these to be created
+					 * within WP101 automatically.
+					 *
+					 * @deprecated 5.0.0
+					 *
+					 * @param array $custom_topics An array of custom WP101 topics.
+					 */
+					'customTopics' => apply_filters( 'wp101_get_custom_help_topics', get_option( 'wp101_custom_topics' ) ),
 
-				/**
-				 * Filter legacy WP101 topic IDs.
-				 *
-				 * This filter was available in WP101 4.x and below, and is only being applied so
-				 * that hidden topics are preserved during the API key exchange process.
-				 *
-				 * @deprecated 5.0.0
-				 *
-				 * @param array $topic_ids An array of WP101 topics that should be hidden.
-				 */
-				'hiddenTopics' => apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ) ),
-			],
-		] );
+					/**
+					 * Filter legacy WP101 topic IDs.
+					 *
+					 * This filter was available in WP101 4.x and below, and is only being applied so
+					 * that hidden topics are preserved during the API key exchange process.
+					 *
+					 * @deprecated 5.0.0
+					 *
+					 * @param array $topic_ids An array of WP101 topics that should be hidden.
+					 */
+					'hiddenTopics' => apply_filters( 'wp101_get_hidden_topics', get_option( 'wp101_hidden_topics' ) ),
+				],
+			]
+		);
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -409,15 +415,18 @@ class API {
 	 */
 	protected function send_request( $method, $path, $query = [], $args = [], $cache = 0 ) {
 		$uri       = $this->build_uri( $path, $query );
-		$args      = wp_parse_args( $args, [
-			'timeout'    => 30,
-			'user-agent' => self::USER_AGENT,
-			'headers'    => [
-				'Authorization'    => 'Bearer ' . $this->get_api_key(),
-				'Method'           => $method,
-				'X-Forwarded-Host' => site_url(),
-			],
-		] );
+		$args      = wp_parse_args(
+			$args,
+			[
+				'timeout'    => 30,
+				'user-agent' => self::USER_AGENT,
+				'headers'    => [
+					'Authorization'    => 'Bearer ' . $this->get_api_key(),
+					'Method'           => $method,
+					'X-Forwarded-Host' => site_url(),
+				],
+			]
+		);
 		$cache_key = self::generate_cache_key( $uri, $args );
 		$cached    = get_transient( $cache_key );
 

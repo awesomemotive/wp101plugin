@@ -80,33 +80,39 @@ function show_notifications( $screen ) {
 	}
 
 	// Register the callback to render the notification.
-	add_action( 'admin_notices', function () use ( $available ) {
-		$links = [];
+	add_action(
+		'admin_notices',
+		function () use ( $available ) {
+			$links = [];
 
-		foreach ( (array) $available as $addon ) {
-			$links[] = sprintf( '<strong><a href="%1$s" target="_blank">%2$s</a></strong>', $addon['url'], $addon['title'] );
-		}
-
-		// Flatten the $links array into a single string.
-		if ( 1 === count( $links ) ) {
-			$link = array_shift( $links );
-		} else {
-			$and  = array_pop( $links );
-			$link = implode( _x( ', ', 'separator for multiple series in a sentence', 'wp101' ), $links );
-			if ( 2 <= count( $links ) ) {
-				$link .= _x( ',', 'Oxford comma', 'wp101' );
+			foreach ( (array) $available as $addon ) {
+				$links[] = sprintf( '<strong><a href="%1$s" target="_blank">%2$s</a></strong>', $addon['url'], $addon['title'] );
 			}
-			$link .= _x( ' and ', 'separator between the last two items in a list', 'wp101' ) . $and;
+
+			// Flatten the $links array into a single string.
+			if ( 1 === count( $links ) ) {
+				$link = array_shift( $links );
+			} else {
+				$and  = array_pop( $links );
+				$link = implode( _x( ', ', 'separator for multiple series in a sentence', 'wp101' ), $links );
+				if ( 2 <= count( $links ) ) {
+					$link .= _x( ',', 'Oxford comma', 'wp101' );
+				}
+				$link .= _x( ' and ', 'separator between the last two items in a list', 'wp101' ) . $and;
+			}
+
+			wp_enqueue_script( 'wp101-addons' );
+
+			render_notification(
+				sprintf(
+					/* Translators: %1$s is the add-on title(s). */
+					__( 'Would you like to add the tutorial videos for %1$s from WP101?', 'wp101' ),
+					$link
+				),
+				array_keys( $available )
+			);
 		}
-
-		wp_enqueue_script( 'wp101-addons' );
-
-		render_notification( sprintf(
-			/* Translators: %1$s is the add-on title(s). */
-			__( 'Would you like to add the tutorial videos for %1$s from WP101?', 'wp101' ),
-			$link
-		), array_keys( $available ) );
-	} );
+	);
 }
 add_action( 'current_screen', __NAMESPACE__ . '\show_notifications' );
 
@@ -139,9 +145,13 @@ function register_scripts() {
 		true
 	);
 
-	wp_localize_script( 'wp101-addons', 'wp101Addons', [
-		'nonce' => wp_create_nonce( 'dismiss-notice' ),
-	] );
+	wp_localize_script(
+		'wp101-addons',
+		'wp101Addons',
+		[
+			'nonce' => wp_create_nonce( 'dismiss-notice' ),
+		]
+	);
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\register_scripts' );
 
@@ -154,10 +164,12 @@ function dismiss_notice() {
 	}
 
 	$user_id   = get_current_user_id();
-	$dismissed = array_filter( array_merge(
-		(array) get_user_meta( $user_id, 'wp101-dismissed-notifications', true ),
-		(array) $_POST['addons']
-	) );
+	$dismissed = array_filter(
+		array_merge(
+			(array) get_user_meta( $user_id, 'wp101-dismissed-notifications', true ),
+			(array) $_POST['addons']
+		)
+	);
 
 	update_user_meta( $user_id, 'wp101-dismissed-notifications', array_unique( array_values( $dismissed ) ) );
 

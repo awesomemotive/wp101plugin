@@ -65,11 +65,13 @@ $addons     = $api->get_addons();
 			<p>
 				<?php
 				if ( current_user_can( 'manage_options' ) ) {
-					echo wp_kses_post( sprintf(
-						/* Translators: %1$s is the "WP101 Settings" admin page. */
-						__( '<a href="%1$s">Please verify your API key</a> and ensure your WP101plugin.com account has access to the desired content.', 'wp101' ),
-						esc_url( menu_page_url( 'wp101-settings', false ) )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							/* Translators: %1$s is the "WP101 Settings" admin page. */
+							__( '<a href="%1$s">Please verify your API key</a> and ensure your WP101plugin.com account has access to the desired content.', 'wp101' ),
+							esc_url( menu_page_url( 'wp101-settings', false ) )
+						)
+					);
 				} else {
 					esc_html_e( 'Please contact a site administrator for further assistance.', 'wp101' );
 				}

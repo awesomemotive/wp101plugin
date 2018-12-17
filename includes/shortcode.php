@@ -36,10 +36,14 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts_styles' );
  * @return string The rendered shortcode content.
  */
 function render_shortcode( $atts ) {
-	$atts = shortcode_atts( [
-		'series' => null,
-		'video'  => null,
-	], $atts, 'wp101' );
+	$atts = shortcode_atts(
+		[
+			'series' => null,
+			'video'  => null,
+		],
+		$atts,
+		'wp101'
+	);
 	$api  = TemplateTags\api();
 
 	if ( ! $api->account_can( 'embed-on-front-end' ) ) {
@@ -56,11 +60,13 @@ function render_shortcode( $atts ) {
 		$series = TemplateTags\get_series( $atts['series'] );
 
 		if ( false === $series ) {
-			return shortcode_debug( sprintf(
-				/* Translators: %1$s is the series slug. */
-				__( 'Series "%1$s" was not found.', 'wp101' ),
-				$atts['series']
-			) );
+			return shortcode_debug(
+				sprintf(
+					/* Translators: %1$s is the series slug. */
+					__( 'Series "%1$s" was not found.', 'wp101' ),
+					$atts['series']
+				)
+			);
 		}
 
 		return render_shortcode_playlist( $series );
@@ -69,11 +75,13 @@ function render_shortcode( $atts ) {
 		$topic = TemplateTags\get_topic( $atts['video'] );
 
 		if ( false === $topic ) {
-			return shortcode_debug( sprintf(
-				/* Translators: %1$s is the video slug. */
-				__( 'Video "%1$s" was not found.', 'wp101' ),
-				$atts['video']
-			) );
+			return shortcode_debug(
+				sprintf(
+					/* Translators: %1$s is the video slug. */
+					__( 'Video "%1$s" was not found.', 'wp101' ),
+					$atts['video']
+				)
+			);
 		}
 
 		return render_shortcode_single( $topic );
