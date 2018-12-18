@@ -29,9 +29,13 @@ function enqueue_scripts_styles() {
 		true
 	);
 
-	wp_localize_script( 'wp101', 'wp101', [
-		'apiKey' => api()->get_public_api_key(),
-	] );
+	wp_localize_script(
+		'wp101',
+		'wp101',
+		[
+			'apiKey' => api()->get_public_api_key(),
+		]
+	);
 }
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts_styles' );
@@ -137,9 +141,11 @@ function list_topics( $topics, $limit = 0, $link = null ) {
 	}
 
 	if ( ! empty( $items ) ) {
-		echo wp_kses_post( sprintf(
-			'<ol class="wp101-addon-topic-list">%s</ol>',
-			implode( '', $items )
-		) );
+		echo wp_kses_post(
+			sprintf(
+				'<ol class="wp101-addon-topic-list">%s</ol>',
+				implode( '', $items )
+			)
+		);
 	}
 }

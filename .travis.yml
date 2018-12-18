@@ -10,23 +10,45 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
+php:
+  - 7.3
+  - 7.2
+  - 7.1
+  - 7.0
+
+env:
+  - WP_VERSION=latest
+  - WP_VERSION=4.9.9
+
 matrix:
+  fast_finish: true
   include:
-    - php: 7.1
+    - name: Coding Standards
+      php: 7.2
+      env: WP_VERSION=latest RUN_PHPCS=1
+    - name: Bleeding Edge
+      php: nightly
       env: WP_VERSION=trunk
-    - php: 7.1
-      env: WP_VERSION=latest
-    - php: 7.0
-      env: WP_VERSION=latest
+  exclude:
+    # WordPress < 5.0 doesn't officially support PHP 7.3
+    - php: 7.3
+      env: WP_VERSION=4.9.9
+  allow_failures:
+    - name: Bleeding Edge
+      php: nightly
+      env: WP_VERSION=trunk
+
 
 install:
-  - |
-    wget https://github.com/runkit7/runkit7/releases/download/1.0.5b1/runkit-1.0.5b1.tgz &&
-    pecl install runkit-1.0.5b1.tgz
   - composer install --prefer-dist
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+  - sh vendor/bin/install-runkit.sh
 
 script:
-  - WP_MULTISITE=0 ./vendor/bin/phpunit
-  - WP_MULTISITE=1 ./vendor/bin/phpunit
-  - ./vendor/bin/phpcs --standard=phpcs.xml ./
+  - |
+    if [[ ${RUN_PHPCS} ]]; then
+      ./vendor/bin/phpcs
+    else
+      WP_MULTISITE=0 ./vendor/bin/phpunit
+      WP_MULTISITE=1 ./vendor/bin/phpunit
+    fi

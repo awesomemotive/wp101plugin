@@ -124,11 +124,13 @@ function render_constant_upgrade_notice() {
 			<li><?php esc_html_e( 'Open your site\'s wp-config.php file in a text editor.', 'wp101' ); ?></li>
 			<li>
 				<?php
-					echo wp_kses_post( sprintf(
-						/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
-						__( 'Find the line that reads %1$s and either remove it completely or replace it with the following:', 'wp101' ),
-						sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
+							__( 'Find the line that reads %1$s and either remove it completely or replace it with the following:', 'wp101' ),
+							sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
+						)
+					);
 				?>
 				<pre><code>define( 'WP101_API_KEY', '<?php echo esc_html( TemplateTags\get_api_key() ); ?>' );</code></pre>
 			</li>
@@ -151,11 +153,13 @@ function render_constant_empty_notice() {
 			<li><?php esc_html_e( 'Open your site\'s wp-config.php file in a text editor.', 'wp101' ); ?></li>
 			<li>
 				<?php
-					echo wp_kses_post( sprintf(
-						/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
-						__( 'Find the line that reads %1$s and either remove it completely or set the value to your WP101 Plugin API key.', 'wp101' ),
-						sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							/* Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );" in wp-config.php. */
+							__( 'Find the line that reads %1$s and either remove it completely or set the value to your WP101 Plugin API key.', 'wp101' ),
+							sprintf( "<code>define( 'WP101_API_KEY', '%s' );</code>", WP101_API_KEY )
+						)
+					);
 				?>
 			</li>
 			<li><?php esc_html_e( 'Save the wp-config.php file on your web server.', 'wp101' ); ?></li>

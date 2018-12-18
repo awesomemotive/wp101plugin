@@ -140,11 +140,15 @@ add_action( 'plugin_action_links_' . WP101_BASENAME, __NAMESPACE__ . '\plugin_se
  * Register the settings within WordPress.
  */
 function register_settings() {
-	register_setting( 'wp101', 'wp101_api_key', [
-		'description'       => _x( 'The key used to authenticate with WP101plugin.com.', 'wp101' ),
-		'sanitize_callback' => __NAMESPACE__ . '\sanitize_api_key',
-		'show_in_rest'      => false,
-	] );
+	register_setting(
+		'wp101',
+		'wp101_api_key',
+		[
+			'description'       => _x( 'The key used to authenticate with WP101plugin.com.', 'wp101' ),
+			'sanitize_callback' => __NAMESPACE__ . '\sanitize_api_key',
+			'show_in_rest'      => false,
+		]
+	);
 }
 add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
 
@@ -162,17 +166,22 @@ function sanitize_api_key( $key ) {
 
 	// If the key is valid, inform the user.
 	if ( $api->get_account() ) {
-		add_settings_error( 'wp101', 'api_key', sprintf(
+		add_settings_error(
+			'wp101',
+			'api_key',
+			sprintf(
 
-			/*
-			 * Translators: %1$s is a confirmation message, %2$s is the playlist page URL, and %3$s
-			 * is the link anchor text.
-			 */
-			'%1$s <a href="%2$s">%3$s</a>',
-			esc_html__( 'Your API key ready to go:', 'wp101' ),
-			esc_attr( get_admin_url( null, 'admin.php?page=wp101' ) ),
-			esc_html__( 'start watching video tutorials!', 'wp101' )
-		), 'updated' );
+				/*
+				 * Translators: %1$s is a confirmation message, %2$s is the playlist page URL, and %3$s
+				 * is the link anchor text.
+				 */
+				'%1$s <a href="%2$s">%3$s</a>',
+				esc_html__( 'Your API key ready to go:', 'wp101' ),
+				esc_attr( get_admin_url( null, 'admin.php?page=wp101' ) ),
+				esc_html__( 'start watching video tutorials!', 'wp101' )
+			),
+			'updated'
+		);
 	} else {
 		add_settings_error( 'wp101', 'api_key', __( 'Invalid API key!', 'wp101' ), 'error' );
 		$key = '';
