@@ -14,6 +14,7 @@ delete_option( 'wp101_admin_restriction' );
 
 // Delete Transients
 delete_transient( 'wp101_topics' );
+delete_transient( 'wp101_wpclassic_topics' );
 delete_transient( 'wp101_jetpack_topics' );
 delete_transient( 'wp101_woocommerce_topics' );
 delete_transient( 'wp101_wpseo_topics' );

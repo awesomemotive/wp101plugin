@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP101
 Description: A complete set of video tutorials for WordPress, Jetpack, WooCommerce, and Yoast SEO, delivered directly in the dashboard.
-Version: 4.1
+Version: 4.2
 Author: WP101Plugin.com
 Author URI: https://wp101plugin.com/
 Text Domain: wp101
@@ -76,8 +76,8 @@ class WP101_Plugin {
 	public function includes() {
 		do_action( 'wp101_pre_includes', self::$instance );
 
+		include_once 'integrations/class.wpclassic.php';
 		include_once 'integrations/class.jetpack.php';
-		include_once 'integrations/class.mailpoet.php';
 		include_once 'integrations/class.woocommerce.php';
 		include_once 'integrations/class.wpseo.php';
 	}
@@ -657,7 +657,7 @@ class WP101_Plugin {
 		});
 		</script>
 		<div id="wp101-topic-listing" class="accordion">
-			<h3><?php _e( 'WordPress Tutorials', 'wp101' ); ?></h3>
+			<h3><?php _e( 'WordPress Tutorial Videos', 'wp101' ); ?></h3>
 			<?php
 				echo $pages;
 				do_action( 'wp101_after_help_topics', self::$instance );
