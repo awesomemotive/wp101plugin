@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
-Tested up to: 5.0.2
-Stable tag: 4.2
+Tested up to: 5.0.3
+Stable tag: 4.2.1
 
 The WordPress 101 video tutorials are all-new for Gutenberg and Wordpress 5.0! Watch videos directly within the dashboard. Choose which videos to show, or add your own.
 
@@ -161,6 +161,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 2. The configuration interface, where you can enter your API key, hide videos from the list, or even add your own custom videos.
 
 == Changelog ==
+= 4.2.1 =
+* In addition to whether or not the Classic Editor plugin is installed and activated, this minor fix also checks to see if filters are being used to disable Gutenberg. If so, display the previous version of our WordPress 101 videos instead of the new videos for Gutenberg and 5.0. Thanks, Cliff Seal!
+
 = 4.2 =
 * Re-added the old WordPress 101 videos for the Classic Editor, provided that plugin is also installed and activated.
 * Added function `get_wpclassic_topics`
@@ -265,6 +268,9 @@ _Note: All code examples are using anonymous functions, which work in PHP 5.3+. 
 * First version!
 
 == Upgrade Notice ==
+= 4.2.1 =
+* In addition to whether or not the Classic Editor plugin is installed and activated, this minor fix also checks to see if filters are being used to disable Gutenberg. If so, display the previous version of our WordPress 101 videos instead of the new videos for Gutenberg and 5.0. Thanks, Cliff Seal!
+
 = 4.2 =
 * Re-added the previous WordPress 101 videos for the Classic Editor in WordPress 4.9 or older, provided the Classic Editor plugin is also installed and activated.
 
