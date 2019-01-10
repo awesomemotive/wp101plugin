@@ -141,7 +141,7 @@ class WP101_Classic_Videos {
 add_action( 'plugins_loaded', 'wp101_maybe_activate_wpclassic_videos' );
 
 function wp101_maybe_activate_wpclassic_videos() {
-	if ( class_exists( 'Classic_Editor' ) ) {
+	if ( class_exists( 'Classic_Editor' ) || false !== has_filter( 'use_block_editor_for_post', '__return_false' ) || false !== has_filter( 'gutenberg_can_edit_post_type', '__return_false' ) ) {
 		return new WP101_Classic_Videos;
 	}
 }
