@@ -29,7 +29,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts_styles' );
  * @param array $atts {
  *   Shortcode attributes.
  *
- *   @var string $series The series slug, to display a whole list of videos. Takes precedence over
+ *   @var string $course The course slug, to display a whole list of videos. Takes precedence over
  *                       a single video slug.
  *   @var string $video  The video/topic slug.
  * }
@@ -38,7 +38,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\register_scripts_styles' );
 function render_shortcode( $atts ) {
 	$atts = shortcode_atts(
 		[
-			'series' => null,
+			'course' => null,
 			'video'  => null,
 		],
 		$atts,
@@ -56,15 +56,15 @@ function render_shortcode( $atts ) {
 	// Load the requisite files.
 	wp_enqueue_style( 'wp101' );
 
-	if ( $atts['series'] ) {
-		$series = TemplateTags\get_series( $atts['series'] );
+	if ( $atts['course'] ) {
+		$series = TemplateTags\get_series( $atts['course'] );
 
 		if ( false === $series ) {
 			return shortcode_debug(
 				sprintf(
 					/* Translators: %1$s is the series slug. */
-					__( 'Series "%1$s" was not found.', 'wp101' ),
-					$atts['series']
+					__( 'Course "%1$s" was not found.', 'wp101' ),
+					$atts['course']
 				)
 			);
 		}
@@ -87,7 +87,7 @@ function render_shortcode( $atts ) {
 		return render_shortcode_single( $topic );
 	}
 
-	return shortcode_debug( __( 'No WP101 series or video were specified.', 'wp101' ) );
+	return shortcode_debug( __( 'No WP101 courses or video were specified.', 'wp101' ) );
 }
 add_shortcode( 'wp101', __NAMESPACE__ . '\render_shortcode' );
 
