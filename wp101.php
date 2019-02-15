@@ -3,7 +3,7 @@
  * Plugin Name: WP101
  * Plugin URI:  https://wp101plugin.com
  * Description: A complete set of video tutorials for WordPress, Jetpack, WooCommerce, and Yoast SEO, delivered directly in the dashboard.
- * Version:     5.0-dev
+ * Version:     5.0.0-dev
  * Author:      WP101
  * Author URI:  https://wp101.com
  * Text Domain: wp101
