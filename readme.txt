@@ -3,22 +3,24 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks,
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Requires PHP: 5.4
-Tested up to: 4.9.5
-Stable tag: 4.1
+Tested up to: 5.1
+Stable tag: 4.2.1
 
-A complete set of WordPress, Jetpack, WooCommerce, and Yoast SEO tutorial videos directly within the dashboard. Choose which videos to show, or add your own!
+The WordPress 101 video tutorials are all-new for Gutenberg and Wordpress 5.0! Watch videos directly within the dashboard. Choose which videos to show, or add your own.
 
 == Description ==
 
+**Yes! Our WordPress 101 tutorial videos have been updated for the all-new block editor in WordPress 5.0!**
+
 The WP101 Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your client’s dashboard!
 
-The WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, Yoast SEO, and MailPoet, provided those plugins are also installed on the site. Videos for other popular plugins are in the works.
+Plus, the WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
 You can choose which tutorial videos are shown, and even embed your own custom videos!
 
-Stop wasting your valuable time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
+Stop wasting time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
 
 == Installation ==
 
@@ -41,13 +43,17 @@ Yes! You can selectively hide or show individual tutorial videos (or entire cour
 
 Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the ["Custom Videos" page in the [WP101Plugin.com app](https://app.wp101plugin.com/custom-topics).
 
-= Where are the Jetpack, WooCommerce, Yoast SEO, or MailPoet videos? =
+= What if I have the Classic Editor installed? =
 
-The tutorial videos for Jetpack, WooCommerce, Yoast SEO, and MailPoet will only appear in the list if the plugin in question is also installed and activated on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+If the Classic Editor plugin is also installed and activated on your site, the previous version of our WordPress 101 videos for the Classic Editor in WordPress 4.9 and older will also appear in the list. You can hide or show these videos in the Settings.
+
+= Why aren’t the Jetpack, WooCommerce, or Yoast SEO videos showing up? =
+
+The tutorial videos for Jetpack, WooCommerce, and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
-No sweat! Just go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
+You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
@@ -60,7 +66,7 @@ Yes! Simply define the `WP101_API_KEY` constant within your `wp-config` file:
 	 */
 	define( 'WP101_API_KEY', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
 
-= I've been using the WP101 Plugin for some time now — will upgrading to 5.x break my site? =
+= I've been using the WP101 Plugin for some time now — will upgrading to 5.x break my site? =
 
 We've made every effort to ensure a smooth transition to version 5.x of the WP101 plugin from earlier versions:
 
@@ -84,6 +90,15 @@ For a complete list of changes, please see [the plugin's GitHub repository](http
 
 = 5.0.0 =
 * We’ve completely redesigned the WP101 Plugin from the ground-up, adding brand new features and improving the entire experience.
+
+= 4.2.1 =
+* In addition to whether or not the Classic Editor plugin is installed and activated, this minor fix also checks to see if filters are being used to disable Gutenberg. If so, display the previous version of our WordPress 101 videos instead of the new videos for Gutenberg and 5.0. Thanks, Cliff Seal!
+
+= 4.2 =
+* Re-added the previous WordPress 101 videos for the Classic Editor in WordPress 4.9 or older, provided the Classic Editor plugin is also installed and activated.
+
+= 4.1 =
+* Brand new WordPress 101 video tutorial series, completely rewritten for the all-new Gutenberg Block Editor in WordPress 5.0!
 
 = 4.1 =
 * We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.

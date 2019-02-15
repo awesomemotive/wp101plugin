@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Complete rewrite of the plugin and backing APIs to bring even more content to the WP101 plugin.
 * Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
 
+## 4.2.1
+* In addition to whether or not the Classic Editor plugin is installed and activated, this minor fix also checks to see if filters are being used to disable Gutenberg. If so, display the previous version of our WordPress 101 videos instead of the new videos for Gutenberg and 5.0. Thanks, Cliff Seal!
+
+## 4.2
+* Re-added the old WordPress 101 videos for the Classic Editor, provided that plugin is also installed and activated.
+* Added function `get_wpclassic_topics`
+
 ## 4.1
-* We’ve added videos for the MailPoet plugin, provided that plugin is installed and activated.
+* Brand new WordPress 101 video tutorial series, completely rewritten for the all-new Gutenberg Block Editor in WordPress 5.0!
 
 ## 4.0.2
 * Return the ‘plugin_action_links_’ filter argument in all cases. Previously, it was only returned if the authorization check succeeded, causing errors in some edge-cases.
