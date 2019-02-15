@@ -18,7 +18,7 @@ class ShortcodeTest extends TestCase {
 		);
 	}
 
-	public function test_can_show_series() {
+	public function test_can_show_course() {
 		wp_set_current_user( $this->factory()->user->create() );
 		Shortcode\register_scripts_styles();
 
@@ -39,13 +39,13 @@ class ShortcodeTest extends TestCase {
 
 		$this->assertNotEmpty(
 			Shortcode\render_shortcode( [
-				'series' => 'test-series',
+				'course' => 'test-series',
 			] )
 		);
 		$this->assertTrue( wp_style_is( 'wp101', 'enqueued' ), 'Expected the styles to be enqueued.' );
 	}
 
-	public function test_handles_missing_series() {
+	public function test_handles_missing_course() {
 		wp_set_current_user( $this->factory()->user->create() );
 
 		$post = $this->factory()->post->create( [
@@ -60,7 +60,7 @@ class ShortcodeTest extends TestCase {
 
 		$this->assertEmpty(
 			Shortcode\render_shortcode( [
-				'series' => 'test-series',
+				'course' => 'test-series',
 			] )
 		);
 	}
@@ -114,7 +114,7 @@ class ShortcodeTest extends TestCase {
 		);
 	}
 
-	public function test_gives_precedence_to_series_over_videos() {
+	public function test_gives_precedence_to_courses_over_videos() {
 		wp_set_current_user( $this->factory()->user->create() );
 		$post = $this->factory()->post->create( [
 			'post_status' => 'private',
@@ -134,7 +134,7 @@ class ShortcodeTest extends TestCase {
 
 		$this->assertNotEmpty(
 			Shortcode\render_shortcode( [
-				'series' => 'test-series',
+				'course' => 'test-series',
 				'video'  => 'test-topic',
 			] )
 		);
