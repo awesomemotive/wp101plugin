@@ -28,6 +28,25 @@
 	}
 }
 
+.wp101-addon-tag {
+	position: relative;
+	top: -1px;
+	display: inline-block;
+	margin-left: .6em;
+	padding: .3em .4em;
+	font-size: .65em;
+	line-height: 1;
+	text-transform: lowercase;
+	vertical-align: middle;
+	text-shadow: 0 0 1px #777;
+	border-radius: 2px;
+
+	&.subscribed {
+		color: #fff;
+		background: #008758;
+	}
+}
+
 .wp101-addon-description {
 	p:first-child {
 		margin-top: 0;
