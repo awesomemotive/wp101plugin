@@ -35,7 +35,12 @@ use WP101\TemplateTags as TemplateTags;
 				<?php $has_addon = isset( $addon['slug'] ) && in_array( $addon['slug'], $purchased, true ); ?>
 
 				<div class="card wp101-addon">
-					<h2><?php echo esc_html( $addon['title'] ); ?></h2>
+					<h2>
+						<?php echo esc_html( $addon['title'] ); ?>
+						<?php if ( $has_addon ) : ?>
+							<span class="wp101-addon-tag subscribed"><?php esc_html_e( 'Subscribed', 'wp101' ); ?></span>
+						<?php endif; ?>
+					</h2>
 					<?php if ( ! empty( $addon['excerpt'] ) ) : ?>
 						<div class="wp101-addon-description">
 							<?php echo wp_kses_post( wpautop( $addon['excerpt'] ) ); ?>
@@ -49,7 +54,12 @@ use WP101\TemplateTags as TemplateTags;
 
 					<?php if ( $has_addon && ! empty( $addon['meets_requirements'] ) ) : ?>
 						<p class="wp101-addon-button">
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary"><?php echo esc_html_e( 'Watch Videos', 'wp101' ); ?></a>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=wp101' ) ); ?>" class="button button-secondary">
+								<?php
+									/* Translators: %1$s is the add-on name. */
+									echo esc_html( sprintf( __( 'Watch %1$s Videos', 'wp101' ), $addon['title'] ) );
+								?>
+							</a>
 						</p>
 
 					<?php elseif ( $has_addon ) : ?>
@@ -59,7 +69,12 @@ use WP101\TemplateTags as TemplateTags;
 
 					<?php elseif ( ! empty( $addon['url'] ) ) : ?>
 						<p class="wp101-addon-button">
-							<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank"><?php echo esc_html_e( 'Get Add-on', 'wp101' ); ?></a>
+							<a href="<?php echo esc_url( $addon['url'] ); ?>" class="button button-primary" target="_blank">
+								<?php
+									/* Translators: %1$s is the add-on name. */
+									echo esc_html( sprintf( __( 'Get the %1$s Add-on', 'wp101' ), $addon['title'] ) );
+								?>
+							</a>
 						</p>
 					<?php endif; ?>
 				</div>
