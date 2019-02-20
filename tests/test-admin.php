@@ -7,6 +7,7 @@
 
 namespace WP101\Tests;
 
+use WP_Error;
 use WP101\Admin as Admin;
 use WP101\API as API;
 
@@ -301,6 +302,22 @@ class AdminTest extends TestCase {
 
 		$this->assertNotContains( get_admin_url( null, 'admin.php?page=wp101' ), $output );
 		$this->assertContains( 'notice-info', $output );
+	}
+
+	/**
+	 * @testWith ["wp101-no-api-key"]
+	 * @link https://github.com/liquidweb/wp101plugin/issues/67
+	 */
+	public function test_special_wp_errors_are_skipped_in_error_output( $code ) {
+		$api    = API::get_instance();
+		$method = $this->get_accessible_method( $api, 'handle_error' );
+		$method->invoke( $api, new WP_Error( $code, 'My error message' ) );
+
+		ob_start();
+		Admin\display_api_errors();
+		$output = ob_get_clean();
+
+		$this->assertNotContains( 'My error message', $output );
 	}
 
 	/**

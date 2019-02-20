@@ -183,7 +183,7 @@ function sanitize_api_key( $key ) {
 			'updated'
 		);
 	} else {
-		add_settings_error( 'wp101', 'api_key', __( 'Invalid API key!', 'wp101' ), 'error' );
+		add_settings_error( 'wp101', 'api_key', __( 'This API key is either invalid or has reached its maximum number of domains.', 'wp101' ), 'error' );
 		$key = '';
 	}
 
@@ -271,9 +271,16 @@ function is_relevant_series( $series ) {
  * Inject admin notices from the API into WP Admin, but only on WP101 pages.
  */
 function display_api_errors() {
-	$api = TemplateTags\api();
+	$api  = TemplateTags\api();
+	$skip = [
+		'wp101-no-api-key',
+	];
 
 	foreach ( $api->get_errors() as $error ) {
+		if ( in_array( $error->get_error_code(), $skip, true ) ) {
+			continue;
+		}
+
 		// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 ?>
 

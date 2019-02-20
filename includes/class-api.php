@@ -414,6 +414,15 @@ class API {
 	 * @return array|WP_Error The HTTP response body or a WP_Error object if something went wrong.
 	 */
 	protected function send_request( $method, $path, $query = [], $args = [], $cache = 0 ) {
+		$api_key = $this->get_api_key();
+
+		if ( empty( $api_key ) ) {
+			return new WP_Error(
+				'wp101-no-api-key',
+				__( 'No API key has been set, unable to make request.', 'wp101' )
+			);
+		}
+
 		$uri       = $this->build_uri( $path, $query );
 		$args      = wp_parse_args(
 			$args,
@@ -421,7 +430,7 @@ class API {
 				'timeout'    => 30,
 				'user-agent' => self::USER_AGENT,
 				'headers'    => [
-					'Authorization'    => 'Bearer ' . $this->get_api_key(),
+					'Authorization'    => 'Bearer ' . $api_key,
 					'Method'           => $method,
 					'X-Forwarded-Host' => site_url(),
 				],

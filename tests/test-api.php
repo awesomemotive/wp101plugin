@@ -16,6 +16,12 @@ use WP101_Plugin;
  */
 class ApiTest extends TestCase {
 
+	public function setUp() {
+		parent::setUp();
+
+		$this->set_api_key( 'default-api-key' );
+	}
+
 	public function tearDown() {
 		parent::tearDown();
 
@@ -65,20 +71,24 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_clear_api_key() {
-		$api = API::get_instance();
+		$api  = API::get_instance();
+		$prop = new \ReflectionProperty( $api, 'api_key' );
+		$prop->setAccessible( true );
 
 		$api->set_api_key( md5( uniqid() ) );
 		$api->clear_api_key();
 
-		$this->assertNull( $api->get_api_key() );
+		$this->assertNull( $prop->getValue( $api ) );
 	}
 
 	public function test_has_api_key() {
 		$api = API::get_instance();
 
+		delete_option( 'wp101_api_key' );
+
 		$this->assertFalse( $api->has_api_key() );
 
-		$this->set_api_key();
+		$this->set_api_key( 'some-api-key' );
 
 		$this->assertTrue( $api->has_api_key() );
 	}
@@ -695,6 +705,21 @@ class ApiTest extends TestCase {
 			$method->invoke( $api, 'GET', '/test-endpoint' ),
 			'Did not receive expected response from send_request().'
 		);
+	}
+
+	/**
+	 * @link https://github.com/liquidweb/wp101plugin/issues/67
+	 */
+	public function test_send_request_aborts_if_no_api_key_is_set() {
+		$api    = API::get_instance();
+		$method = $this->get_accessible_method( $api, 'send_request' );
+
+		$this->set_api_key( '' );
+
+		$response = $method->invoke( $api, 'GET', '/test-endpoint' );
+
+		$this->assertTrue( is_wp_error( $response ) );
+		$this->assertSame( 'wp101-no-api-key', $response->get_error_code() );
 	}
 
 	public function test_send_request_checks_response_status() {
