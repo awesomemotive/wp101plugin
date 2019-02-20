@@ -183,7 +183,7 @@ function sanitize_api_key( $key ) {
 			'updated'
 		);
 	} else {
-		add_settings_error( 'wp101', 'api_key', __( 'Invalid API key!', 'wp101' ), 'error' );
+		add_settings_error( 'wp101', 'api_key', __( 'This API key is either invalid or has reached its maximum number of domains.', 'wp101' ), 'error' );
 		$key = '';
 	}
 
