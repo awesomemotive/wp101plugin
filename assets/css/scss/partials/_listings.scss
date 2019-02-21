@@ -1,0 +1,75 @@
+/**
+ * Styles for the listing page.
+ *
+ * @package WP101
+ */
+
+.wp101-playlist {
+	box-sizing: border-box;
+
+	.wp101-series {
+		h2 {
+			position: relative;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			line-height: 1.4;
+			border-bottom: 1px solid #ddd;
+		}
+	}
+
+	// Styling for the accordion indicator.
+	.ui-accordion-header {
+		padding-right: 26px;
+		cursor: pointer;
+
+		&:hover, &:focus, &:active {
+			.ui-accordion-header-icon {
+				color: inherit;
+			}
+		}
+
+		&.ui-state-active {
+			.ui-accordion-header-icon {
+				&:before {
+					content: '\f142';
+				}
+			}
+		}
+	}
+
+	.ui-accordion-header-icon {
+		position: absolute;
+		left: auto;
+		right: 0;
+		font: normal 20px/1 dashicons;
+		color: #72777c;
+
+		&:before {
+			content: '\f140';
+		}
+	}
+}
+
+.wp101-topics-list {
+	.active {
+		font-weight: bold;
+		text-decoration: none;
+		color: inherit;
+	}
+}
+
+.wp101-addon-notice {
+	border-top: 1px solid #ddd;
+}
+
+@media (min-width: 1028px) {
+	.wp101-media {
+		float: right;
+		width: calc(100% - 300px);
+	}
+
+	.wp101-playlist {
+		float: left;
+		width: 280px;
+	}
+}

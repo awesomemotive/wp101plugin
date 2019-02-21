@@ -1,0 +1,58 @@
+/**
+ * Styles for the add-ons page.
+ *
+ * @package WP101
+ */
+
+.wp101-addon-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin-top: -20px;
+	margin-right: -20px;
+
+	.card {
+		display: flex;
+		flex-wrap: nowrap;
+		flex-direction: column;
+		justify-content: flex-start;
+		margin-right: 20px;
+	}
+
+	.wp101-addon-button, .notice {
+		align-self: flex-end;
+		margin-top: auto;
+	}
+
+	ol {
+		margin-top: 0;
+	}
+}
+
+.wp101-addon-tag {
+	position: relative;
+	top: -1px;
+	display: inline-block;
+	margin-left: .6em;
+	padding: .3em .4em;
+	font-size: .65em;
+	line-height: 1;
+	text-transform: lowercase;
+	vertical-align: middle;
+	text-shadow: 0 0 1px #777;
+	border-radius: 2px;
+
+	&.subscribed {
+		color: #fff;
+		background: #008758;
+	}
+}
+
+.wp101-addon-description {
+	p:first-child {
+		margin-top: 0;
+	}
+}
+
+.wp101-addon-more-topics {
+	list-style: none;
+}
