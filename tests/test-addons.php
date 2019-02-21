@@ -168,6 +168,46 @@ class AddonTest extends TestCase {
 		}
 	}
 
+	/**
+	 * If an add-on has been subscribed to but the 'update_option_active_plugins' hasn't been
+	 * fired, the add-on may still exist in the 'wp101-available-series' option.
+	 *
+	 * @link https://github.com/liquidweb/wp101plugin/issues/70
+	 */
+	public function test_show_notifications_does_not_include_subscribed_addons() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'has_api_key' )
+			->andReturn( true );
+		$api->shouldReceive( 'get_playlist' )
+			->once()
+			->andReturn( [
+				'series' => [
+					[
+						'slug' => 'learning-some-plugin',
+					],
+				],
+			] );
+
+		wp_set_current_user( $this->factory()->user->create( [
+			'role' => 'administrator',
+		] ) );
+
+		update_option( 'wp101-available-series', [
+			'learning-some-plugin' => [
+				'title'  => 'Learning Some Plugin',
+				'url'    => '#',
+				'plugin' => 'some-plugin/some-plugin.php',
+			],
+		] );
+
+		ob_start();
+		Addons\show_notifications( WP_Screen::get( 'plugins' ) );
+		do_action( 'admin_notices' );
+		$output = ob_get_clean();
+
+		$this->assertEmpty( $output );
+	}
+
 	public function notification_page_provider() {
 		return [
 			'Plugins page'        => [ 'plugins', true ],

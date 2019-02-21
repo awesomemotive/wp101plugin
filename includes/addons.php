@@ -67,12 +67,16 @@ function show_notifications( $screen ) {
 		return;
 	}
 
-	// Get the dismissed keys and filter them out of available notifications.
-	$dismissed = array_fill_keys(
+	// Filter out items that have been dismissed and/or purchased.
+	$ignore = array_merge(
 		(array) get_user_meta( get_current_user_id(), 'wp101-dismissed-notifications', true ),
-		''
+		wp_list_pluck( TemplateTags\api()->get_playlist()['series'], 'slug', 'slug' )
 	);
-	$available = array_diff_key( get_option( 'wp101-available-series', [] ), $dismissed );
+
+	$available = array_diff_key(
+		get_option( 'wp101-available-series', [] ),
+		array_fill_keys( $ignore, '' )
+	);
 
 	// Abort if we have nothing to say.
 	if ( empty( $available ) ) {
