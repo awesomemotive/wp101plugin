@@ -4,7 +4,7 @@ Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Requires PHP: 5.4
 Tested up to: 5.1
-Stable tag: 4.2.1
+Stable tag: 5.0.0
 
 The WordPress 101 video tutorials are all-new for Gutenberg and Wordpress 5.0! Watch videos directly within the dashboard. Choose which videos to show, or add your own.
 
