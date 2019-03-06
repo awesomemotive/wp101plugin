@@ -166,6 +166,32 @@ class AdminTest extends TestCase {
 		$this->assertFalse( $settings['wp101_api_key']['show_in_rest'], 'The API key should never be exposed via the WP REST API.' );
 	}
 
+	/**
+	 * Work around the well-known "when storing a new setting, the sanitize callback filter is
+	 * is called twice" issue with the WordPress Settings API.
+	 *
+	 * @link   https://developer.wordpress.org/reference/functions/register_setting/#comment-content-2488
+	 * @ticket https://github.com/liquidweb/wp101plugin/issues/73
+	 */
+	public function test_sanitize_api_key_is_only_called_once() {
+		Admin\register_settings();
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'get_account' )
+			->once()
+			->andReturn( [ 'some-account-details' ] );
+
+		// Call it twice, to mimic what we'd see when calling update_option() for a new option.
+		sanitize_option( 'wp101_api_key', 'someKey' );
+		sanitize_option( 'wp101_api_key', 'someKey' );
+
+		ob_start();
+		settings_errors();
+		$output = ob_get_clean();
+
+		$this->assertSelectorCount( 1, '#setting-error-api_key', $output );
+	}
+
 	public function test_settings_link_is_injected_into_plugin_action_links() {
 		$actions = apply_filters( 'plugin_action_links_' . WP101_BASENAME, array() );
 
@@ -300,8 +326,12 @@ class AdminTest extends TestCase {
 		Admin\render_addons_page();
 		$output = ob_get_clean();
 
-		$this->assertNotContains( get_admin_url( null, 'admin.php?page=wp101' ), $output );
-		$this->assertContains( 'notice-info', $output );
+		$this->assertElementNotContains(
+			get_admin_url( null, 'admin.php?page=wp101' ),
+			'.wp101-addon-button a',
+			$output
+		);
+		$this->assertSelectorCount( 1, '.wp101-addon .notice-info', $output );
 	}
 
 	/**
