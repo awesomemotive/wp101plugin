@@ -1,4 +1,11 @@
-
+assets/css/*.css
+assets/css/*.map
+assets/js/*.js
+assets/js/*.map
+dist
+node_modules
+tests/coverage
+vendor
 .DS_Store
 Thumbs.db
 *.codekit
