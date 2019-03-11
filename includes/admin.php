@@ -160,7 +160,19 @@ add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
  * @return string The sanitized key.
  */
 function sanitize_api_key( $key ) {
+	static $sanitized_api_key;
+
 	$key = sanitize_text_field( $key );
+
+	// Simply return the key if it's already been sanitized once.
+	if ( true === $sanitized_api_key ) {
+		return $key;
+	}
+
+	// Ensure this won't be run in its entirety a second time.
+	$sanitized_api_key = true;
+
+	// Verify the API key against the API.
 	$api = TemplateTags\api();
 	$api->set_api_key( $key );
 
