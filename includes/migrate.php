@@ -65,7 +65,7 @@ function maybe_migrate() {
  * @return bool Whether or not the API key needs exchanged.
  */
 function api_key_needs_migration( $api_key ) {
-	return $api_key && 32 !== strlen( $api_key );
+	return $api_key && 32 !== mb_strlen( $api_key );
 }
 
 /**
