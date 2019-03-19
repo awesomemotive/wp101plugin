@@ -23,6 +23,15 @@ function maybe_migrate() {
 		return;
 	}
 
+	// Schedule additional migrations if this is a multisite network.
+	if ( is_multisite() && ! get_site_option( 'wp101-bulk-migration-lock', false ) ) {
+		if ( ! wp_next_scheduled( 'wp101-bulk-migration' ) ) {
+			wp_schedule_single_event( time(), 'wp101-bulk-migration' );
+		}
+
+		add_site_option( 'wp101-bulk-migration-lock', true );
+	}
+
 	// Key is either empty or already good to go.
 	if ( ! api_key_needs_migration( $key ) ) {
 		return;

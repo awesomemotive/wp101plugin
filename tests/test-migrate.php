@@ -110,6 +110,44 @@ class MigrateTest extends TestCase {
 		$this->assertTrue( has_action( 'admin_notices', 'WP101\Migrate\render_migration_failure_notice' ) );
 	}
 
+	/**
+	 * @group multisite
+	 */
+	public function test_maybe_migrate_will_schedule_a_bulk_migration_task() {
+		$this->skip_if_not_multisite();
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->once()
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+		$this->set_api_key( self::LEGACY_API_KEY );
+
+		Migrate\maybe_migrate();
+
+		$this->assertEquals( self::CURRENT_API_KEY, get_option( 'wp101_api_key' ) );
+
+		$this->assertNotEmpty(wp_next_scheduled('wp101-bulk-migration'));
+		$this->assertTrue(
+			get_site_option( 'wp101-bulk-migration-lock', false ),
+			'A network-wide option should be set to prevent multiple runs.'
+		);
+	}
+
+	/**
+	 * @group multisite
+	 */
+	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_once() {
+		add_site_option( 'wp101-bulk-migration-lock', true );
+
+		$this->mock_api()->shouldReceive( 'exchange_api_key' )->never();
+
+		Migrate\maybe_migrate();
+
+		$this->assertFalse(wp_next_scheduled('wp101-bulk-migration'));
+	}
+
 	public function test_api_key_needs_migration() {
 		$this->assertTrue( Migrate\api_key_needs_migration( self::LEGACY_API_KEY ) );
 		$this->assertFalse( Migrate\api_key_needs_migration( self::CURRENT_API_KEY ) );
