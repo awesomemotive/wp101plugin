@@ -124,6 +124,11 @@ class MigrateTest extends TestCase {
 			] );
 		$this->set_api_key( self::LEGACY_API_KEY );
 
+		$user_id = $this->factory->user->create();
+
+		grant_super_admin( $user_id );
+		wp_set_current_user( $user_id );
+
 		Migrate\maybe_migrate();
 
 		$this->assertEquals( self::CURRENT_API_KEY, get_option( 'wp101_api_key' ) );
@@ -140,6 +145,26 @@ class MigrateTest extends TestCase {
 	 */
 	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_once() {
 		add_site_option( 'wp101-bulk-migration-lock', true );
+
+		$user_id = $this->factory->user->create();
+
+		grant_super_admin( $user_id );
+		wp_set_current_user( $user_id );
+
+		$this->mock_api()->shouldReceive( 'exchange_api_key' )->never();
+
+		Migrate\maybe_migrate();
+
+		$this->assertFalse(wp_next_scheduled('wp101-bulk-migration'));
+	}
+
+	/**
+	 * @group multisite
+	 */
+	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_for_network_admins() {
+		$user_id = $this->factory->user->create();
+
+		wp_set_current_user( $user_id ); // User is not a super admin.
 
 		$this->mock_api()->shouldReceive( 'exchange_api_key' )->never();
 

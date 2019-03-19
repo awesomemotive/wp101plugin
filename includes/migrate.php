@@ -24,7 +24,7 @@ function maybe_migrate() {
 	}
 
 	// Schedule additional migrations if this is a multisite network.
-	if ( is_multisite() && ! get_site_option( 'wp101-bulk-migration-lock', false ) ) {
+	if ( is_multisite() && is_super_admin() && ! get_site_option( 'wp101-bulk-migration-lock', false ) ) {
 		if ( ! wp_next_scheduled( 'wp101-bulk-migration' ) ) {
 			wp_schedule_single_event( time(), 'wp101-bulk-migration' );
 		}
