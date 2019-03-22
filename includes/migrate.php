@@ -65,6 +65,7 @@ function maybe_migrate() {
 	delete_option( 'wp101_custom_topics' );
 	delete_option( 'wp101_hidden_topics' );
 }
+add_action( 'wp101_migrate_site', __NAMESPACE__ . '\maybe_migrate' );
 
 /**
  * Determine whether the API key option requires migration.
@@ -176,3 +177,46 @@ function render_constant_empty_notice() {
 
 <?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
+
+/**
+ * Iterate through a WordPress Multisite installation and migrate each site.
+ *
+ * @return int The number of sites that were migrated.
+ */
+function migrate_multisite() {
+	$api      = TemplateTags\api();
+	$migrated = 0;
+
+	// Abort early if this isn't a multisite instance.
+	if ( ! is_multisite() ) {
+		return $migrated;
+	}
+
+	$plugin = plugin_basename( dirname( __DIR__ ) . '/wp101.php' );
+	$blogs  = get_sites(
+		[
+			'fields'       => 'ids',
+			'site__not_in' => [ get_current_blog_id() ],
+		]
+	);
+
+	// Iterate over the sites, triggering migrations.
+	foreach ( $blogs as $blog ) {
+		switch_to_blog( $blog );
+
+		// Ensure each site is loading its API key fresh.
+		$api->clear_api_key();
+
+		// Trigger a migration.
+		do_action( 'wp101_migrate_site' );
+
+		// Restore the previous site context.
+		restore_current_blog();
+
+		// Increment the counter.
+		$migrated++;
+	}
+
+	return $migrated;
+}
+add_action( 'wp101-bulk-migration', __NAMESPACE__ . '\migrate_multisite' );

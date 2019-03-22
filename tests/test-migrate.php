@@ -112,6 +112,7 @@ class MigrateTest extends TestCase {
 
 	/**
 	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
 	 */
 	public function test_maybe_migrate_will_schedule_a_bulk_migration_task() {
 		$this->skip_if_not_multisite();
@@ -142,6 +143,7 @@ class MigrateTest extends TestCase {
 
 	/**
 	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
 	 */
 	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_once() {
 		add_site_option( 'wp101-bulk-migration-lock', true );
@@ -155,11 +157,12 @@ class MigrateTest extends TestCase {
 
 		Migrate\maybe_migrate();
 
-		$this->assertFalse(wp_next_scheduled('wp101-bulk-migration'));
+		$this->assertFalse( wp_next_scheduled( 'wp101-bulk-migration' ) );
 	}
 
 	/**
 	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
 	 */
 	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_for_network_admins() {
 		$user_id = $this->factory->user->create();
@@ -170,7 +173,7 @@ class MigrateTest extends TestCase {
 
 		Migrate\maybe_migrate();
 
-		$this->assertFalse(wp_next_scheduled('wp101-bulk-migration'));
+		$this->assertFalse( wp_next_scheduled( 'wp101-bulk-migration' ) );
 	}
 
 	public function test_api_key_needs_migration() {
@@ -243,5 +246,47 @@ class MigrateTest extends TestCase {
 
 		$this->assertContainsSelector( '#wp101-api-key-constant-remove-notice', $output );
 		$this->assertContains( "'WP101_API_KEY', '" . self::LEGACY_API_KEY . "'", $output );
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 3 );
+
+		foreach ( $blog_ids as $blog_id ) {
+			add_blog_option( $blog_id, 'wp101_api_key', self::LEGACY_API_KEY );
+		}
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->times( 3 )
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+
+		$this->assertSame( 3, Migrate\migrate_multisite() );
+		$this->assertSame( 3, did_action( 'wp101_migrate_site' ) );
+
+		foreach ( $blog_ids as $blog_id ) {
+			$this->assertSame(
+				self::CURRENT_API_KEY,
+				get_blog_option( $blog_id, 'wp101_api_key' ),
+				"The API key should have been updated for blog #{$blog_id}."
+			);
+		}
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite_aborts_early_if_not_multisite() {
+		$this->skip_if_multisite();
+
+		$this->assertSame( 0, Migrate\migrate_multisite() );
 	}
 }

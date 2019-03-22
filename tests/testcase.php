@@ -69,7 +69,18 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Determine if we're currently running in a WordPress Multisite environment.
+	 * Skip the test if we're running in a WordPress Multisite environment.
+	 *
+	 * @return bool
+	 */
+	protected function skip_if_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'This test will not run under WordPress Multisite.' );
+		}
+	}
+
+	/**
+	 * Skip the test unless we're running in a WordPress Multisite environment.
 	 *
 	 * @return bool
 	 */
