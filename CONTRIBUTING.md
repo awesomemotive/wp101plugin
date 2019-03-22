@@ -2,6 +2,10 @@
 
 The WP101 Plugin is the client-facing end of [the WP101 Plugin SaaS](https://app.wp101plugin.com) and is used to present video training right within WordPress.
 
+## Branching strategy
+
+All new branches should be branched off of `develop`, which is the default branch for the repo. The `master` branch represents the latest stable release.
+
 ## Installing dependencies
 
 After cloning the repository, development dependencies are installed via [npm](https://npmjs.com) and [Composer](https://getcomposer.org):
