@@ -11,6 +11,8 @@ use WP101\TemplateTags as TemplateTags;
 
 /**
  * Apply any necessary migrations.
+ *
+ * @return WP_Error|null
  */
 function maybe_migrate() {
 	$api = TemplateTags\api();
@@ -48,7 +50,7 @@ function maybe_migrate() {
 
 		add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_failure_notice' );
 
-		return;
+		return $key;
 	}
 
 	update_option( 'wp101_api_key', $key['apiKey'], false );
@@ -208,7 +210,14 @@ function migrate_multisite() {
 		$api->clear_api_key();
 
 		// Trigger a migration.
-		do_action( 'wp101_migrate_site' );
+		$migration = maybe_migrate();
+
+		// If we ran into an issue, remove the lock so it can try again.
+		if ( is_wp_error( $migration ) ) {
+			delete_site_option( 'wp101-bulk-migration-lock' );
+
+			return $migrated;
+		}
 
 		// Restore the previous site context.
 		restore_current_blog();

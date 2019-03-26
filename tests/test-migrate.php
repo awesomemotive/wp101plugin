@@ -269,7 +269,6 @@ class MigrateTest extends TestCase {
 			] );
 
 		$this->assertSame( 3, Migrate\migrate_multisite() );
-		$this->assertSame( 3, did_action( 'wp101_migrate_site' ) );
 
 		foreach ( $blog_ids as $blog_id ) {
 			$this->assertSame(
@@ -278,6 +277,28 @@ class MigrateTest extends TestCase {
 				"The API key should have been updated for blog #{$blog_id}."
 			);
 		}
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite_will_remove_lock_if_an_error_occurs() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 2 );
+
+		add_blog_option( $blog_ids[0], 'wp101_api_key', self::LEGACY_API_KEY );
+		add_blog_option( $blog_ids[1], 'wp101_api_key', self::LEGACY_API_KEY );
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->andReturn( new WP_Error( 'wp101-migration', 'Some error message' ) );
+
+		$this->expectException( Warning::class );
+
+		$this->assertSame( 0, Migrate\migrate_multisite() );
+		$this->assertEmpty( get_site_option( 'wp101-bulk-migration-lock' ) );
 	}
 
 	/**
