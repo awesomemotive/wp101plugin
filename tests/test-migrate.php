@@ -283,6 +283,36 @@ class MigrateTest extends TestCase {
 	 * @group multisite
 	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
 	 */
+	public function test_migrate_multisite_will_batch_queries() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 7 );
+
+		foreach ( $blog_ids as $blog_id ) {
+			add_blog_option( $blog_id, 'wp101_api_key', self::LEGACY_API_KEY );
+		}
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+
+		$this->assertSame( 7, Migrate\migrate_multisite( 3 ) );
+
+		foreach ( $blog_ids as $blog_id ) {
+			$this->assertSame(
+				self::CURRENT_API_KEY,
+				get_blog_option( $blog_id, 'wp101_api_key' ),
+				"The API key should have been updated for blog #{$blog_id}."
+			);
+		}
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
 	public function test_migrate_multisite_will_remove_lock_if_an_error_occurs() {
 		$this->skip_if_not_multisite();
 

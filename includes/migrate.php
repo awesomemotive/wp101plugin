@@ -183,9 +183,11 @@ function render_constant_empty_notice() {
 /**
  * Iterate through a WordPress Multisite installation and migrate each site.
  *
+ * @param int $batch_size Optional. The number of sites to update in each pass. Default is 100.
+ *
  * @return int The number of sites that were migrated.
  */
-function migrate_multisite() {
+function migrate_multisite( $batch_size = 100 ) {
 	$api      = TemplateTags\api();
 	$migrated = 0;
 
@@ -194,16 +196,19 @@ function migrate_multisite() {
 		return $migrated;
 	}
 
-	$plugin = plugin_basename( dirname( __DIR__ ) . '/wp101.php' );
-	$blogs  = get_sites(
-		[
-			'fields'       => 'ids',
-			'site__not_in' => [ get_current_blog_id() ],
-		]
-	);
+	$plugin    = plugin_basename( dirname( __DIR__ ) . '/wp101.php' );
+	$site_args = [
+		'fields'       => 'ids',
+		'site__not_in' => [ get_current_blog_id() ],
+		'number'       => $batch_size,
+		'offset'       => 0,
+	];
+	$blogs     = get_sites( $site_args );
 
 	// Iterate over the sites, triggering migrations.
-	foreach ( $blogs as $blog ) {
+	while ( ! empty( $blogs ) ) {
+		$blog = array_shift( $blogs );
+
 		switch_to_blog( $blog );
 
 		// Ensure each site is loading its API key fresh.
@@ -224,6 +229,13 @@ function migrate_multisite() {
 
 		// Increment the counter.
 		$migrated++;
+
+		// Reset the query at the end of the batch.
+		if ( empty( $blogs ) ) {
+			$site_args['offset'] = $migrated;
+
+			$blogs = get_sites( $site_args );
+		}
 	}
 
 	return $migrated;
