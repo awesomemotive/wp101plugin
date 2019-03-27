@@ -110,6 +110,72 @@ class MigrateTest extends TestCase {
 		$this->assertTrue( has_action( 'admin_notices', 'WP101\Migrate\render_migration_failure_notice' ) );
 	}
 
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_maybe_migrate_will_schedule_a_bulk_migration_task() {
+		$this->skip_if_not_multisite();
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->once()
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+		$this->set_api_key( self::LEGACY_API_KEY );
+
+		$user_id = $this->factory->user->create();
+
+		grant_super_admin( $user_id );
+		wp_set_current_user( $user_id );
+
+		Migrate\maybe_migrate();
+
+		$this->assertEquals( self::CURRENT_API_KEY, get_option( 'wp101_api_key' ) );
+
+		$this->assertNotEmpty(wp_next_scheduled('wp101-bulk-migration'));
+		$this->assertTrue(
+			get_site_option( 'wp101-bulk-migration-lock', false ),
+			'A network-wide option should be set to prevent multiple runs.'
+		);
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_once() {
+		add_site_option( 'wp101-bulk-migration-lock', true );
+
+		$user_id = $this->factory->user->create();
+
+		grant_super_admin( $user_id );
+		wp_set_current_user( $user_id );
+
+		$this->mock_api()->shouldReceive( 'exchange_api_key' )->never();
+
+		Migrate\maybe_migrate();
+
+		$this->assertFalse( wp_next_scheduled( 'wp101-bulk-migration' ) );
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_maybe_migrate_will_only_schedule_a_bulk_migration_for_network_admins() {
+		$user_id = $this->factory->user->create();
+
+		wp_set_current_user( $user_id ); // User is not a super admin.
+
+		$this->mock_api()->shouldReceive( 'exchange_api_key' )->never();
+
+		Migrate\maybe_migrate();
+
+		$this->assertFalse( wp_next_scheduled( 'wp101-bulk-migration' ) );
+	}
+
 	public function test_api_key_needs_migration() {
 		$this->assertTrue( Migrate\api_key_needs_migration( self::LEGACY_API_KEY ) );
 		$this->assertFalse( Migrate\api_key_needs_migration( self::CURRENT_API_KEY ) );
@@ -180,5 +246,98 @@ class MigrateTest extends TestCase {
 
 		$this->assertContainsSelector( '#wp101-api-key-constant-remove-notice', $output );
 		$this->assertContains( "'WP101_API_KEY', '" . self::LEGACY_API_KEY . "'", $output );
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 3 );
+
+		foreach ( $blog_ids as $blog_id ) {
+			add_blog_option( $blog_id, 'wp101_api_key', self::LEGACY_API_KEY );
+		}
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->times( 3 )
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+
+		$this->assertSame( 3, Migrate\migrate_multisite() );
+
+		foreach ( $blog_ids as $blog_id ) {
+			$this->assertSame(
+				self::CURRENT_API_KEY,
+				get_blog_option( $blog_id, 'wp101_api_key' ),
+				"The API key should have been updated for blog #{$blog_id}."
+			);
+		}
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite_will_batch_queries() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 7 );
+
+		foreach ( $blog_ids as $blog_id ) {
+			add_blog_option( $blog_id, 'wp101_api_key', self::LEGACY_API_KEY );
+		}
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+
+		$this->assertSame( 7, Migrate\migrate_multisite( 3 ) );
+
+		foreach ( $blog_ids as $blog_id ) {
+			$this->assertSame(
+				self::CURRENT_API_KEY,
+				get_blog_option( $blog_id, 'wp101_api_key' ),
+				"The API key should have been updated for blog #{$blog_id}."
+			);
+		}
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite_will_remove_lock_if_an_error_occurs() {
+		$this->skip_if_not_multisite();
+
+		$blog_ids = $this->factory->blog->create_many( 2 );
+
+		add_blog_option( $blog_ids[0], 'wp101_api_key', self::LEGACY_API_KEY );
+		add_blog_option( $blog_ids[1], 'wp101_api_key', self::LEGACY_API_KEY );
+
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->andReturn( new WP_Error( 'wp101-migration', 'Some error message' ) );
+
+		$this->expectException( Warning::class );
+
+		$this->assertSame( 0, Migrate\migrate_multisite() );
+		$this->assertEmpty( get_site_option( 'wp101-bulk-migration-lock' ) );
+	}
+
+	/**
+	 * @group multisite
+	 * @ticket https://github.com/leftlane/wp101plugin/issues/47
+	 */
+	public function test_migrate_multisite_aborts_early_if_not_multisite() {
+		$this->skip_if_multisite();
+
+		$this->assertSame( 0, Migrate\migrate_multisite() );
 	}
 }

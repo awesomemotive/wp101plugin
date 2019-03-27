@@ -69,6 +69,28 @@ class TestCase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Skip the test if we're running in a WordPress Multisite environment.
+	 *
+	 * @return bool
+	 */
+	protected function skip_if_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'This test will not run under WordPress Multisite.' );
+		}
+	}
+
+	/**
+	 * Skip the test unless we're running in a WordPress Multisite environment.
+	 *
+	 * @return bool
+	 */
+	protected function skip_if_not_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'This test will only run under WordPress Multisite.' );
+		}
+	}
+
+	/**
 	 * Return a ReflectionMethod with given protected/private $method accessible.
 	 *
 	 * @param  object|string $class  A class name or instance that contains the given method.
