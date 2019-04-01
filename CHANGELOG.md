@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) as of version 5.0.0.
 
+## [Unreleased]
+* Run migrations across a multisite network via a background task ([#48]).
+
 ## [5.0.1]
 * Ensure that legacy API keys are exchanged before making any other API requests ([#45]).
 
@@ -117,6 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0
 * First version!
 
+[Unreleased]: https://github.com/101videos/wp101plugin/compare/master...develop
 [5.0.0]: https://github.com/leftlane/wp101plugin/releases/tag/v5.0.0
 [5.0.1]: https://github.com/leftlane/wp101plugin/releases/tag/v5.0.1
 [#45]: https://github.com/leftlane/wp101plugin/issues/45
+[#48]: https://github.com/101videos/wp101plugin/pull/48
