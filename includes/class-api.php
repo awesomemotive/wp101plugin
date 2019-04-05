@@ -49,13 +49,6 @@ class API {
 	const API_KEY_OPTION = 'wp101_api_key';
 
 	/**
-	 * Transient key for the site's public API key.
-	 *
-	 * @var string
-	 */
-	const PUBLIC_API_KEY_OPTION = 'wp101-public-api-key';
-
-	/**
 	 * The User-Agent string that will be passed with API requests.
 	 *
 	 * @var string
@@ -158,7 +151,8 @@ class API {
 	 * @return string|WP_Error The public API key or any WP_Error that occurred.
 	 */
 	public function get_public_api_key() {
-		$public_key = get_transient( self::PUBLIC_API_KEY_OPTION );
+		$key_name   = $this->get_public_api_key_name();
+		$public_key = get_transient( $key_name );
 
 		if ( $public_key ) {
 			return $public_key;
@@ -175,9 +169,21 @@ class API {
 
 		$public_key = $response['publicKey'];
 
-		set_transient( self::PUBLIC_API_KEY_OPTION, $public_key, 0 );
+		set_transient( $key_name, $public_key, 0 );
 
 		return $public_key;
+	}
+
+	/**
+	 * Get the public API key name.
+	 *
+	 * The name consists of a static prefix followed by the first 8 characters of an md5 hash of
+	 * the site URL.
+	 *
+	 * @return string
+	 */
+	public function get_public_api_key_name() {
+		return 'wp101-public-api-key-' . substr( md5( site_url( '/' ) ), 0, 8 );
 	}
 
 	/**

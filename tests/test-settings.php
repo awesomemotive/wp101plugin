@@ -78,16 +78,17 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_public_key_is_cleared_when_private_key_changes() {
-		update_option( 'wp101_api_key', md5( uniqid() ) );
-		set_transient( API::PUBLIC_API_KEY_OPTION, uniqid(), 0 );
-
-		$api = $this->mock_api();
+		$api  = $this->mock_api();
 		$api->shouldReceive( 'clear_api_key' )->once();
 		$api->shouldReceive( 'get_public_api_key' )->once();
+		$name = $api->get_public_api_key_name();
+
+		update_option( 'wp101_api_key', md5( uniqid() ) );
+		set_transient( $name, uniqid(), 0 );
 
 		// Change the private key.
 		update_option( 'wp101_api_key', md5( uniqid() ) );
 
-		$this->assertFalse( get_transient( API::PUBLIC_API_KEY_OPTION ) );
+		$this->assertFalse( get_transient( $name ) );
 	}
 }

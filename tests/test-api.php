@@ -134,7 +134,10 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_public_api_key() {
-		$this->assertFalse( get_transient( API::PUBLIC_API_KEY_OPTION ) );
+		$api  = API::get_instance();
+		$name = $api->get_public_api_key_name();
+
+		$this->assertFalse( get_transient( $name ) );
 
 		$json = [
 			'status' => 'success',
@@ -147,20 +150,22 @@ class ApiTest extends TestCase {
 			'body' => wp_json_encode( $json ),
 		] );
 
-		$key = API::get_instance()->get_public_api_key();
+		$key = $api->get_public_api_key();
 
 		$this->assertEquals(
 			$json['data']['publicKey'],
 			$key,
 			'The public API should be determined by the WP101 API.'
 		);
-		$this->assertEquals( $key, get_transient( API::PUBLIC_API_KEY_OPTION ) );
+		$this->assertEquals( $key, get_transient( $name ) );
 	}
 
 	public function test_get_public_api_key_returns_from_transients_if_populated() {
-		$key = uniqid();
+		$api  = API::get_instance();
+		$name = $api->get_public_api_key_name();
+		$key  = uniqid();
 
-		set_transient( API::PUBLIC_API_KEY_OPTION, $key, 0 );
+		set_transient( $name, $key, 0 );
 
 		$this->assertEquals( $key, API::get_instance()->get_public_api_key() );
 	}
@@ -186,6 +191,19 @@ class ApiTest extends TestCase {
 		$this->assertTrue(
 			is_wp_error( API::get_instance()->get_public_api_key() ),
 			'If a public key can\'t be determined, return a WP_Error object.'
+		);
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/49
+	 */
+	public function test_get_public_api_key_name() {
+		$hash = substr( md5( site_url( '/' ) ), 0, 8 );
+
+		$this->assertContains(
+			$hash,
+			API::get_instance()->get_public_api_key_name(),
+			'Expected the public API key transient name to include a hash of the site URL.'
 		);
 	}
 
@@ -235,9 +253,11 @@ class ApiTest extends TestCase {
 	}
 
 	public function test_get_addons_updates_add_on_urls() {
-		$api_key = uniqid();
+		$api  = API::get_instance();
+		$name = $api->get_public_api_key_name();
+		$key  = uniqid();
 
-		set_transient( API::PUBLIC_API_KEY_OPTION, $api_key );
+		set_transient( $name, $key );
 		$this->set_expected_response([
 			'body' => wp_json_encode( [
 				'status' => 'success',
@@ -252,8 +272,8 @@ class ApiTest extends TestCase {
 		]);
 
 		$this->assertEquals(
-			'http://example.com?apiKey=' . $api_key,
-			API::get_instance()->get_addons()['addons'][0]['url'],
+			'http://example.com?apiKey=' . $key,
+			$api->get_addons()['addons'][0]['url'],
 			'The public API key should be appended to all add-on URLs.'
 		);
 	}
