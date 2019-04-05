@@ -4,7 +4,7 @@ Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Requires PHP: 5.4
 Tested up to: 5.1
-Stable tag: 5.0.1
+Stable tag: 5.1.0
 
 The WordPress 101 video tutorials are all-new for Gutenberg and Wordpress 5.0! Watch videos directly within the dashboard. Choose which videos to show, or add your own.
 
@@ -82,6 +82,11 @@ We've made every effort to ensure a smooth transition to version 5.x of the WP10
 
 For a complete list of changes, please see [the plugin's GitHub repository](https://github.com/leftlane/wp101plugin/blob/master/CHANGELOG.md).
 
+= 5.1.0 =
+* Run migrations across a multisite network via a background task.
+* Store public API keys based on the site URL, enabling better handling of domain changes.
+* Add the `wp101_excluded_topics` filter.
+
 = 5.0.1 =
 * Ensure that legacy API keys are exchanged before making any other API requests.
 
@@ -90,6 +95,9 @@ For a complete list of changes, please see [the plugin's GitHub repository](http
 * Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
 
 == Upgrade Notice ==
+
+= 5.1.0 =
+* Improves migration behavior on WordPress multisite instances.
 
 = 5.0.1 =
 * Resolves an issue some subscribers were seeing during API key migration.
