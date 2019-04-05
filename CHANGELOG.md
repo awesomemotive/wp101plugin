@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 * Run migrations across a multisite network via a background task ([#48]).
+* Store public API keys based on the site URL, enabling better handling of domain changes ([#52]).
+* Add the `wp101_excluded_topics` filter ([#53]).
+	```php
+	/**
+	 * Exclude "some-video-slug" and "some-plugin.legacy_id" from appearing in
+	 * the WP101 video playlist.
+	 */
+	add_filter( 'wp101_excluded_topics', function ( $topics ) {
+	  $topics[] = 'some-video-slug';
+	  $topics[] = 'some-plugin.legacy_id';
+
+	  return $topics;
+	} );
+	```
 
 ## [5.0.1]
 * Ensure that legacy API keys are exchanged before making any other API requests ([#45]).
@@ -125,3 +139,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [5.0.1]: https://github.com/leftlane/wp101plugin/releases/tag/v5.0.1
 [#45]: https://github.com/leftlane/wp101plugin/issues/45
 [#48]: https://github.com/101videos/wp101plugin/pull/48
+[#52]: https://github.com/101videos/wp101plugin/pull/52
+[#53]: https://github.com/101videos/wp101plugin/pull/53
