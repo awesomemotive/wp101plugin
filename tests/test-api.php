@@ -328,7 +328,14 @@ class ApiTest extends TestCase {
 	public function test_get_playlist() {
 		$json = [
 			'status' => 'success',
-			'data'   => [],
+			'data'   => [
+				'series' => [
+					'slug'   => 'some-slug',
+					'topics' => [
+						'slug' => 'video-' . uniqid(),
+					],
+				],
+			],
 		];
 
 		$this->set_expected_response( [
@@ -344,6 +351,173 @@ class ApiTest extends TestCase {
 		} );
 
 		$this->assertEquals( [ 'series' => [] ], API::get_instance()->get_playlist() );
+	}
+
+	public function test_get_playlist_handles_malformed_responses() {
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => [
+					'some irrelevant values.',
+				],
+			] ),
+		] );
+
+		$this->assertEquals( [ 'series' => [] ], API::get_instance()->get_playlist() );
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/50
+	 */
+	public function test_get_playlist_can_filter_results_by_slug() {
+		$playlist = [
+			'series' => [
+				[
+					'slug'   => 'first-series',
+					'topics' => [
+						[
+							'slug'      => 'first-video',
+							'legacy_id' => 'plugin.1',
+						],
+						[
+							'slug'      => 'second-video',
+							'legacy_id' => 'plugin.2',
+						]
+					],
+				],
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => $playlist,
+			] ),
+		] );
+
+
+		add_filter( 'wp101_excluded_topics', function () {
+			return [
+				'first-video',
+			];
+		} );
+
+		$result = API::get_instance()->get_playlist();
+
+		$this->assertCount( 1, $result['series'][0]['topics'] );
+
+		$this->assertSame(
+			$playlist['series'][0]['topics'][1]['slug'],
+			current($result['series'][0]['topics'])['slug']
+		);
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/50
+	 */
+	public function test_get_playlist_can_filter_results_across_multiple_series() {
+		$playlist = [
+			'series' => [
+				[
+					'slug'   => 'first-series',
+					'topics' => [
+						[
+							'slug'      => 'first-video',
+							'legacy_id' => 'plugin.1',
+						],
+						[
+							'slug'      => 'second-video',
+							'legacy_id' => 'plugin.2',
+						]
+					],
+				],
+				[
+					'slug'   => 'second-series',
+					'topics' => [
+						[
+							'slug'      => 'third-video',
+							'legacy_id' => 'plugin.3',
+						],
+						[
+							'slug'      => 'fourth-video',
+							'legacy_id' => 'plugin.4',
+						]
+					],
+				],
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => $playlist,
+			] ),
+		] );
+
+
+		add_filter( 'wp101_excluded_topics', function () {
+			return [
+				'first-video',
+				'fourth-video',
+			];
+		} );
+
+		$result = API::get_instance()->get_playlist();
+
+		$this->assertCount( 1, $result['series'][0]['topics'] );
+		$this->assertSame(
+			$playlist['series'][0]['topics'][1]['slug'],
+			current($result['series'][0]['topics'])['slug']
+		);
+		$this->assertCount( 1, $result['series'][1]['topics'] );
+		$this->assertSame(
+			$playlist['series'][1]['topics'][0]['slug'],
+			current($result['series'][1]['topics'])['slug']
+		);
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/50
+	 */
+	public function test_get_playlist_can_filter_results_by_legacy_id() {
+		$playlist = [
+			'series' => [
+				[
+					'slug'   => 'first-series',
+					'topics' => [
+						[
+							'slug'      => 'first-video',
+							'legacy_id' => 'plugin.1',
+						],
+						[
+							'slug'      => 'second-video',
+							'legacy_id' => 'plugin.2',
+						]
+					],
+				]
+			],
+		];
+
+		$this->set_expected_response( [
+			'body' => wp_json_encode( [
+				'status' => 'success',
+				'data'   => $playlist,
+			] ),
+		] );
+
+		add_filter( 'wp101_excluded_topics', function () {
+			return [
+				'plugin.2',
+			];
+		} );
+
+		$result = API::get_instance()->get_playlist();
+
+		$this->assertCount( 1, $result['series'][0]['topics'] );
+		$this->assertSame(
+			$playlist['series'][0]['topics'][0]['slug'],
+			current($result['series'][0]['topics'])['slug']
+		);
 	}
 
 	public function test_get_series() {

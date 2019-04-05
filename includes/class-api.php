@@ -236,14 +236,36 @@ class API {
 	 * @return array An array of all available series and topics.
 	 */
 	public function get_playlist() {
-		$response = $this->send_request( 'GET', '/playlist' );
+		$response = $this->send_request( 'GET', '/playlist', [], [], MINUTE_IN_SECONDS );
 
-		if ( is_wp_error( $response ) ) {
-			$this->handle_error( $response );
+		if ( is_wp_error( $response ) || ! isset( $response['series'] ) ) {
+			if ( is_wp_error( $response ) ) {
+				$this->handle_error( $response );
+			}
 
 			return [
 				'series' => [],
 			];
+		}
+
+		/**
+		 * Filter the topics that should be displayed in the playlist.
+		 *
+		 * @param array $excluded An array of topic slugs and/or legacy IDs that should be excluded
+		 *                        from display in the playlist.
+		 */
+		$excluded = apply_filters( 'wp101_excluded_topics', [] );
+
+		if ( ! empty( $excluded ) ) {
+			foreach ( $response['series'] as $key => $series ) {
+				$response['series'][ $key ]['topics'] = array_filter(
+					$series['topics'],
+					function ( $topic ) use ( $excluded ) {
+						return ! in_array( $topic['slug'], $excluded, true )
+							&& ! in_array( $topic['legacy_id'], $excluded, true );
+					}
+				);
+			}
 		}
 
 		return $response;
