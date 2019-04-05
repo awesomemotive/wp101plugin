@@ -165,7 +165,7 @@ class ApiTest extends TestCase {
 		$name = $api->get_public_api_key_name();
 		$key  = uniqid();
 
-		set_transient( $name, $key, 0 );
+		set_transient( $name, $key, DAY_IN_SECONDS );
 
 		$this->assertEquals( $key, API::get_instance()->get_public_api_key() );
 	}

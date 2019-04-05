@@ -84,7 +84,7 @@ class SettingsTest extends TestCase {
 		$name = $api->get_public_api_key_name();
 
 		update_option( 'wp101_api_key', md5( uniqid() ) );
-		set_transient( $name, uniqid(), 0 );
+		set_transient( $name, uniqid(), DAY_IN_SECONDS );
 
 		// Change the private key.
 		update_option( 'wp101_api_key', md5( uniqid() ) );
