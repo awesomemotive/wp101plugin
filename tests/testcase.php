@@ -24,7 +24,7 @@ class TestCase extends WP_UnitTestCase {
 		parent::tearDown();
 
 		delete_option( 'wp101_api_key' );
-		delete_transient( API::PUBLIC_API_KEY_OPTION );
+		delete_transient( API::get_instance()->get_public_api_key_name() );
 
 		$instance = new ReflectionProperty( API::get_instance(), 'instance' );
 		$instance->setAccessible( true );
