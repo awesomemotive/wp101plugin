@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the WP101 package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP101 5.0.0-dev\n"
+"Project-Id-Version: WP101 5.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp101\n"
-"POT-Creation-Date: 2019-02-22 22:00:06+00:00\n"
+"POT-Creation-Date: 2019-04-05 18:44:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,64 +29,64 @@ msgstr ""
 msgid "Would you like to add the tutorial videos for %1$s from WP101?"
 msgstr ""
 
-#: includes/admin.php:179
+#: includes/admin.php:192
 #. Translators: %1$s is a confirmation message, %2$s is the playlist page URL,
 #. and %3$s is the link anchor text.
 msgid "Your API key ready to go:"
 msgstr ""
 
-#: includes/admin.php:181
+#: includes/admin.php:194
 msgid "start watching video tutorials!"
 msgstr ""
 
-#: includes/admin.php:186
+#: includes/admin.php:199
 msgid "This API key is either invalid or has reached its maximum number of domains."
 msgstr ""
 
-#: includes/class-api.php:173
+#: includes/class-api.php:167
 msgid "Unable to retrieve a valid public key from WP101."
 msgstr ""
 
-#: includes/class-api.php:321
+#: includes/class-api.php:349
 msgid "Cannot exchange an empty API key."
 msgstr ""
 
-#: includes/class-api.php:367 includes/class-api.php:377
+#: includes/class-api.php:395 includes/class-api.php:405
 msgid "The WP101 API request failed."
 msgstr ""
 
-#: includes/class-api.php:422
+#: includes/class-api.php:450
 msgid "No API key has been set, unable to make request."
 msgstr ""
 
-#: includes/class-api.php:459
+#: includes/class-api.php:487
 #. Translators: %1$s is the first error message from the API response.
 msgid "The WP101 API request failed: %1$s"
 msgstr ""
 
-#: includes/migrate.php:94
+#: includes/migrate.php:106
 msgid ""
 "WP101 has automatically upgraded your API key to work with the latest "
 "version!"
 msgstr ""
 
-#: includes/migrate.php:108
+#: includes/migrate.php:120
 msgid ""
 "WP101 was unable to automatically migrate your API key for the latest "
 "version."
 msgstr ""
 
-#: includes/migrate.php:122
+#: includes/migrate.php:134
 msgid ""
 "Your API key has been updated to work with the latest version of WP101, but "
 "your wp-config.php requires updating:"
 msgstr ""
 
-#: includes/migrate.php:124 includes/migrate.php:153
+#: includes/migrate.php:136 includes/migrate.php:165
 msgid "Open your site's wp-config.php file in a text editor."
 msgstr ""
 
-#: includes/migrate.php:130
+#: includes/migrate.php:142
 #. Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );"
 #. in wp-config.php.
 msgid ""
@@ -94,17 +94,17 @@ msgid ""
 "with the following:"
 msgstr ""
 
-#: includes/migrate.php:137 includes/migrate.php:165
+#: includes/migrate.php:149 includes/migrate.php:177
 msgid "Save the wp-config.php file on your web server."
 msgstr ""
 
-#: includes/migrate.php:151
+#: includes/migrate.php:163
 msgid ""
 "An empty <code>WP101_API_KEY</code> constant has been defined in "
 "wp-config.php and should be removed:"
 msgstr ""
 
-#: includes/migrate.php:159
+#: includes/migrate.php:171
 #. Translators: %1$s is a code snippet for "define( 'WP101_API_KEY', '...' );"
 #. in wp-config.php.
 msgid ""
@@ -265,42 +265,42 @@ msgctxt "separator between the last two items in a list"
 msgid " and "
 msgstr ""
 
-#: includes/admin.php:79 includes/admin.php:89
+#: includes/admin.php:80 includes/admin.php:90
 msgctxt "page title"
 msgid "WP101"
 msgstr ""
 
-#: includes/admin.php:99
+#: includes/admin.php:100
 msgctxt "page title"
 msgid "WP101 Settings"
 msgstr ""
 
-#: includes/admin.php:111
+#: includes/admin.php:112
 msgctxt "page title"
 msgid "WP101 Add-ons"
 msgstr ""
 
-#: includes/admin.php:80 includes/admin.php:90
+#: includes/admin.php:81 includes/admin.php:91
 msgctxt "menu title"
 msgid "Video Tutorials"
 msgstr ""
 
-#: includes/admin.php:100
+#: includes/admin.php:101
 msgctxt "menu title"
 msgid "Settings"
 msgstr ""
 
-#: includes/admin.php:112
+#: includes/admin.php:113
 msgctxt "menu title"
 msgid "Add-ons"
 msgstr ""
 
-#: includes/admin.php:132
+#: includes/admin.php:133
 msgctxt "plugin links"
 msgid "Settings"
 msgstr ""
 
-#: includes/admin.php:147
+#: includes/admin.php:148
 msgctxt "wp101"
 msgid "The key used to authenticate with WP101plugin.com."
 msgstr ""

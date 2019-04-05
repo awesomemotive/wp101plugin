@@ -47,7 +47,7 @@ class UninstallTest extends TestCase {
 
 	public function test_clear_caches() {
 		$transients = array(
-			API::PUBLIC_API_KEY_OPTION,
+			API::get_instance()->get_public_api_key_name(),
 			'wp101_topics',
 			'wp101_jetpack_topics',
 			'wp101_woocommerce_topics',

@@ -11,6 +11,8 @@ use WP101\TemplateTags as TemplateTags;
 
 /**
  * Apply any necessary migrations.
+ *
+ * @return WP_Error|null
  */
 function maybe_migrate() {
 	$api = TemplateTags\api();
@@ -21,6 +23,15 @@ function maybe_migrate() {
 		add_action( 'admin_notices', __NAMESPACE__ . '\render_constant_empty_notice' );
 
 		return;
+	}
+
+	// Schedule additional migrations if this is a multisite network.
+	if ( is_multisite() && is_super_admin() && ! get_site_option( 'wp101-bulk-migration-lock', false ) ) {
+		if ( ! wp_next_scheduled( 'wp101-bulk-migration' ) ) {
+			wp_schedule_single_event( time(), 'wp101-bulk-migration' );
+		}
+
+		add_site_option( 'wp101-bulk-migration-lock', true );
 	}
 
 	// Key is either empty or already good to go.
@@ -39,7 +50,7 @@ function maybe_migrate() {
 
 		add_action( 'admin_notices', __NAMESPACE__ . '\render_migration_failure_notice' );
 
-		return;
+		return $key;
 	}
 
 	update_option( 'wp101_api_key', $key['apiKey'], false );
@@ -56,6 +67,7 @@ function maybe_migrate() {
 	delete_option( 'wp101_custom_topics' );
 	delete_option( 'wp101_hidden_topics' );
 }
+add_action( 'wp101_migrate_site', __NAMESPACE__ . '\maybe_migrate' );
 
 /**
  * Determine whether the API key option requires migration.
@@ -167,3 +179,65 @@ function render_constant_empty_notice() {
 
 <?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 }
+
+/**
+ * Iterate through a WordPress Multisite installation and migrate each site.
+ *
+ * @param int $batch_size Optional. The number of sites to update in each pass. Default is 100.
+ *
+ * @return int The number of sites that were migrated.
+ */
+function migrate_multisite( $batch_size = 100 ) {
+	$api      = TemplateTags\api();
+	$migrated = 0;
+
+	// Abort early if this isn't a multisite instance.
+	if ( ! is_multisite() ) {
+		return $migrated;
+	}
+
+	$plugin    = plugin_basename( dirname( __DIR__ ) . '/wp101.php' );
+	$site_args = [
+		'fields'       => 'ids',
+		'site__not_in' => [ get_current_blog_id() ],
+		'number'       => $batch_size,
+		'offset'       => 0,
+	];
+	$blogs     = get_sites( $site_args );
+
+	// Iterate over the sites, triggering migrations.
+	while ( ! empty( $blogs ) ) {
+		$blog = array_shift( $blogs );
+
+		switch_to_blog( $blog );
+
+		// Ensure each site is loading its API key fresh.
+		$api->clear_api_key();
+
+		// Trigger a migration.
+		$migration = maybe_migrate();
+
+		// If we ran into an issue, remove the lock so it can try again.
+		if ( is_wp_error( $migration ) ) {
+			delete_site_option( 'wp101-bulk-migration-lock' );
+
+			return $migrated;
+		}
+
+		// Restore the previous site context.
+		restore_current_blog();
+
+		// Increment the counter.
+		$migrated++;
+
+		// Reset the query at the end of the batch.
+		if ( empty( $blogs ) ) {
+			$site_args['offset'] = $migrated;
+
+			$blogs = get_sites( $site_args );
+		}
+	}
+
+	return $migrated;
+}
+add_action( 'wp101-bulk-migration', __NAMESPACE__ . '\migrate_multisite' );

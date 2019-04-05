@@ -24,7 +24,7 @@ class TestCase extends WP_UnitTestCase {
 		parent::tearDown();
 
 		delete_option( 'wp101_api_key' );
-		delete_transient( API::PUBLIC_API_KEY_OPTION );
+		delete_transient( API::get_instance()->get_public_api_key_name() );
 
 		$instance = new ReflectionProperty( API::get_instance(), 'instance' );
 		$instance->setAccessible( true );
@@ -65,6 +65,28 @@ class TestCase extends WP_UnitTestCase {
 	public function remove_constants() {
 		if ( function_exists( 'runkit_constant_remove' ) && defined( 'WP101_API_KEY' ) ) {
 			runkit_constant_remove( 'WP101_API_KEY' );
+		}
+	}
+
+	/**
+	 * Skip the test if we're running in a WordPress Multisite environment.
+	 *
+	 * @return bool
+	 */
+	protected function skip_if_multisite() {
+		if ( is_multisite() ) {
+			$this->markTestSkipped( 'This test will not run under WordPress Multisite.' );
+		}
+	}
+
+	/**
+	 * Skip the test unless we're running in a WordPress Multisite environment.
+	 *
+	 * @return bool
+	 */
+	protected function skip_if_not_multisite() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'This test will only run under WordPress Multisite.' );
 		}
 	}
 

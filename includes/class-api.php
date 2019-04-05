@@ -49,13 +49,6 @@ class API {
 	const API_KEY_OPTION = 'wp101_api_key';
 
 	/**
-	 * Transient key for the site's public API key.
-	 *
-	 * @var string
-	 */
-	const PUBLIC_API_KEY_OPTION = 'wp101-public-api-key';
-
-	/**
 	 * The User-Agent string that will be passed with API requests.
 	 *
 	 * @var string
@@ -158,7 +151,8 @@ class API {
 	 * @return string|WP_Error The public API key or any WP_Error that occurred.
 	 */
 	public function get_public_api_key() {
-		$public_key = get_transient( self::PUBLIC_API_KEY_OPTION );
+		$key_name   = $this->get_public_api_key_name();
+		$public_key = get_transient( $key_name );
 
 		if ( $public_key ) {
 			return $public_key;
@@ -175,9 +169,21 @@ class API {
 
 		$public_key = $response['publicKey'];
 
-		set_transient( self::PUBLIC_API_KEY_OPTION, $public_key, 0 );
+		set_transient( $key_name, $public_key, 0 );
 
 		return $public_key;
+	}
+
+	/**
+	 * Get the public API key name.
+	 *
+	 * The name consists of a static prefix followed by the first 8 characters of an md5 hash of
+	 * the site URL.
+	 *
+	 * @return string
+	 */
+	public function get_public_api_key_name() {
+		return 'wp101-public-api-key-' . substr( md5( site_url( '/' ) ), 0, 8 );
 	}
 
 	/**
@@ -230,14 +236,36 @@ class API {
 	 * @return array An array of all available series and topics.
 	 */
 	public function get_playlist() {
-		$response = $this->send_request( 'GET', '/playlist' );
+		$response = $this->send_request( 'GET', '/playlist', [], [], MINUTE_IN_SECONDS );
 
-		if ( is_wp_error( $response ) ) {
-			$this->handle_error( $response );
+		if ( is_wp_error( $response ) || ! isset( $response['series'] ) ) {
+			if ( is_wp_error( $response ) ) {
+				$this->handle_error( $response );
+			}
 
 			return [
 				'series' => [],
 			];
+		}
+
+		/**
+		 * Filter the topics that should be displayed in the playlist.
+		 *
+		 * @param array $excluded An array of topic slugs and/or legacy IDs that should be excluded
+		 *                        from display in the playlist.
+		 */
+		$excluded = apply_filters( 'wp101_excluded_topics', [] );
+
+		if ( ! empty( $excluded ) ) {
+			foreach ( $response['series'] as $key => $series ) {
+				$response['series'][ $key ]['topics'] = array_filter(
+					$series['topics'],
+					function ( $topic ) use ( $excluded ) {
+						return ! in_array( $topic['slug'], $excluded, true )
+							&& ! in_array( $topic['legacy_id'], $excluded, true );
+					}
+				);
+			}
 		}
 
 		return $response;
