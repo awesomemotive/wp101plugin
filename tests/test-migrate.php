@@ -24,10 +24,14 @@ class MigrateTest extends TestCase {
 	const CURRENT_API_KEY = 'abcdefghijklmnopqrstuvwxyz123456';
 
 	/**
-	 * @after
+	 * Clean up before each test.
 	 */
-	public function remove_actions() {
+	public function setUp() {
+		parent::setUp();
+
 		remove_all_actions( 'admin_notices' );
+		delete_option( 'wp101_custom_topics' );
+		delete_option( 'wp101_hidden_topics' );
 	}
 
 	/**
