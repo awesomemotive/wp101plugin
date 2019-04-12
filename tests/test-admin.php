@@ -16,6 +16,15 @@ use WP101\API as API;
  */
 class AdminTest extends TestCase {
 
+	public function setUp() {
+		global $wp_settings_errors;
+
+		parent::setUp();
+
+		$_POST              = [];
+		$wp_settings_errors = [];
+	}
+
 	public function test_enqueue_scripts_registers_scripts() {
 		$this->assertFalse( wp_style_is( 'wp101-admin', 'registered' ) );
 		$this->assertFalse( wp_script_is( 'wp101-admin', 'registered' ) );
@@ -348,6 +357,38 @@ class AdminTest extends TestCase {
 		$output = ob_get_clean();
 
 		$this->assertNotContains( 'My error message', $output );
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/51
+	 */
+	public function test_render_settings_page_should_be_able_to_flush_the_cache() {
+		$_POST = [
+			'_wpnonce' => wp_create_nonce( 'wp101-flush-cache' ),
+		];
+
+		ob_start();
+		Admin\render_settings_page();
+		ob_get_clean();
+
+		$this->assertSame( 1, did_action( 'wp101_flush_cache' ) );
+		$this->assertNotEmpty( get_settings_errors() );
+	}
+
+	/**
+	 * @ticket https://github.com/101videos/wp101plugin/issues/51
+	 */
+	public function test_render_settings_page_should_verify_cache_nonce() {
+		$_POST = [
+			'_wpnonce' => 'invalidNonce',
+		];
+
+		ob_start();
+		Admin\render_settings_page();
+		ob_get_clean();
+
+		$this->assertSame( 0, did_action( 'wp101_flush_cache' ) );
+		$this->assertEmpty( get_settings_errors() );
 	}
 
 	/**

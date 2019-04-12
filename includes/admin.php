@@ -232,6 +232,15 @@ function render_listings_page() {
  * Render the WP101 settings page.
  */
 function render_settings_page() {
+	if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( $_POST['_wpnonce'], 'wp101-flush-cache' ) ) {
+		/**
+		 * Flush caches related to the WP101 plugin.
+		 */
+		do_action( 'wp101_flush_cache' );
+
+		add_settings_error( 'wp101', 'flush_cache', __( 'The WP101 cache has been flushed.', 'wp101' ), 'updated' );
+	}
+
 	include WP101_VIEWS . '/settings.php';
 }
 
