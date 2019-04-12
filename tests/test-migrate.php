@@ -24,10 +24,14 @@ class MigrateTest extends TestCase {
 	const CURRENT_API_KEY = 'abcdefghijklmnopqrstuvwxyz123456';
 
 	/**
-	 * @after
+	 * Clean up before each test.
 	 */
-	public function remove_actions() {
+	public function setUp() {
+		parent::setUp();
+
 		remove_all_actions( 'admin_notices' );
+		delete_option( 'wp101_custom_topics' );
+		delete_option( 'wp101_hidden_topics' );
 	}
 
 	/**
@@ -66,9 +70,41 @@ class MigrateTest extends TestCase {
 	}
 
 	/**
+	 * If the wp101_api_key option has legacy_options, attempt to exchange it.
+	 *
+	 * @ticket https://github.com/101videos/wp101plugin/issues/55
+	 */
+	public function test_maybe_migrate_for_legacy_options() {
+		$api = $this->mock_api();
+		$api->shouldReceive( 'exchange_api_key' )
+			->once()
+			->andReturn( [
+				'apiKey' => self::CURRENT_API_KEY,
+			] );
+		$this->set_api_key( self::CURRENT_API_KEY );
+
+		update_option( 'wp101_custom_topics', [
+			'custom-topic' => [
+				'title'   => 'Custom Topic',
+				'content' => 'Some video embed',
+			],
+		] );
+		update_option( 'wp101_hidden_topics', [ 1, 2, 3 ] );
+
+		$this->assertFalse(
+			Migrate\api_key_needs_migration( $api->get_api_key() ),
+			'This test is predicated on the API key not needing migration, but the options do.'
+		);
+
+		Migrate\maybe_migrate();
+
+		$this->assertEquals( 10, has_action( 'admin_notices', 'WP101\Migrate\render_migration_success_notice' ) );
+	}
+
+	/**
 	 * The maybe_migrate() function should return early if there's nothing to migrate.
 	 */
-	public function test_maybe_migrate_returns_early_no_key_is_present() {
+	public function test_maybe_migrate_returns_early_if_no_key_is_present() {
 		delete_option( 'wp101_api_key' );
 
 		$api = $this->mock_api();
@@ -80,7 +116,8 @@ class MigrateTest extends TestCase {
 	}
 
 	/**
-	 * If an API key already matches the expected pattern, don't attempt to exchange it.
+	 * If an API key already matches the expected pattern *and* the legacy options have been
+	 * removed, don't attempt to exchange it.
 	 */
 	public function test_maybe_migrate_returns_early_if_keys_do_not_require_migration() {
 		$api = $this->mock_api();
