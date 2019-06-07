@@ -267,6 +267,22 @@ class AdminTest extends TestCase {
 		$this->assertTrue( Admin\is_relevant_series( $series ) );
 	}
 
+	public function test_is_relevant_series_can_be_overridden_via_filter() {
+		$series = [
+			'restrictions' => [
+				'plugins' => [
+					'some-plugin/some-plugin.php',
+				],
+			],
+		];
+
+		update_option( 'active_plugins', [] );
+
+		add_filter( 'wp101_is_relevant_series', '__return_true' );
+
+		$this->assertTrue( Admin\is_relevant_series( $series ) );
+	}
+
 	/**
 	 * @link https://github.com/liquidweb/wp101plugin/issues/40
 	 */
