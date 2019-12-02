@@ -3,24 +3,22 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks,
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 3.2
 Requires PHP: 5.4
-Tested up to: 5.1.1
-Stable tag: 5.1.0
+Tested up to: 5.3
+Stable tag: 5.2.0
 
-The WordPress 101 video tutorials are all-new for Gutenberg and Wordpress 5.0! Watch videos directly within the dashboard. Choose which videos to show, or add your own.
+The WP101® Plugin provides your clients with a library tutorial videos for WordPress, WooCommerce, Jetpack, Yoast SEO, and more — right in their own dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-**Yes! Our WordPress 101 tutorial videos have been updated for the all-new block editor in WordPress 5.0!**
+The WP101® Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a library of professionally-produced, ‘WordPress 101’ tutorial videos directly within your client’s own dashboard.
 
-The WP101 Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a complete set of professionally-produced “WordPress 101” tutorial videos directly within your client’s dashboard!
-
-Plus, the WP101 Plugin also includes a complete set of tutorial videos for WooCommerce, Jetpack, and Yoast SEO, if those plugins are also installed on the site. Videos for other popular plugins are in the works.
+Plus, the WP101 Plugin also includes tutorial videos for WooCommerce, Jetpack, Yoast SEO, and Ninja Forms, provided those plugins are also installed and activated on the site in question. Videos for other popular plugins are in the works.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
-You can choose which tutorial videos are shown, and even embed your own custom videos!
+You can choose which tutorial videos to show in the list, or even embed your own custom videos!
 
-Stop wasting time teaching WordPress to your clients. Let the WP101 Plugin free your time to focus on what you do best!
+Stop wasting your valuable time teaching WordPress to your clients. Let the WP101 Plugin free your time to do what you do best!
 
 == Installation ==
 
@@ -41,19 +39,19 @@ Yes! You can selectively hide or show individual tutorial videos (or entire cour
 
 = Can I add my own custom videos? =
 
-Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the ["Custom Videos" page in the [WP101Plugin.com app](https://app.wp101plugin.com/custom-topics).
+Yes! You can add your own custom videos, and they'll appear at the bottom of the list of tutorial videos. Visit the “Custom Videos” page in the [WP101 Plugin app](https://app.wp101plugin.com/custom-topics).
 
 = What if I have the Classic Editor installed? =
 
 If the Classic Editor plugin is also installed and activated on your site, the previous version of our WordPress 101 videos for the Classic Editor in WordPress 4.9 and older will also appear in the list. You can hide or show these videos in the Settings.
 
-= Why aren’t the Jetpack, WooCommerce, or Yoast SEO videos showing up? =
+= Why aren’t the WooCommerce, Jetpack, or Yoast SEO videos showing up? =
 
-The tutorial videos for Jetpack, WooCommerce, and Yoast SEO will only appear in the list if the plugin in question is also installed on the same site. No sense showing videos that don’t apply to a particular site, now is there?
+The tutorial videos for WooCommerce, Jetpack, and Yoast SEO will only appear in the list if the plugin in question is also installed and activated on the same site. No sense showing videos that don’t apply to a particular site, right?
 
 = The plugin was installed by my developer, but their API key has expired. What do I do? =
 
-You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own subscription and get access to all of our videos.
+You can ask your developer to renew their subscription, or you can go to [WP101Plugin.com](https://wp101plugin.com/) to start your own Solo Site subscription and get access to all of our videos.
 
 = Can I hardcode my API key into the plugin for use across multiple installations?  =
 
@@ -71,16 +69,25 @@ Yes! Simply define the `WP101_API_KEY` constant within your `wp-config` file:
 We've made every effort to ensure a smooth transition to version 5.x of the WP101 plugin from earlier versions:
 
 * Upon upgrading, your existing API key will be exchanged for a new API key automatically.
-	- If you've defined the API key via the `WP101_API_KEY` constant, you'll be given instructions for updating the value.
+* If you've defined the API key via the `WP101_API_KEY` constant, you'll be given instructions for updating the value.
 * Hidden courses and videos will automatically be passed to the WP101 Plugin app as part of the exchange, and will be reflected automatically. No more having to filter out videos!
 
 == Screenshots ==
 
 1. The video tutorial selection and viewing interface.
+2. Add your own custom videos and deploy them to one or more sites.
+3. Choose to hide or show individual videos—or an entire series—on a per-domain basis.
+4. Manage all your client domains remotely, from one dashboard.
+5. With a Pro License, you can also embed the 31-part WordPress 101 video series on the front-end of your membership site.
+6. Use one API key across all your sites, or generate unique API keys as needed.
 
 == Changelog ==
 
 For a complete list of changes, please see [the plugin's GitHub repository](https://github.com/leftlane/wp101plugin/blob/master/CHANGELOG.md).
+
+= 5.2 =
+* Tested and verified for WordPress 5.3.
+* Updated screenshots and WP101® branding.
 
 = 5.1.0 =
 * Run migrations across a multisite network via a background task.
@@ -95,6 +102,9 @@ For a complete list of changes, please see [the plugin's GitHub repository](http
 * Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
 
 == Upgrade Notice ==
+
+= 5.2 =
+* Tested and verified for WordPress 5.3, plus some minor housekeeping.
 
 = 5.1.0 =
 * Improves migration behavior on WordPress multisite instances.
