@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name:       WP101
+ * Plugin Name:       WP101 Video Tutorial Plugin
  * Plugin URI:        https://wp101plugin.com
- * Description:       A complete set of video tutorials for WordPress, Jetpack, WooCommerce, and Yoast SEO, delivered directly in the dashboard.
- * Version:           5.2
- * Author:            WP101
+ * Description:       A complete set of video tutorials for WordPress, WooCommerce, Jetpack, and more... delivered directly in the dashboard.
+ * Version:           5.3
+ * Author:            WP101®
  * Author URI:        https://wp101.com
  * Text Domain:       wp101
  * Requires at least: 4.1
@@ -34,7 +34,7 @@ require_once WP101_INC . '/uninstall.php';
  * @link https://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices#Disable_Nag_Notices
  */
 if ( ! defined( 'DISABLE_NAG_NOTICES' ) || ! DISABLE_NAG_NOTICES ) {
-	require_once WP101_INC . '/addons.php';
+    require_once WP101_INC . '/addons.php';
 }
 
 /**

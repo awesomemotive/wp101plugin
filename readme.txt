@@ -1,18 +1,18 @@
-=== WP101 ===
+=== WP101 Video Tutorial Plugin ===
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 4.1
 Requires PHP: 5.4
-Tested up to: 5.5.1
-Stable tag: 5.2.0
+Tested up to: 5.7
+Stable tag: 5.3.0
 
-The WP101® Plugin provides your clients with a library tutorial videos for WordPress, WooCommerce, Jetpack, Yoast SEO, and more — right in their own dashboard. Choose which videos to show, or add your own!
+The WP101® Video Tutorial Plugin provides your clients with a library tutorial videos for WordPress, WooCommerce, Jetpack, Yoast SEO, and more — right in their own dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
-The WP101® Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a library of professionally-produced, ‘WordPress 101’ tutorial videos directly within your client’s own dashboard.
+The WP101® Video Tutorial Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a library of professionally-produced, ‘WordPress 101’ tutorial videos directly within your client’s own dashboard.
 
-Plus, the WP101 Plugin also includes tutorial videos for WooCommerce, Jetpack, Yoast SEO, and Ninja Forms, provided those plugins are also installed and activated on the site in question. Videos for other popular plugins are in the works.
+Plus, the WP101 Video Tutorial Plugin also includes tutorial videos for WooCommerce, Jetpack, Yoast SEO, and Ninja Forms. Videos for other popular plugins are in the works.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
@@ -57,12 +57,12 @@ You can ask your developer to renew their subscription, or you can go to [WP101P
 
 Yes! Simply define the `WP101_API_KEY` constant within your `wp-config` file:
 
-	/**
-	 * API key for the WP101 plugin.
-	 *
-	 * @link https://wp101plugin.com
-	 */
-	define( 'WP101_API_KEY', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
+    /**
+     * API key for the WP101 plugin.
+     *
+     * @link https://wp101plugin.com
+     */
+    define( 'WP101_API_KEY', 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX' );
 
 = I've been using the WP101 Plugin for some time now — will upgrading to 5.x break my site? =
 
@@ -85,6 +85,10 @@ We've made every effort to ensure a smooth transition to version 5.x of the WP10
 
 For a complete list of changes, please see [the plugin's GitHub repository](https://github.com/leftlane/wp101plugin/blob/master/CHANGELOG.md).
 
+= 5.3 =
+* Tested and verified for WordPress 5.7.
+* Updated name for better discoverability.
+
 = 5.2 =
 * Tested and verified for WordPress 5.3.
 * Updated screenshots and WP101® branding.
@@ -102,6 +106,9 @@ For a complete list of changes, please see [the plugin's GitHub repository](http
 * Custom videos, course visibility, and permissions are now controlled via [the WP101 Plugin app](https://app.wp101plugin.com).
 
 == Upgrade Notice ==
+
+= 5.3 =
+* Tested and verified for WordPress 5.7, plus some minor housekeeping.
 
 = 5.2 =
 * Tested and verified for WordPress 5.3, plus some minor housekeeping.
