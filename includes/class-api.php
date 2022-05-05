@@ -458,9 +458,9 @@ class API {
 				'timeout'    => 30,
 				'user-agent' => self::USER_AGENT,
 				'headers'    => [
-					'Authorization'    => 'Bearer ' . $api_key,
-					'Method'           => $method,
-					'X-Forwarded-Host' => site_url(),
+					'Authorization' => 'Bearer ' . $api_key,
+					'Method'        => $method,
+					'Origin'        => site_url(),
 				],
 			]
 		);
