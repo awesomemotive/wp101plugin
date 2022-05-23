@@ -2,8 +2,8 @@
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 4.1
-Requires PHP: 5.4
-Tested up to: 5.9
+Requires PHP: 7.4
+Tested up to: 6.0
 Stable tag: 5.3.0
 
 The WP101® Video Tutorial Plugin provides your clients with a library tutorial videos for WordPress, WooCommerce, Jetpack, Yoast SEO, and more — right in their own dashboard. Choose which videos to show, or add your own!
