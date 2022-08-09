@@ -68,7 +68,7 @@ class API {
 	/**
 	 * Prevent the object from being deserialized.
 	 */
-	private function __wakeup() {}
+	public function __wakeup() {}
 
 	/**
 	 * Retrieve the singular instance of the class.
