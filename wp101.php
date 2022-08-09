@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       WP101 Video Tutorial Plugin
  * Plugin URI:        https://wp101plugin.com
- * Description:       A complete set of video tutorials for WordPress, WooCommerce, Jetpack, and more... delivered directly in the dashboard.
- * Version:           5.3
+ * Description:       A complete set of video tutorials for WordPress, WooCommerce, and more... delivered directly in the dashboard.
+ * Version:           5.3.1
  * Author:            WP101®
  * Author URI:        https://wp101.com
  * Text Domain:       wp101
