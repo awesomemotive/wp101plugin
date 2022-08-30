@@ -3,16 +3,16 @@ Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks,
 Tags: wp101, tutorials, video, help, learn, screencast
 Requires at least: 4.1
 Requires PHP: 7.4
-Tested up to: 6.0
+Tested up to: 6.0.2
 Stable tag: 5.3.1
 
-The WP101® Video Tutorial Plugin provides your clients with a library of professionally-produced video tutorials for WordPress, WooCommerce, Beaver Builder, Ninja Forms, WPForms, and more — right in their WordPress dashboard. Choose which videos to show, or add your own!
+The WP101® Video Tutorial Plugin provides your clients with a library of professionally-produced video tutorials for WordPress, WooCommerce, Elementor, Beaver Builder, Ninja Forms, WPForms, and more — right in their WordPress dashboard. Choose which videos to show, or add your own!
 
 == Description ==
 
 The WP101® Video Tutorial Plugin is simply the easiest way to teach your clients WordPress basics, cutting your support costs while providing an invaluable resource for your clients. It delivers a library of professionally-produced, WordPress 101 tutorial videos directly within your client’s own dashboard.
 
-In addition to video tutorials for WordPress (both Gutenberg and Classic Editor), we're continually expanding our library with video tutorials for the most popular WordPress plugins, including WooCommerce, Beaver Builder, Ninja Forms, and WPForms.
+In addition to video tutorials for WordPress (both Gutenberg and Classic Editor), we're continually expanding our library with video tutorials for the most popular WordPress plugins, including WooCommerce, Elementor, Beaver Builder, Ninja Forms, and WPForms.
 
 Simply enter your [WP101Plugin.com](https://wp101plugin.com/) API key to display our WordPress tutorial videos within your client’s WordPress administration panel.
 
