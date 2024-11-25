@@ -888,7 +888,7 @@ class ApiTest extends TestCase {
 			$this->assertEquals( 'GET', $args['method'] );
 			$this->assertContains( '/test-endpoint', $url );
 			$this->assertEquals( 'Bearer ' . $key, $args['headers']['Authorization'] );
-			$this->assertEquals( site_url(), $args['headers']['X-Forwarded-Host'] );
+			$this->assertEquals( site_url(), $args['headers']['Origin'] );
 			$this->assertEquals( API::USER_AGENT, $args['user-agent']);
 
 			return $response;
