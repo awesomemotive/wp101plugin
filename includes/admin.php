@@ -17,6 +17,7 @@ use WP101\TemplateTags as TemplateTags;
 function register_textdomain() {
 	load_plugin_textdomain( 'wp101', false, basename( dirname( WP101_BASENAME ) ) . '/languages' );
 }
+
 add_action( 'plugins_loaded', __NAMESPACE__ . '\register_textdomain' );
 
 /**
@@ -25,30 +26,31 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\register_textdomain' );
  * @param string $hook The page being loaded.
  */
 function enqueue_scripts( $hook ) {
-	wp_register_style(
-		'wp101-admin',
-		WP101_URL . '/assets/css/wp101-admin.css',
-		null,
-		WP101_VERSION,
-		'all'
-	);
-
-	wp_register_script(
-		'wp101-admin',
-		WP101_URL . '/assets/js/wp101-admin.min.js',
-		array( 'jquery-ui-accordion' ),
-		WP101_VERSION,
-		true
-	);
-
 	// Only enqueue on WP101 pages.
 	if ( false !== strpos( $hook, 'wp101' ) ) {
+		wp_register_style(
+			'wp101-admin',
+			WP101_URL . '/assets/css/wp101-admin.css',
+			null,
+			WP101_VERSION,
+			'all'
+		);
+
+		wp_register_script(
+			'wp101-admin',
+			WP101_URL . '/assets/js/wp101-admin.min.js',
+			array( 'jquery-ui-accordion' ),
+			WP101_VERSION,
+			true
+		);
+
 		wp_enqueue_style( 'wp101-admin' );
 		wp_enqueue_script( 'wp101-admin' );
 
 		add_action( 'admin_notices', __NAMESPACE__ . '\display_api_errors' );
 	}
 }
+
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_scripts' );
 
 /**
@@ -70,22 +72,6 @@ function get_addon_capability() {
  * Register the WP101 settings page.
  */
 function register_menu_pages() {
-	Migrate\maybe_migrate();
-
-	// If we can't retrieve a playlist, *only* show the settings page.
-	$playlist = TemplateTags\api()->get_playlist();
-
-	if ( empty( $playlist['series'] ) ) {
-		return add_menu_page(
-			_x( 'WP101', 'page title', 'wp101' ),
-			_x( 'Video Tutorials', 'menu title', 'wp101' ),
-			'manage_options',
-			'wp101-settings',
-			__NAMESPACE__ . '\render_settings_page',
-			'dashicons-video-alt3'
-		);
-	}
-
 	add_menu_page(
 		_x( 'WP101', 'page title', 'wp101' ),
 		_x( 'Video Tutorials', 'menu title', 'wp101' ),
@@ -104,19 +90,20 @@ function register_menu_pages() {
 		__NAMESPACE__ . '\render_settings_page'
 	);
 
-	$addons = TemplateTags\api()->get_addons();
-
-	if ( ! empty( $addons['addons'] ) ) {
-		add_submenu_page(
-			'wp101',
-			_x( 'WP101 Add-ons', 'page title', 'wp101' ),
-			_x( 'Add-ons', 'menu title', 'wp101' ),
-			get_addon_capability(),
-			'wp101-addons',
-			__NAMESPACE__ . '\render_addons_page'
-		);
-	}
+//	$addons = TemplateTags\api()->get_addons();
+//
+//	if ( ! empty( $addons['addons'] ) ) {
+//		add_submenu_page(
+//			'wp101',
+//			_x( 'WP101 Add-ons', 'page title', 'wp101' ),
+//			_x( 'Add-ons', 'menu title', 'wp101' ),
+//			get_addon_capability(),
+//			'wp101-addons',
+//			__NAMESPACE__ . '\render_addons_page'
+//		);
+//	}
 }
+
 add_action( 'admin_menu', __NAMESPACE__ . '\register_menu_pages' );
 
 /**
@@ -135,6 +122,7 @@ function plugin_settings_link( $links ) {
 
 	return $links;
 }
+
 add_action( 'plugin_action_links_' . WP101_BASENAME, __NAMESPACE__ . '\plugin_settings_link' );
 
 /**
@@ -151,6 +139,7 @@ function register_settings() {
 		]
 	);
 }
+
 add_action( 'admin_init', __NAMESPACE__ . '\register_settings' );
 
 /**
@@ -184,10 +173,10 @@ function sanitize_api_key( $key ) {
 			'api_key',
 			sprintf(
 
-				/*
-				 * Translators: %1$s is a confirmation message, %2$s is the playlist page URL, and %3$s
-				 * is the link anchor text.
-				 */
+			/*
+			 * Translators: %1$s is a confirmation message, %2$s is the playlist page URL, and %3$s
+			 * is the link anchor text.
+			 */
 				'%1$s <a href="%2$s">%3$s</a>',
 				esc_html__( 'Your API key ready to go:', 'wp101' ),
 				esc_attr( get_admin_url( null, 'admin.php?page=wp101' ) ),
@@ -220,7 +209,6 @@ function render_addons_page() {
 function render_listings_page() {
 	$api        = TemplateTags\api();
 	$playlist   = $api->get_playlist();
-	$public_key = $api->get_public_api_key();
 
 	// Filter out irrelevant series.
 	$playlist['series'] = array_filter( $playlist['series'], __NAMESPACE__ . '\is_relevant_series' );
@@ -246,6 +234,7 @@ function clear_public_api_key() {
 	$api->clear_api_key();
 	$api->get_public_api_key();
 }
+
 add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_key' );
 
 /**
@@ -265,21 +254,13 @@ add_action( 'update_option_wp101_api_key', __NAMESPACE__ . '\clear_public_api_ke
  * @return bool Whether or not the series should be displayed.
  */
 function is_relevant_series( $series ) {
-	$is_relevant = true;
-
-	if ( ! empty( $series['restrictions']['plugins'] ) ) {
-		$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
-
-		$is_relevant = ! empty( $restrictions );
+	if ( ! isset( $series['restrictions']['plugins'] ) || empty( $series['restrictions']['plugins'] ) ) {
+		return true;
 	}
 
-	/**
-	 * Determine if a series is relevant for the given site.
-	 *
-	 * @param bool  $is_relevant Whether or not the series is relevant for this site.
-	 * @param array $series      The series details.
-	 */
-	return apply_filters( 'wp101_is_relevant_series', $is_relevant, $series );
+	$restrictions = array_filter( $series['restrictions']['plugins'], 'is_plugin_active' );
+
+	return ! empty( $restrictions );
 }
 
 /**
@@ -297,12 +278,12 @@ function display_api_errors() {
 		}
 
 		// phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact
-?>
+		?>
 
-	<div class="notice notice-error">
-		<p><?php echo wp_kses_post( $error->get_error_message() ); ?></p>
-	</div>
+		<div class="notice notice-error">
+			<p><?php echo wp_kses_post( $error->get_error_message() ); ?></p>
+		</div>
 
-<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
+		<?php // phpcs:enable Generic.WhiteSpace.ScopeIndent.IncorrectExact
 	}
 }

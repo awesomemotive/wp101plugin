@@ -34,12 +34,8 @@ function maybe_migrate() {
 		add_site_option( 'wp101-bulk-migration-lock', true );
 	}
 
-	// Pull the custom + hidden topics so we can migrate anything that might be necessary.
-	$custom_topics = get_option( 'wp101_custom_topics' );
-	$hidden_topics = get_option( 'wp101_hidden_topics' );
-
-	// If the key's already set and we have no options to deal with, there's nothing more to do.
-	if ( ! api_key_needs_migration( $key ) && ! $custom_topics && ! $hidden_topics ) {
+	// Key is either empty or already good to go.
+	if ( ! api_key_needs_migration( $key ) ) {
 		return;
 	}
 

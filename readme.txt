@@ -1,12 +1,13 @@
 === WP101 Video Tutorial Plugin ===
 Contributors: shawndh, markjaquith, mordauk, JustinSainton, wpsmith, bhwebworks, liquidweb
-Tags: wp101, tutorials, video, help, learn, screencast
-Requires at least: 4.1
+Tags: wp101, tutorials, video, help, learn
+Requires at least: 5.1
 Requires PHP: 7.4
-Tested up to: 6.0.2
-Stable tag: 5.3.1
+Tested up to: 6.7.1
+Stable tag: 5.4.1
+License: GPLv2 or later
 
-The WP101® Video Tutorial Plugin provides your clients with a library of professionally-produced video tutorials for WordPress, WooCommerce, Elementor, Beaver Builder, Ninja Forms, WPForms, and more — right in their WordPress dashboard. Choose which videos to show, or add your own!
+Professional video tutorials for WordPress, WooCommerce, Elementor, and more, right in the dashboard of your WordPress site. Perfect for beginners.
 
 == Description ==
 
@@ -76,6 +77,20 @@ Yes! Simply define the `WP101_API_KEY` constant within your `wp-config` file:
 == Changelog ==
 
 For a complete list of changes, please see [the plugin's GitHub repository](https://github.com/leftlane/wp101plugin/blob/master/CHANGELOG.md).
+
+= 5.4.1 =
+* Fix: Deprecated notice in PHP 8.1+
+
+= 5.4.0 =
+* Tested and verified for WordPress 6.7.1
+* Fix: Major performance issues when the plugin is activated. 👈
+* Fix: The custom videos not showing up in the list of videos.
+* Replaced the old API endpoints with the new ones.
+* Code cleanup and other minor bug fixes.
+
+= 5.3.2 =
+* Tested and verified for WordPress 6.7.0
+* Changing the source of videos (internal)
 
 = 5.3.1 =
 * Tested and verified for WordPress 6.0.1

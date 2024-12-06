@@ -1,5 +1,5 @@
 {
-  "name": "leftlane/wp101plugin",
+  "name": "awesomemotive/wp101plugin",
   "description": "A complete set of WordPress 101 tutorial videos directly within the dashboard. Choose which videos to show, or add your own!",
   "type": "wordpress-plugin",
   "homepage": "https://wp101plugin.com",
@@ -34,28 +34,28 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/leftlane/wp101plugin/issues",
+    "issues": "https://github.com/awesomemotive/wp101plugin/issues",
     "forum": "https://wordpress.org/support/plugin/wp101",
-    "source": "https://github.com/leftlane/wp101plugin",
+    "source": "https://github.com/awesomemotive/wp101plugin",
     "docs": "https://wp101plugin.com"
   },
   "require": {},
   "require-dev": {
-    "php": "^7.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-    "mockery/mockery": "^1.0",
-    "phpcompatibility/php-compatibility": "^9.1",
-    "phpunit/phpunit": "^6.5",
-    "stevegrunwell/phpunit-markup-assertions": "^1.0",
-    "stevegrunwell/runkit7-installer": "^1.1.0",
-    "wp-coding-standards/wpcs": "^2.0"
+    "php": "^7.4",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "mockery/mockery": "^1.6",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "phpunit/phpunit": "^9.0",
+    "stevegrunwell/phpunit-markup-assertions": "^1.4",
+    "stevegrunwell/runkit7-installer": "^1.2.0",
+    "wp-coding-standards/wpcs": "^3.0"
   },
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.1"
+      "php": "7.4"
     }
   }
 }

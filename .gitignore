@@ -11,3 +11,5 @@ Thumbs.db
 *.codekit
 *.log
 *.scssc
+.idea
+/svn/
