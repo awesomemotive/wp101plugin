@@ -20,7 +20,7 @@ $ composer install
 
 ## Coding standards
 
-This plugin uses [the WordPress coding standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/), which are enforced via [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer).
+This plugin uses [the WordPress coding standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/), which are enforced via [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer).
 
 ## Compiling assets
 
